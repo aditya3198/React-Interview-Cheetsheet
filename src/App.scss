@@ -1,0 +1,74 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: linear-gradient(to bottom,#20222b, #330a3b);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.customBtn {
+  background-color: transparent;
+  color: #e461fb;
+  border: 1px solid #e880fa;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+
+  &:hover {
+    transition: all 0.6s ease;
+    background-color: #e880fa2c;
+    color: #fdfdfd;
+  }
+  &:active {
+    background-color: #e880fa;
+    color: #fdfdfd;
+  }
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  .banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    img {
+      animation: rotate 10s linear infinite;
+    }
+    h1 {
+      color: #e461fb;
+      font-size: 3rem;
+    }
+  }
+  footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    color: #e461fb;
+    font-size: 0.9rem;
+  }
+}
