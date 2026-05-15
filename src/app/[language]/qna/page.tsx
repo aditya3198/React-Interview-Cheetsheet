@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { LANGUAGE_SLUGS } from '@/data/navigation';
 import jsQna from '@/data/javascript/qna';
 import htmlQna from '@/data/html/qna';
