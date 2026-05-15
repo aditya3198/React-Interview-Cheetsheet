@@ -1,0 +1,102 @@
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.block {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1.5rem;
+  padding-bottom: 2rem;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+
+  @media (max-width: 640px) {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.versionBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-primary-border);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.75rem;
+  text-align: center;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.versionName {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.year {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.line {
+  width: 2px;
+  flex: 1;
+  background: linear-gradient(to bottom, var(--color-primary-border), transparent);
+  min-height: 20px;
+  margin-top: 0.5rem;
+
+  @media (max-width: 640px) {
+    display: none;
+  }
+}
+
+.rightCol {
+  padding-top: 0.25rem;
+}
+
+.highlights {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.highlight {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.highlightHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.feature {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.desc {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}

@@ -1,0 +1,19 @@
+.layout {
+  display: flex;
+  min-height: calc(100vh - var(--topnav-height));
+  padding-top: var(--topnav-height);
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem 2.5rem;
+
+  @media (max-width: 1024px) {
+    padding: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    padding: 1rem;
+  }
+}

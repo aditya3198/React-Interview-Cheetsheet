@@ -1,0 +1,96 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: sticky;
+  top: var(--topnav-height);
+  z-index: 10;
+  background: var(--color-bg-deep);
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 420px;
+  padding: 0.6rem 1rem;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-primary-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--transition-fast);
+
+  &:focus {
+    border-color: var(--color-primary);
+  }
+
+  &::placeholder {
+    color: var(--color-text-dim);
+  }
+}
+
+
+.empty {
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-primary-border);
+  background: var(--color-bg-card);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+  scroll-margin-top: 160px;
+
+  &:hover {
+    border-color: rgba(228, 97, 251, 0.5);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.25rem 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+
+.cardMeta {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.cardDesc {
+  padding: 0 1.25rem 1rem;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}

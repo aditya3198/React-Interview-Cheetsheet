@@ -1,0 +1,87 @@
+@use '@/styles/mixins' as *;
+
+.hub {
+  padding: 4rem 2rem;
+  max-width: 1000px;
+  margin-inline: auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dim));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.0625rem;
+  color: var(--color-text-muted);
+  max-width: 52ch;
+  margin-inline: auto;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+
+  @include respond-to(mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cardLink {
+  text-decoration: none;
+  display: block;
+}
+
+.card {
+  overflow: hidden;
+  padding: 0 !important;
+  transition: transform var(--transition-base);
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.colorBar {
+  height: 4px;
+  width: 100%;
+}
+
+.cardBody {
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.langLabel {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.langDescription {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.cta {
+  font-size: 0.875rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
