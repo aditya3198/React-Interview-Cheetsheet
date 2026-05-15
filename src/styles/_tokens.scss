@@ -1,0 +1,63 @@
+:root {
+  // Background layers
+  --color-bg-deep: #20222b;
+  --color-bg-mid: #2a1535;
+  --color-bg-surface: #1e1a2e;
+  --color-bg-card: #231d33;
+  --color-bg-overlay: rgba(32, 34, 43, 0.85);
+
+  // Primary (purple/magenta)
+  --color-primary: #e461fb;
+  --color-primary-dim: #b040c8;
+  --color-primary-glow: rgba(232, 128, 250, 0.2);
+  --color-primary-border: rgba(232, 128, 250, 0.3);
+
+  // Text
+  --color-text: #fdfdfd;
+  --color-text-muted: #a090b0;
+  --color-text-dim: #6a5a7a;
+
+  // Language accent colors
+  --color-js: #f7df1e;
+  --color-html: #e34c26;
+  --color-css: #264de4;
+  --color-react: #61dafb;
+
+  // Difficulty / level colors (fresher → experienced → expert)
+  --color-junior: #4ade80;
+  --color-mid: #facc15;
+  --color-senior: #f87171;
+  --color-fresher: #4ade80;
+  --color-experienced: #facc15;
+  --color-expert: #f87171;
+
+  // Tier colors
+  --color-core: #34d399;
+  --color-core-bg: rgba(52, 211, 153, 0.12);
+  --color-core-border: rgba(52, 211, 153, 0.35);
+  --color-advanced: #fb923c;
+  --color-advanced-bg: rgba(251, 146, 60, 0.12);
+  --color-advanced-border: rgba(251, 146, 60, 0.35);
+
+  // Border / radius
+  --radius-xs: 3px;
+  --radius-sm: 5px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  // Layout
+  --sidebar-width: 240px;
+  --topnav-height: 56px;
+
+  // Shadows
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px rgba(228, 97, 251, 0.25);
+
+  // Transitions
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+}
