@@ -1,4 +1,3 @@
-export const runtime = 'edge';
 import { LANGUAGE_SLUGS } from '@/data/navigation';
 import jsTheory from '@/data/javascript/theory';
 import htmlTheory from '@/data/html/theory';

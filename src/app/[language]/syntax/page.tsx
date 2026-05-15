@@ -1,4 +1,3 @@
-export const runtime = 'edge';
 import { LANGUAGE_SLUGS } from '@/data/navigation';
 import jsSyntax from '@/data/javascript/syntax';
 import htmlSyntax from '@/data/html/syntax';
