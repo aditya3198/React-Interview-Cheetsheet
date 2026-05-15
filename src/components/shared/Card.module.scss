@@ -1,0 +1,33 @@
+.card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-primary-border);
+  background: var(--color-bg-card);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+
+  &:hover {
+    border-color: rgba(228, 97, 251, 0.5);
+  }
+}
+
+.default {
+  padding: 1.25rem;
+}
+
+.elevated {
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+
+  &:hover {
+    box-shadow: var(--shadow-glow);
+  }
+}
+
+.outlined {
+  padding: 1.25rem;
+  background: transparent;
+}
+
+.tilt {
+  cursor: pointer;
+  transform-style: preserve-3d;
+}

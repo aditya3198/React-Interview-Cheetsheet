@@ -1,0 +1,33 @@
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.1rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.82rem;
+}
+
+.crumbGroup {
+  display: flex;
+  align-items: center;
+}
+
+.separator {
+  color: var(--color-text-dim);
+  padding: 0 0.3rem;
+}
+
+.crumb {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+.current {
+  color: var(--color-text);
+  font-weight: 600;
+}

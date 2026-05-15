@@ -1,0 +1,129 @@
+@use '@/styles/mixins' as *;
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--color-bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  @include respond-to(mobile) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+}
+
+.rowLabel {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-dim);
+  min-width: 68px;
+  flex-shrink: 0;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--color-text);
+  }
+}
+
+.pillActive {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: var(--color-text);
+}
+
+// Tier pills
+.pill_core {
+  &.pillActive {
+    background: var(--color-core-bg);
+    border-color: var(--color-core-border);
+    color: var(--color-core);
+  }
+  &:not(.pillActive):hover {
+    border-color: var(--color-core-border);
+    color: var(--color-core);
+  }
+  .tierDot {
+    background: var(--color-core);
+  }
+}
+
+.pill_advanced {
+  &.pillActive {
+    background: var(--color-advanced-bg);
+    border-color: var(--color-advanced-border);
+    color: var(--color-advanced);
+  }
+  &:not(.pillActive):hover {
+    border-color: var(--color-advanced-border);
+    color: var(--color-advanced);
+  }
+  .tierDot {
+    background: var(--color-advanced);
+  }
+}
+
+// Level pills
+.pill_fresher {
+  &.pillActive {
+    background: rgba(74, 222, 128, 0.1);
+    border-color: rgba(74, 222, 128, 0.35);
+    color: var(--color-fresher);
+  }
+}
+
+.pill_experienced {
+  &.pillActive {
+    background: rgba(250, 204, 21, 0.1);
+    border-color: rgba(250, 204, 21, 0.35);
+    color: var(--color-experienced);
+  }
+}
+
+.pill_expert {
+  &.pillActive {
+    background: rgba(248, 113, 113, 0.1);
+    border-color: rgba(248, 113, 113, 0.35);
+    color: var(--color-expert);
+  }
+}
+
+.tierDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}

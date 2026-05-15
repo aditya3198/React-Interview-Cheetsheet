@@ -1,0 +1,67 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.version {
+  background: rgba(97, 218, 251, 0.12);
+  color: #61dafb;
+  border: 1px solid rgba(97, 218, 251, 0.25);
+}
+
+.tag {
+  background: var(--color-primary-glow);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary-border);
+}
+
+.breaking {
+  background: rgba(248, 113, 113, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.25);
+}
+
+.difficulty {
+  border: 1px solid currentColor;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.tier {
+  border: 1px solid currentColor;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.tier_core {
+  color: var(--color-core);
+}
+
+.tier_advanced {
+  color: var(--color-advanced);
+}
+
+.level {
+  border: 1px solid currentColor;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  font-size: 0.65rem;
+}
+
+.level_fresher {
+  color: var(--color-fresher);
+}
+
+.level_experienced {
+  color: var(--color-experienced);
+}
+
+.level_expert {
+  color: var(--color-expert);
+}

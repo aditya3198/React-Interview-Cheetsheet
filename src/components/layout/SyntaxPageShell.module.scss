@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.aside {
+  width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  top: calc(var(--topnav-height) + 2rem);
+  max-height: calc(100vh - var(--topnav-height) - 4rem);
+  overflow-y: auto;
+
+  @media (max-width: 1280px) {
+    display: none;
+  }
+}
