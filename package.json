@@ -23,6 +23,9 @@
     "three": "^0.184.0",
     "zustand": "^5.0.13"
   },
+  "overrides": {
+    "postcss": ">=8.5.10"
+  },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@testing-library/jest-dom": "^6.9.1",
