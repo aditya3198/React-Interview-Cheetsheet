@@ -1,4 +1,4 @@
-import { LANGUAGE_SLUGS } from '@/data/navigation';
+export const runtime = 'edge';
 import jsVersions from '@/data/javascript/versions';
 import htmlVersions from '@/data/html/versions';
 import cssVersions from '@/data/css/versions';
@@ -14,10 +14,6 @@ const dataMap: Record<LanguageSlug, VersionEntry[]> = {
   css: cssVersions,
   react: reactVersions,
 };
-
-export function generateStaticParams() {
-  return LANGUAGE_SLUGS.map((language) => ({ language }));
-}
 
 export default async function VersionsPage({
   params,
