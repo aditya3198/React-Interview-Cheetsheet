@@ -1,15 +1,18 @@
-import { redirect } from 'next/navigation';
-import { LANGUAGE_SLUGS } from '@/data/navigation';
+'use client';
+import { use, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-export function generateStaticParams() {
-  return LANGUAGE_SLUGS.map((language) => ({ language }));
-}
-
-export default async function LanguagePage({
+export default function LanguagePage({
   params,
 }: {
   params: Promise<{ language: string }>;
 }) {
-  const { language } = await params;
-  redirect(`/${language}/syntax`);
+  const { language } = use(params);
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace(`/${language}/syntax`);
+  }, [language, router]);
+
+  return null;
 }
