@@ -1,4 +1,4 @@
-export const runtime = 'edge';
+import { LANGUAGE_SLUGS } from '@/data/navigation';
 import jsTheory from '@/data/javascript/theory';
 import htmlTheory from '@/data/html/theory';
 import cssTheory from '@/data/css/theory';
@@ -14,6 +14,10 @@ const dataMap: Record<LanguageSlug, ConceptCard[]> = {
   css: cssTheory,
   react: reactTheory,
 };
+
+export function generateStaticParams() {
+  return LANGUAGE_SLUGS.map((language) => ({ language }));
+}
 
 export default async function TheoryPage({
   params,

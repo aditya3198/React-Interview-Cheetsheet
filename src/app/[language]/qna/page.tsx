@@ -1,4 +1,4 @@
-export const runtime = 'edge';
+import { LANGUAGE_SLUGS } from '@/data/navigation';
 import jsQna from '@/data/javascript/qna';
 import htmlQna from '@/data/html/qna';
 import cssQna from '@/data/css/qna';
@@ -14,6 +14,10 @@ const dataMap: Record<LanguageSlug, QnaItem[]> = {
   css: cssQna,
   react: reactQna,
 };
+
+export function generateStaticParams() {
+  return LANGUAGE_SLUGS.map((language) => ({ language }));
+}
 
 export default async function QnaPage({
   params,

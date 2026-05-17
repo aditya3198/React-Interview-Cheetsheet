@@ -1,4 +1,4 @@
-export const runtime = 'edge';
+import { LANGUAGE_SLUGS } from '@/data/navigation';
 import jsSyntax from '@/data/javascript/syntax';
 import htmlSyntax from '@/data/html/syntax';
 import cssSyntax from '@/data/css/syntax';
@@ -14,6 +14,10 @@ const dataMap: Record<LanguageSlug, SyntaxEntry[]> = {
   css: cssSyntax,
   react: reactSyntax,
 };
+
+export function generateStaticParams() {
+  return LANGUAGE_SLUGS.map((language) => ({ language }));
+}
 
 export default async function SyntaxPage({
   params,

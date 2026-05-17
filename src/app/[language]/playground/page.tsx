@@ -1,5 +1,4 @@
 'use client';
-export const runtime = 'edge';
 import { use } from 'react';
 import htmlPlaygroundConfigs from '@/data/html/playground';
 import cssPlaygroundConfigs from '@/data/css/playground';
