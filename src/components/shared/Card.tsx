@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useTransform, useSpring, useReducedMotion } from 'framer-motion';
 import clsx from 'clsx';
 import styles from './Card.module.scss';
 
@@ -15,13 +15,14 @@ interface CardProps {
 
 export default function Card({ children, variant = 'default', tilt3d = false, className, onClick }: CardProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const prefersReduced = useReducedMotion();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), { stiffness: 300, damping: 30 });
   const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), { stiffness: 300, damping: 30 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!tilt3d || !ref.current) return;
+    if (!tilt3d || !ref.current || prefersReduced) return;
     const rect = ref.current.getBoundingClientRect();
     x.set((e.clientX - rect.left) / rect.width - 0.5);
     y.set((e.clientY - rect.top) / rect.height - 0.5);
@@ -32,7 +33,8 @@ export default function Card({ children, variant = 'default', tilt3d = false, cl
     y.set(0);
   };
 
-  if (!tilt3d) {
+  // Skip 3d tilt entirely when user prefers reduced motion or tilt3d is off
+  if (!tilt3d || prefersReduced) {
     return (
       <div
         ref={ref}
