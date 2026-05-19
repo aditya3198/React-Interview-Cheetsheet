@@ -1,0 +1,101 @@
+.hint {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-dim);
+  padding: 8px 0;
+}
+.kbd {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: rgba(236, 231, 221, 0.06);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xs);
+  padding: 1px 6px;
+  color: var(--color-text-dim);
+  margin: 0 2px;
+}
+
+// ─── Grade row ────────────────────────────────────────────
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-dim);
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+.btns {
+  display: flex;
+  gap: 10px;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
+}
+
+.btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: rgba(236, 231, 221, 0.03);
+  cursor: pointer;
+  font-size: 14px;
+  transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+
+  &:hover { transform: translateY(-1px); }
+  &:active { transform: translateY(0); }
+}
+
+.key {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: rgba(236, 231, 221, 0.06);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xs);
+  padding: 1px 6px;
+  color: var(--color-text-dim);
+  flex-shrink: 0;
+}
+.btnLabel {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.interval {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  opacity: 0.65;
+  margin-left: auto;
+}
+
+// ─── Per-grade colors ─────────────────────────────────────
+.again {
+  color: #cf6f5f;
+  border-color: rgba(207, 111, 95, 0.25);
+  background: rgba(207, 111, 95, 0.05);
+  &:hover { background: rgba(207, 111, 95, 0.1); border-color: rgba(207, 111, 95, 0.4); }
+  .key { color: #cf6f5f; border-color: rgba(207, 111, 95, 0.35); background: rgba(207, 111, 95, 0.1); }
+}
+.almost {
+  color: var(--color-primary);
+  border-color: var(--color-primary-border);
+  background: rgba(212, 160, 74, 0.05);
+  &:hover { background: rgba(212, 160, 74, 0.1); border-color: rgba(212, 160, 74, 0.5); }
+  .key { color: var(--color-primary); border-color: var(--color-primary-border); background: rgba(212, 160, 74, 0.1); }
+}
+.got {
+  color: #88b07a;
+  border-color: rgba(136, 176, 122, 0.25);
+  background: rgba(136, 176, 122, 0.05);
+  &:hover { background: rgba(136, 176, 122, 0.1); border-color: rgba(136, 176, 122, 0.4); }
+  .key { color: #88b07a; border-color: rgba(136, 176, 122, 0.35); background: rgba(136, 176, 122, 0.1); }
+}
