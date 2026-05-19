@@ -1,3 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <text x="16" y="24" font-family="monospace" font-size="16" font-weight="700" fill="#e461fb" text-anchor="middle">&lt;/&gt;</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .bg     { fill: #14110e; }
+    .accent { fill: #d4a04a; }
+    .fg     { fill: #ece7dd; }
+
+    @media (prefers-color-scheme: light) {
+      .bg     { fill: #ece7dd; }
+      .accent { fill: #b07f2c; }
+      .fg     { fill: #14110e; }
+    }
+  </style>
+
+  <rect class="bg" width="64" height="64" rx="12"/>
+  <circle class="accent" cx="14" cy="18" r="4"/>
+  <text x="34" y="48" text-anchor="middle" font-family="'Instrument Serif', 'Iowan Old Style', Georgia, serif" font-style="italic" font-weight="400" font-size="48" class="fg" letter-spacing="-2">fp</text>
 </svg>
