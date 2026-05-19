@@ -18,7 +18,7 @@ export default function Sidebar({ language }: SidebarProps) {
 
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.langHeader} style={{ borderColor: langMeta?.color }}>
+      <div className={styles.langHeader}>
         <span className={styles.langDot} style={{ background: langMeta?.color }} />
         <span className={styles.langLabel}>{langMeta?.label}</span>
       </div>
@@ -32,7 +32,6 @@ export default function Sidebar({ language }: SidebarProps) {
               key={section.slug}
               href={href}
               className={`${styles.link} ${isActive ? styles.active : ''}`}
-              style={isActive && langMeta ? { color: langMeta.color, borderColor: langMeta.color } : undefined}
               onClick={() => { if (href !== pathname) setLoading(true); }}
             >
               <span className={styles.icon}>{section.icon}</span>

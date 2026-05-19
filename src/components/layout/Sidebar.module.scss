@@ -2,12 +2,12 @@
   position: sticky;
   top: var(--topnav-height);
   height: calc(100vh - var(--topnav-height));
-  width: var(--sidebar-width);
+  width: 220px;
   flex-shrink: 0;
   overflow-y: auto;
   padding: 1.5rem 0;
-  border-right: 1px solid var(--color-primary-border);
-  background: var(--color-bg-surface);
+  border-right: 1px solid var(--line);
+  background: var(--color-bg-deep);
 
   @media (max-width: 768px) {
     display: none;
@@ -19,29 +19,30 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0 1.25rem 1rem;
-  border-bottom: 1px solid;
+  border-bottom: 1px solid var(--line);
   margin-bottom: 0.75rem;
 }
 
 .langDot {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
 .langLabel {
-  font-size: 0.875rem;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
   color: var(--color-text);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 2px;
   padding: 0 0.75rem;
 }
 
@@ -49,13 +50,13 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.6rem 0.75rem;
-  border-radius: var(--radius-md);
-  font-size: 0.9rem;
-  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 400;
   color: var(--color-text-muted);
-  border-left: 3px solid transparent;
-  transition: background var(--transition-fast), color var(--transition-fast);
+  border-left: 2px solid transparent;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
   text-decoration: none;
 
   &:hover {
@@ -65,13 +66,16 @@
 }
 
 .active {
-  background: rgba(228, 97, 251, 0.1);
-  font-weight: 600;
+  background: var(--color-primary-glow);
+  color: var(--color-text);
+  border-left-color: var(--color-primary);
 }
 
 .icon {
-  font-size: 1rem;
-  width: 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  width: 18px;
   text-align: center;
   flex-shrink: 0;
+  color: var(--color-text-dim);
 }
