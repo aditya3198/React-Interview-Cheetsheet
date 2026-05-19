@@ -1,23 +1,114 @@
 .container {
   display: flex;
-  gap: 2rem;
+  gap: 0;
   align-items: flex-start;
 }
 
 .content {
   flex: 1;
   min-width: 0;
+  padding: 28px 32px 80px;
 }
 
 .aside {
-  width: 220px;
+  width: 320px;
   flex-shrink: 0;
+  border-left: 1px solid var(--line);
   position: sticky;
-  top: calc(var(--topnav-height) + 2rem);
-  max-height: calc(100vh - var(--topnav-height) - 4rem);
+  top: var(--topnav-height);
+  height: calc(100vh - var(--topnav-height));
   overflow-y: auto;
+  padding: 22px 22px 80px;
 
   @media (max-width: 1280px) {
     display: none;
   }
+}
+
+// ─── Pinned panel ─────────────────────────────────────────
+.panel { margin-bottom: 0; }
+
+.panelLabel {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  margin: 0 0 14px;
+}
+
+.emptyPins {
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.55;
+
+  b { color: var(--color-primary); }
+}
+
+.pinList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pinItem {
+  border: 1px solid var(--color-primary-border);
+  background: rgba(212, 160, 74, 0.05);
+  border-radius: var(--radius-md);
+  padding: 12px 12px 10px;
+}
+
+.pinHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.pinTitle {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.pinRemove {
+  color: var(--color-text-dim);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0 2px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+
+  &:hover { color: var(--color-text); }
+}
+
+.pinCode {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--color-text-muted);
+  padding: 8px 10px;
+  background: var(--color-bg-deep);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  white-space: pre;
+  margin: 0;
+  line-height: 1.55;
+}
+
+// ─── TOC ─────────────────────────────────────────────────
+.toc {
+  margin-top: 32px;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
 }

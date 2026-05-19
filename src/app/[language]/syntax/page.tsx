@@ -25,12 +25,13 @@ export default async function SyntaxPage({
   params: Promise<{ language: string }>;
 }) {
   const { language } = await params;
-  const entries = dataMap[language as LanguageSlug] ?? [];
+  const lang = language as LanguageSlug;
+  const entries = dataMap[lang] ?? [];
 
   return (
     <>
       <Breadcrumbs />
-      <SyntaxPageShell entries={entries} />
+      <SyntaxPageShell entries={entries} language={lang} section="syntax" />
     </>
   );
 }
