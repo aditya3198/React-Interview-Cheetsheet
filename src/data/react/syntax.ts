@@ -147,82 +147,6 @@ function usePrevious(value) {
 }`,
   },
   {
-    id: 'usememo',
-    title: 'useMemo',
-    description: 'Memoizes the result of an expensive computation, recomputing only when dependencies change.',
-    language: 'jsx',
-    tags: ['hooks', 'useMemo', 'performance', 'memoization'],
-    tier: 'core',
-    level: 'experienced',
-    code: `import { useMemo } from 'react';
-
-function ProductList({ products, filter }) {
-  // Expensive filter — only recomputes when products or filter changes
-  const filtered = useMemo(
-    () => products.filter(p =>
-      p.name.toLowerCase().includes(filter.toLowerCase())
-    ),
-    [products, filter]
-  );
-
-  return <ul>{filtered.map(p => <li key={p.id}>{p.name}</li>)}</ul>;
-}
-
-// Stable reference for child props
-function Parent({ items }) {
-  const config = useMemo(() => ({
-    sortOrder: 'asc',
-    limit: 10,
-  }), []); // empty deps = computed once
-
-  return <Child config={config} />;
-}
-
-// DON'T useMemo for cheap computations
-// const doubled = useMemo(() => count * 2, [count]); // overkill`,
-  },
-  {
-    id: 'usecallback',
-    title: 'useCallback',
-    description: 'Memoizes a function reference, preventing recreation on every render. Essential for passing callbacks to memoized children.',
-    language: 'jsx',
-    tags: ['hooks', 'useCallback', 'performance', 'memoization'],
-    tier: 'core',
-    level: 'experienced',
-    code: `import { useCallback, memo } from 'react';
-
-// Without useCallback, handleClick is a new function every render
-// → ExpensiveChild re-renders even when nothing changed
-const ExpensiveChild = memo(({ onClick }) => (
-  <button onClick={onClick}>Click</button>
-));
-
-function Parent({ id }) {
-  const [count, setCount] = useState(0);
-
-  // Stable function — only changes when id changes
-  const handleClick = useCallback(() => {
-    fetchData(id);
-  }, [id]);
-
-  return (
-    <>
-      <p>{count}</p>
-      <button onClick={() => setCount(c => c + 1)}>Increment</button>
-      <ExpensiveChild onClick={handleClick} />
-    </>
-  );
-}
-
-// Use with useEffect dependency arrays
-const fetchUser = useCallback(async () => {
-  const data = await api.getUser(userId);
-  setUser(data);
-}, [userId]);
-
-useEffect(() => { fetchUser(); }, [fetchUser]);`,
-  },
-  {
     id: 'usecontext',
     title: 'useContext & createContext',
     description: 'Share state across the component tree without prop drilling.',
@@ -300,42 +224,80 @@ function Counter({ initialCount = 0 }) {
 }`,
   },
   {
-    id: 'custom-hooks',
-    title: 'Custom Hooks',
-    description: 'Extract stateful logic into reusable functions that start with "use".',
+    id: 'usememo',
+    title: 'useMemo',
+    description: 'Memoizes the result of an expensive computation, recomputing only when dependencies change.',
     language: 'jsx',
-    tags: ['hooks', 'custom-hooks', 'composition'],
+    tags: ['hooks', 'useMemo', 'performance', 'memoization'],
     tier: 'core',
     level: 'experienced',
-    code: `// Custom hook: data fetching
-function useFetch<T>(url: string) {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+    code: `import { useMemo } from 'react';
 
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
+function ProductList({ products, filter }) {
+  // Expensive filter — only recomputes when products or filter changes
+  const filtered = useMemo(
+    () => products.filter(p =>
+      p.name.toLowerCase().includes(filter.toLowerCase())
+    ),
+    [products, filter]
+  );
 
-    fetch(url, { signal: controller.signal })
-      .then(r => { if (!r.ok) throw new Error(\`HTTP \${r.status}\`); return r.json(); })
-      .then(setData)
-      .catch(err => { if (err.name !== 'AbortError') setError(err); })
-      .finally(() => setLoading(false));
-
-    return () => controller.abort();
-  }, [url]);
-
-  return { data, loading, error };
+  return <ul>{filtered.map(p => <li key={p.id}>{p.name}</li>)}</ul>;
 }
 
-// Usage
-function UserCard({ id }: { id: number }) {
-  const { data: user, loading, error } = useFetch<User>(\`/api/users/\${id}\`);
-  if (loading) return <Spinner />;
-  if (error) return <Error message={error.message} />;
-  return <div>{user?.name}</div>;
-}`,
+// Stable reference for child props
+function Parent({ items }) {
+  const config = useMemo(() => ({
+    sortOrder: 'asc',
+    limit: 10,
+  }), []); // empty deps = computed once
+
+  return <Child config={config} />;
+}
+
+// DON'T useMemo for cheap computations
+// const doubled = useMemo(() => count * 2, [count]); // overkill`,
+  },
+  {
+    id: 'usecallback',
+    title: 'useCallback',
+    description: 'Memoizes a function reference, preventing recreation on every render. Essential for passing callbacks to memoized children.',
+    language: 'jsx',
+    tags: ['hooks', 'useCallback', 'performance', 'memoization'],
+    tier: 'core',
+    level: 'experienced',
+    code: `import { useCallback, memo } from 'react';
+
+// Without useCallback, handleClick is a new function every render
+// → ExpensiveChild re-renders even when nothing changed
+const ExpensiveChild = memo(({ onClick }) => (
+  <button onClick={onClick}>Click</button>
+));
+
+function Parent({ id }) {
+  const [count, setCount] = useState(0);
+
+  // Stable function — only changes when id changes
+  const handleClick = useCallback(() => {
+    fetchData(id);
+  }, [id]);
+
+  return (
+    <>
+      <p>{count}</p>
+      <button onClick={() => setCount(c => c + 1)}>Increment</button>
+      <ExpensiveChild onClick={handleClick} />
+    </>
+  );
+}
+
+// Use with useEffect dependency arrays
+const fetchUser = useCallback(async () => {
+  const data = await api.getUser(userId);
+  setUser(data);
+}, [userId]);
+
+useEffect(() => { fetchUser(); }, [fetchUser]);`,
   },
   {
     id: 'react-memo',
@@ -377,6 +339,44 @@ function Parent() {
 
 // Custom comparison function
 const Equal = memo(Component, (prev, next) => prev.id === next.id);`,
+  },
+  {
+    id: 'custom-hooks',
+    title: 'Custom Hooks',
+    description: 'Extract stateful logic into reusable functions that start with "use".',
+    language: 'jsx',
+    tags: ['hooks', 'custom-hooks', 'composition'],
+    tier: 'core',
+    level: 'experienced',
+    code: `// Custom hook: data fetching
+function useFetch<T>(url: string) {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+
+    fetch(url, { signal: controller.signal })
+      .then(r => { if (!r.ok) throw new Error(\`HTTP \${r.status}\`); return r.json(); })
+      .then(setData)
+      .catch(err => { if (err.name !== 'AbortError') setError(err); })
+      .finally(() => setLoading(false));
+
+    return () => controller.abort();
+  }, [url]);
+
+  return { data, loading, error };
+}
+
+// Usage
+function UserCard({ id }: { id: number }) {
+  const { data: user, loading, error } = useFetch<User>(\`/api/users/\${id}\`);
+  if (loading) return <Spinner />;
+  if (error) return <Error message={error.message} />;
+  return <div>{user?.name}</div>;
+}`,
   },
   {
     id: 'forwardref',
@@ -424,83 +424,43 @@ const Dialog = forwardRef(function Dialog(props, ref) {
 });`,
   },
   {
-    id: 'lazy-suspense',
-    title: 'lazy & Suspense',
-    description: 'Code-split components by dynamic import; Suspense shows a fallback while the component loads.',
+    id: 'uselayouteffect',
+    title: 'useLayoutEffect',
+    description: 'Like useEffect but fires synchronously after DOM mutations and before the browser paints.',
     language: 'jsx',
-    tags: ['lazy', 'suspense', 'code-splitting', 'performance'],
+    tags: ['hooks', 'useLayoutEffect', 'dom', 'timing'],
     tier: 'advanced',
     level: 'experienced',
-    code: `import { lazy, Suspense } from 'react';
+    code: `import { useLayoutEffect, useRef, useState } from 'react';
 
-// Lazy load a component (code splits here)
-const Dashboard = lazy(() => import('./Dashboard'));
-const Settings = lazy(() => import('./Settings'));
+// Measure DOM dimensions before paint (no flash)
+function Tooltip({ text, anchor }) {
+  const tooltipRef = useRef(null);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
 
-function App() {
+  useLayoutEffect(() => {
+    if (!tooltipRef.current || !anchor) return;
+    const anchorRect = anchor.getBoundingClientRect();
+    const tooltipRect = tooltipRef.current.getBoundingClientRect();
+
+    setPosition({
+      top: anchorRect.bottom + 8,
+      left: anchorRect.left - tooltipRect.width / 2,
+    });
+  }, [anchor]);
+
   return (
-    <Suspense fallback={<Spinner />}>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/settings" element={<Settings />} />
-      </Routes>
-    </Suspense>
-  );
-}
-
-// Named export — need to wrap in a default
-const Chart = lazy(() =>
-  import('./charts').then(m => ({ default: m.LineChart }))
-);
-
-// Preload on hover
-function NavLink({ to, component }: { to: string; component: LazyComponent }) {
-  const prefetch = () => component._payload?._status === -1 && component._payload._result();
-  return <Link to={to} onMouseEnter={prefetch}>...</Link>;
-}`,
-  },
-  {
-    id: 'create-portal',
-    title: 'createPortal',
-    description: 'Render children into a DOM node outside the parent component hierarchy.',
-    language: 'jsx',
-    tags: ['portal', 'createPortal', 'dom', 'modal'],
-    tier: 'advanced',
-    level: 'experienced',
-    code: `import { createPortal } from 'react-dom';
-import { useState } from 'react';
-
-function Modal({ isOpen, onClose, children }) {
-  if (!isOpen) return null;
-
-  return createPortal(
-    <div className="modal-overlay" onClick={onClose}>
-      <div
-        className="modal-content"
-        onClick={e => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-      >
-        {children}
-        <button onClick={onClose} aria-label="Close">✕</button>
-      </div>
-    </div>,
-    document.body // renders here — outside .app-root
-  );
-}
-
-// Portals maintain React event bubbling even out of the DOM tree
-function App() {
-  const [open, setOpen] = useState(false);
-  return (
-    <div onClick={() => console.log('Parent click')}>
-      <button onClick={() => setOpen(true)}>Open</button>
-      <Modal isOpen={open} onClose={() => setOpen(false)}>
-        <p>Content</p>
-      </Modal>
+    <div
+      ref={tooltipRef}
+      style={{ position: 'fixed', ...position }}
+    >
+      {text}
     </div>
   );
-}`,
+}
+
+// Rule: prefer useEffect; use useLayoutEffect only when
+// you need to read/write DOM before paint to prevent flicker`,
   },
   {
     id: 'error-boundary',
@@ -549,43 +509,83 @@ function App() {
 }`,
   },
   {
-    id: 'uselayouteffect',
-    title: 'useLayoutEffect',
-    description: 'Like useEffect but fires synchronously after DOM mutations and before the browser paints.',
+    id: 'create-portal',
+    title: 'createPortal',
+    description: 'Render children into a DOM node outside the parent component hierarchy.',
     language: 'jsx',
-    tags: ['hooks', 'useLayoutEffect', 'dom', 'timing'],
+    tags: ['portal', 'createPortal', 'dom', 'modal'],
     tier: 'advanced',
     level: 'experienced',
-    code: `import { useLayoutEffect, useRef, useState } from 'react';
+    code: `import { createPortal } from 'react-dom';
+import { useState } from 'react';
 
-// Measure DOM dimensions before paint (no flash)
-function Tooltip({ text, anchor }) {
-  const tooltipRef = useRef(null);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+function Modal({ isOpen, onClose, children }) {
+  if (!isOpen) return null;
 
-  useLayoutEffect(() => {
-    if (!tooltipRef.current || !anchor) return;
-    const anchorRect = anchor.getBoundingClientRect();
-    const tooltipRect = tooltipRef.current.getBoundingClientRect();
-
-    setPosition({
-      top: anchorRect.bottom + 8,
-      left: anchorRect.left - tooltipRect.width / 2,
-    });
-  }, [anchor]);
-
-  return (
-    <div
-      ref={tooltipRef}
-      style={{ position: 'fixed', ...position }}
-    >
-      {text}
-    </div>
+  return createPortal(
+    <div className="modal-overlay" onClick={onClose}>
+      <div
+        className="modal-content"
+        onClick={e => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
+        {children}
+        <button onClick={onClose} aria-label="Close">✕</button>
+      </div>
+    </div>,
+    document.body // renders here — outside .app-root
   );
 }
 
-// Rule: prefer useEffect; use useLayoutEffect only when
-// you need to read/write DOM before paint to prevent flicker`,
+// Portals maintain React event bubbling even out of the DOM tree
+function App() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div onClick={() => console.log('Parent click')}>
+      <button onClick={() => setOpen(true)}>Open</button>
+      <Modal isOpen={open} onClose={() => setOpen(false)}>
+        <p>Content</p>
+      </Modal>
+    </div>
+  );
+}`,
+  },
+  {
+    id: 'lazy-suspense',
+    title: 'lazy & Suspense',
+    description: 'Code-split components by dynamic import; Suspense shows a fallback while the component loads.',
+    language: 'jsx',
+    tags: ['lazy', 'suspense', 'code-splitting', 'performance'],
+    tier: 'advanced',
+    level: 'experienced',
+    code: `import { lazy, Suspense } from 'react';
+
+// Lazy load a component (code splits here)
+const Dashboard = lazy(() => import('./Dashboard'));
+const Settings = lazy(() => import('./Settings'));
+
+function App() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/settings" element={<Settings />} />
+      </Routes>
+    </Suspense>
+  );
+}
+
+// Named export — need to wrap in a default
+const Chart = lazy(() =>
+  import('./charts').then(m => ({ default: m.LineChart }))
+);
+
+// Preload on hover
+function NavLink({ to, component }: { to: string; component: LazyComponent }) {
+  const prefetch = () => component._payload?._status === -1 && component._payload._result();
+  return <Link to={to} onMouseEnter={prefetch}>...</Link>;
+}`,
   },
   {
     id: 'usetransition',

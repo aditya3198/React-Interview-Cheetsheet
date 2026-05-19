@@ -2,40 +2,6 @@ import type { SyntaxEntry } from '@/types/content';
 
 const jsSyntax: SyntaxEntry[] = [
   {
-    id: 'hoisting',
-    title: 'Hoisting',
-    description: 'Declarations are moved to the top of their scope at compile time. var is hoisted and initialized to undefined; let/const are hoisted but stay in the Temporal Dead Zone until their declaration line.',
-    language: 'javascript',
-    tags: ['hoisting', 'scope', 'variables'],
-    tier: 'core',
-    level: 'experienced',
-    since: 'ES2015',
-    code: `// --- var hoisting ---
-console.log(x); // undefined (hoisted, initialized to undefined)
-var x = 5;
-console.log(x); // 5
-
-// Equivalent to what the engine sees:
-// var x;           ← hoisted to top
-// console.log(x);  // undefined
-// x = 5;
-
-// --- let hoisting (Temporal Dead Zone) ---
-console.log(y); // ReferenceError: Cannot access 'y' before initialization
-let y = 10;
-
-// let IS hoisted, but accessing it before the declaration
-// throws because it sits in the Temporal Dead Zone (TDZ).
-
-// --- function hoisting ---
-greet(); // "Hello!" — entire function body is hoisted
-function greet() { console.log("Hello!"); }
-
-// Arrow / function expressions are NOT hoisted the same way
-sayHi(); // TypeError: sayHi is not a function
-var sayHi = () => console.log("Hi!");`,
-  },
-  {
     id: 'var-let-const',
     title: 'var, let, const',
     description: 'Variable declarations with different scoping and mutability rules.',
@@ -56,6 +22,36 @@ let y = 1;
 const z = [];
 z.push(1); // OK — object contents can change
 // z = [];  // TypeError — binding cannot change`,
+  },
+  {
+    id: 'template-literals',
+    title: 'Template Literals',
+    description: 'String literals with embedded expressions and multi-line support.',
+    language: 'javascript',
+    tags: ['strings', 'template-literals'],
+    tier: 'core',
+    level: 'fresher',
+    since: 'ES2015',
+    code: `const name = 'World';
+const greeting = \`Hello, \${name}!\`; // "Hello, World!"
+
+// Multi-line strings
+const html = \`
+  <div>
+    <p>No more \\n hacks</p>
+  </div>
+\`;
+
+// Expressions
+const price = 9.99;
+const msg = \`Total: \$\${(price * 1.1).toFixed(2)}\`;
+
+// Tagged templates
+function highlight(strings, ...values) {
+  return strings.reduce((acc, str, i) =>
+    acc + str + (values[i] ? \`<b>\${values[i]}</b>\` : ''), '');
+}
+const result = highlight\`Price is \${price} USD\`;`,
   },
   {
     id: 'arrow-functions',
@@ -86,6 +82,40 @@ class Timer {
     }, 1000);
   }
 }`,
+  },
+  {
+    id: 'array-methods',
+    title: 'Array Methods',
+    description: 'Functional array transformations: map, filter, reduce, find, and more.',
+    language: 'javascript',
+    tags: ['arrays', 'functional', 'map', 'filter', 'reduce'],
+    tier: 'core',
+    level: 'fresher',
+    code: `const nums = [1, 2, 3, 4, 5];
+
+// map — transform each element
+nums.map(n => n * 2);             // [2, 4, 6, 8, 10]
+
+// filter — keep matching elements
+nums.filter(n => n % 2 === 0);    // [2, 4]
+
+// reduce — accumulate to single value
+nums.reduce((sum, n) => sum + n, 0); // 15
+
+// find / findIndex
+nums.find(n => n > 3);            // 4
+nums.findIndex(n => n > 3);       // 3
+
+// some / every
+nums.some(n => n > 4);            // true
+nums.every(n => n > 0);           // true
+
+// flat / flatMap
+[[1, 2], [3, 4]].flat();          // [1, 2, 3, 4]
+nums.flatMap(n => [n, n * 2]);    // [1,2, 2,4, 3,6, ...]
+
+// Array.from
+Array.from({ length: 3 }, (_, i) => i); // [0, 1, 2]`,
   },
   {
     id: 'destructuring',
@@ -147,161 +177,120 @@ const [head, ...tail] = [1, 2, 3, 4];
 // head=1, tail=[2,3,4]`,
   },
   {
-    id: 'template-literals',
-    title: 'Template Literals',
-    description: 'String literals with embedded expressions and multi-line support.',
+    id: 'hoisting',
+    title: 'Hoisting',
+    description: 'Declarations are moved to the top of their scope at compile time. var is hoisted and initialized to undefined; let/const are hoisted but stay in the Temporal Dead Zone until their declaration line.',
     language: 'javascript',
-    tags: ['strings', 'template-literals'],
+    tags: ['hoisting', 'scope', 'variables'],
     tier: 'core',
-    level: 'fresher',
+    level: 'experienced',
     since: 'ES2015',
-    code: `const name = 'World';
-const greeting = \`Hello, \${name}!\`; // "Hello, World!"
+    code: `// --- var hoisting ---
+console.log(x); // undefined (hoisted, initialized to undefined)
+var x = 5;
+console.log(x); // 5
 
-// Multi-line strings
-const html = \`
-  <div>
-    <p>No more \\n hacks</p>
-  </div>
-\`;
+// Equivalent to what the engine sees:
+// var x;           ← hoisted to top
+// console.log(x);  // undefined
+// x = 5;
 
-// Expressions
-const price = 9.99;
-const msg = \`Total: \$\${(price * 1.1).toFixed(2)}\`;
+// --- let hoisting (Temporal Dead Zone) ---
+console.log(y); // ReferenceError: Cannot access 'y' before initialization
+let y = 10;
 
-// Tagged templates
-function highlight(strings, ...values) {
-  return strings.reduce((acc, str, i) =>
-    acc + str + (values[i] ? \`<b>\${values[i]}</b>\` : ''), '');
-}
-const result = highlight\`Price is \${price} USD\`;`,
+// let IS hoisted, but accessing it before the declaration
+// throws because it sits in the Temporal Dead Zone (TDZ).
+
+// --- function hoisting ---
+greet(); // "Hello!" — entire function body is hoisted
+function greet() { console.log("Hello!"); }
+
+// Arrow / function expressions are NOT hoisted the same way
+sayHi(); // TypeError: sayHi is not a function
+var sayHi = () => console.log("Hi!");`,
   },
   {
-    id: 'optional-chaining',
-    title: 'Optional Chaining (?.)',
-    description: 'Safely access deeply nested properties without explicit null checks.',
+    id: 'error-handling',
+    title: 'Error Handling',
+    description: 'try/catch/finally patterns and custom error types.',
     language: 'javascript',
-    tags: ['optional-chaining', 'null-safety'],
+    tags: ['errors', 'try-catch', 'exceptions'],
     tier: 'core',
     level: 'experienced',
-    since: 'ES2020',
-    code: `const user = { address: { city: 'NYC' } };
-
-// Without optional chaining
-const city = user && user.address && user.address.city;
-
-// With optional chaining
-const city = user?.address?.city; // 'NYC' or undefined
-
-// On method calls
-const len = str?.length;
-const upper = str?.toUpperCase();
-
-// On array access
-const first = arr?.[0];
-
-// On function calls
-const result = callback?.();
-
-// Combined with nullish coalescing
-const city = user?.address?.city ?? 'Unknown';`,
-  },
-  {
-    id: 'nullish-coalescing',
-    title: 'Nullish Coalescing (??)',
-    description: 'Returns the right-hand value only when the left is null or undefined.',
-    language: 'javascript',
-    tags: ['nullish-coalescing', 'null-safety'],
-    tier: 'core',
-    level: 'experienced',
-    since: 'ES2020',
-    code: `// || returns right side for ANY falsy value (0, '', false)
-const count = 0 || 10;   // 10 — probably wrong!
-
-// ?? returns right side ONLY for null/undefined
-const count = 0 ?? 10;   // 0 — correct!
-const name = '' ?? 'Anonymous'; // '' — empty string is valid
-
-// Common patterns
-function getConfig(userConfig) {
-  return {
-    timeout: userConfig.timeout ?? 3000,
-    retries: userConfig.retries ?? 3,
-    debug: userConfig.debug ?? false,
-  };
+    code: `// Basic try/catch/finally
+try {
+  const data = JSON.parse(rawInput);
+  processData(data);
+} catch (err) {
+  console.error(err.message);
+} finally {
+  cleanup(); // always runs
 }
 
-// Logical assignment
-let x = null;
-x ??= 'default'; // assigns only if x is null/undefined`,
-  },
-  {
-    id: 'async-await',
-    title: 'async / await',
-    description: 'Syntactic sugar over Promises for writing asynchronous code in a synchronous style.',
-    language: 'javascript',
-    tags: ['async', 'await', 'promises'],
-    tier: 'core',
-    level: 'experienced',
-    since: 'ES2017',
-    code: `// Basic async function
-async function fetchUser(id) {
-  const res = await fetch(\`/api/users/\${id}\`);
-  const data = await res.json();
-  return data;
-}
-
-// Error handling
-async function fetchSafe(url) {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
-    return await res.json();
-  } catch (err) {
-    console.error('Fetch failed:', err.message);
-    return null;
+// Custom error classes
+class ValidationError extends Error {
+  constructor(field, message) {
+    super(message);
+    this.name = 'ValidationError';
+    this.field = field;
   }
 }
 
-// Parallel execution (don't await in a loop)
-async function loadAll(ids) {
-  const promises = ids.map(id => fetchUser(id));
-  return Promise.all(promises); // runs in parallel
-}`,
+// Type-based error handling
+try {
+  validate(input);
+} catch (err) {
+  if (err instanceof ValidationError) {
+    showFieldError(err.field, err.message);
+  } else if (err instanceof NetworkError) {
+    retry();
+  } else {
+    throw err; // re-throw unknown errors
+  }
+}
+
+// Error cause (ES2022)
+throw new Error('Failed to load', { cause: originalError });`,
   },
   {
-    id: 'promises',
-    title: 'Promises',
-    description: 'Objects representing the eventual completion or failure of an asynchronous operation.',
+    id: 'execution-context',
+    title: 'Execution Context & Call Stack',
+    description: 'Every function call creates an Execution Context — the environment in which code runs.',
     language: 'javascript',
-    tags: ['promises', 'async'],
-    tier: 'core',
+    tags: ['execution-context', 'call-stack', 'scope'],
+    tier: 'advanced',
     level: 'experienced',
-    since: 'ES2015',
-    code: `// Creating a promise
-const p = new Promise((resolve, reject) => {
-  setTimeout(() => resolve('done'), 1000);
-});
+    code: `// There are 3 types of Execution Context:
+// 1. Global EC — created once when the script loads
+// 2. Function EC — created each time a function is called
+// 3. Eval EC — created inside eval() (avoid)
 
-// Chaining
-fetch('/api/data')
-  .then(res => res.json())
-  .then(data => process(data))
-  .catch(err => console.error(err))
-  .finally(() => setLoading(false));
+// Each EC has two phases:
+//   Creation  → hoisting happens, scope chain set up, 'this' bound
+//   Execution → code runs line-by-line
 
-// Promise combinators
-Promise.all([p1, p2, p3]);        // resolves when ALL resolve
-Promise.allSettled([p1, p2, p3]); // waits for ALL, returns statuses
-Promise.race([p1, p2]);           // first to settle wins
-Promise.any([p1, p2, p3]);        // first to FULFILL wins (ES2021)
+function outer() {
+  let x = 10; // part of outer's EC (Variable Environment)
 
-// Promise.allSettled — inspect results
-const results = await Promise.allSettled([p1, p2]);
-results.forEach(r => {
-  if (r.status === 'fulfilled') console.log(r.value);
-  else console.error(r.reason);
-});`,
+  function inner() {
+    let y = 20; // inner's EC
+    console.log(x + y); // scope chain lookup: x found in outer's EC
+  }
+
+  inner(); // pushes inner's EC onto the Call Stack
+}         // inner's EC is popped on return
+
+outer();  // pushes outer's EC → inner's EC → pop inner → pop outer
+
+// Call Stack trace (top = current):
+// ┌──────────────┐
+// │  inner()  EC │
+// ├──────────────┤
+// │  outer()  EC │
+// ├──────────────┤
+// │  Global   EC │
+// └──────────────┘`,
   },
   {
     id: 'classes',
@@ -380,38 +369,203 @@ export * from './utils.js';
 const { add } = await import('./math.js');`,
   },
   {
-    id: 'array-methods',
-    title: 'Array Methods',
-    description: 'Functional array transformations: map, filter, reduce, find, and more.',
+    id: 'promises',
+    title: 'Promises',
+    description: 'Objects representing the eventual completion or failure of an asynchronous operation.',
     language: 'javascript',
-    tags: ['arrays', 'functional', 'map', 'filter', 'reduce'],
+    tags: ['promises', 'async'],
     tier: 'core',
-    level: 'fresher',
-    code: `const nums = [1, 2, 3, 4, 5];
+    level: 'experienced',
+    since: 'ES2015',
+    code: `// Creating a promise
+const p = new Promise((resolve, reject) => {
+  setTimeout(() => resolve('done'), 1000);
+});
 
-// map — transform each element
-nums.map(n => n * 2);             // [2, 4, 6, 8, 10]
+// Chaining
+fetch('/api/data')
+  .then(res => res.json())
+  .then(data => process(data))
+  .catch(err => console.error(err))
+  .finally(() => setLoading(false));
 
-// filter — keep matching elements
-nums.filter(n => n % 2 === 0);    // [2, 4]
+// Promise combinators
+Promise.all([p1, p2, p3]);        // resolves when ALL resolve
+Promise.allSettled([p1, p2, p3]); // waits for ALL, returns statuses
+Promise.race([p1, p2]);           // first to settle wins
+Promise.any([p1, p2, p3]);        // first to FULFILL wins (ES2021)
 
-// reduce — accumulate to single value
-nums.reduce((sum, n) => sum + n, 0); // 15
+// Promise.allSettled — inspect results
+const results = await Promise.allSettled([p1, p2]);
+results.forEach(r => {
+  if (r.status === 'fulfilled') console.log(r.value);
+  else console.error(r.reason);
+});`,
+  },
+  {
+    id: 'async-await',
+    title: 'async / await',
+    description: 'Syntactic sugar over Promises for writing asynchronous code in a synchronous style.',
+    language: 'javascript',
+    tags: ['async', 'await', 'promises'],
+    tier: 'core',
+    level: 'experienced',
+    since: 'ES2017',
+    code: `// Basic async function
+async function fetchUser(id) {
+  const res = await fetch(\`/api/users/\${id}\`);
+  const data = await res.json();
+  return data;
+}
 
-// find / findIndex
-nums.find(n => n > 3);            // 4
-nums.findIndex(n => n > 3);       // 3
+// Error handling
+async function fetchSafe(url) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
+    return await res.json();
+  } catch (err) {
+    console.error('Fetch failed:', err.message);
+    return null;
+  }
+}
 
-// some / every
-nums.some(n => n > 4);            // true
-nums.every(n => n > 0);           // true
+// Parallel execution (don't await in a loop)
+async function loadAll(ids) {
+  const promises = ids.map(id => fetchUser(id));
+  return Promise.all(promises); // runs in parallel
+}`,
+  },
+  {
+    id: 'fetch-abort',
+    title: 'fetch & AbortController',
+    description: 'Native browser API for HTTP requests with cancellation support.',
+    language: 'javascript',
+    tags: ['fetch', 'http', 'abort'],
+    tier: 'core',
+    level: 'experienced',
+    since: 'ES2015',
+    code: `// Basic GET
+const res = await fetch('/api/users');
+const users = await res.json();
 
-// flat / flatMap
-[[1, 2], [3, 4]].flat();          // [1, 2, 3, 4]
-nums.flatMap(n => [n, n * 2]);    // [1,2, 2,4, 3,6, ...]
+// POST with JSON body
+const res = await fetch('/api/users', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'Alice' }),
+});
 
-// Array.from
-Array.from({ length: 3 }, (_, i) => i); // [0, 1, 2]`,
+// Error handling (fetch only rejects on network error)
+if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
+
+// AbortController — cancel in-flight requests
+const controller = new AbortController();
+const { signal } = controller;
+
+fetch('/api/data', { signal })
+  .then(r => r.json())
+  .catch(err => {
+    if (err.name === 'AbortError') return; // expected
+    throw err;
+  });
+
+controller.abort(); // cancel
+
+// Timeout pattern
+const timeout = setTimeout(() => controller.abort(), 5000);`,
+  },
+  {
+    id: 'optional-chaining',
+    title: 'Optional Chaining (?.)',
+    description: 'Safely access deeply nested properties without explicit null checks.',
+    language: 'javascript',
+    tags: ['optional-chaining', 'null-safety'],
+    tier: 'core',
+    level: 'experienced',
+    since: 'ES2020',
+    code: `const user = { address: { city: 'NYC' } };
+
+// Without optional chaining
+const city = user && user.address && user.address.city;
+
+// With optional chaining
+const city = user?.address?.city; // 'NYC' or undefined
+
+// On method calls
+const len = str?.length;
+const upper = str?.toUpperCase();
+
+// On array access
+const first = arr?.[0];
+
+// On function calls
+const result = callback?.();
+
+// Combined with nullish coalescing
+const city = user?.address?.city ?? 'Unknown';`,
+  },
+  {
+    id: 'nullish-coalescing',
+    title: 'Nullish Coalescing (??)',
+    description: 'Returns the right-hand value only when the left is null or undefined.',
+    language: 'javascript',
+    tags: ['nullish-coalescing', 'null-safety'],
+    tier: 'core',
+    level: 'experienced',
+    since: 'ES2020',
+    code: `// || returns right side for ANY falsy value (0, '', false)
+const count = 0 || 10;   // 10 — probably wrong!
+
+// ?? returns right side ONLY for null/undefined
+const count = 0 ?? 10;   // 0 — correct!
+const name = '' ?? 'Anonymous'; // '' — empty string is valid
+
+// Common patterns
+function getConfig(userConfig) {
+  return {
+    timeout: userConfig.timeout ?? 3000,
+    retries: userConfig.retries ?? 3,
+    debug: userConfig.debug ?? false,
+  };
+}
+
+// Logical assignment
+let x = null;
+x ??= 'default'; // assigns only if x is null/undefined`,
+  },
+  {
+    id: 'logical-assignment',
+    title: 'Logical Assignment Operators',
+    description: 'Combine logical operators with assignment for concise conditional mutation.',
+    language: 'javascript',
+    tags: ['operators', 'assignment'],
+    tier: 'core',
+    level: 'experienced',
+    since: 'ES2021',
+    code: `// ??= — assign if null or undefined
+let config = null;
+config ??= { theme: 'dark' }; // assigns
+
+let active = false;
+active ??= true; // does NOT assign — false is not null/undefined
+
+// ||= — assign if falsy
+let name = '';
+name ||= 'Anonymous'; // assigns — '' is falsy
+
+let count = 0;
+count ||= 1; // assigns — 0 is falsy (often unintended!)
+
+// &&= — assign if truthy
+let user = { name: 'Alice' };
+user &&= { ...user, loggedIn: true }; // assigns
+
+let guest = null;
+guest &&= { loggedIn: true }; // does NOT assign — null is falsy
+
+// Common pattern: memoization
+cache[key] ??= expensiveComputation(key);`,
   },
   {
     id: 'object-methods',
@@ -483,247 +637,6 @@ m.forEach((value, key) => { ... });
 // Convert to/from Object
 Object.fromEntries(m);
 new Map(Object.entries(obj));`,
-  },
-  {
-    id: 'generators',
-    title: 'Generators',
-    description: 'Functions that can pause and resume execution, producing a sequence of values on demand.',
-    language: 'javascript',
-    tags: ['generators', 'iterators'],
-    tier: 'advanced',
-    level: 'expert',
-    since: 'ES2015',
-    code: `function* counter(start = 0) {
-  while (true) {
-    yield start++;
-  }
-}
-
-const gen = counter(5);
-gen.next(); // { value: 5, done: false }
-gen.next(); // { value: 6, done: false }
-
-// Finite generator
-function* range(start, end, step = 1) {
-  for (let i = start; i < end; i += step) {
-    yield i;
-  }
-}
-[...range(0, 6, 2)]; // [0, 2, 4]
-
-// Generator for custom iterables
-function* entries(obj) {
-  for (const key of Object.keys(obj)) {
-    yield [key, obj[key]];
-  }
-}
-
-// Async generators (ES2018)
-async function* paginate(url) {
-  let page = 1;
-  while (true) {
-    const data = await fetch(\`\${url}?page=\${page++}\`).then(r => r.json());
-    if (!data.length) return;
-    yield data;
-  }
-}`,
-  },
-  {
-    id: 'proxy-reflect',
-    title: 'Proxy & Reflect',
-    description: 'Intercept and redefine fundamental operations on objects.',
-    language: 'javascript',
-    tags: ['proxy', 'reflect', 'meta-programming'],
-    tier: 'advanced',
-    level: 'expert',
-    since: 'ES2015',
-    code: `// Validation proxy
-const validator = {
-  set(target, prop, value) {
-    if (prop === 'age' && typeof value !== 'number') {
-      throw new TypeError('Age must be a number');
-    }
-    return Reflect.set(target, prop, value);
-  },
-};
-
-const person = new Proxy({}, validator);
-person.age = 25;    // OK
-person.age = '25';  // TypeError
-
-// Logging proxy
-function createLogged(target) {
-  return new Proxy(target, {
-    get(obj, prop) {
-      console.log(\`Getting \${prop}\`);
-      return Reflect.get(obj, prop);
-    },
-  });
-}
-
-// Default values proxy
-const withDefaults = new Proxy({}, {
-  get(obj, prop) {
-    return prop in obj ? obj[prop] : \`<\${prop}>\`;
-  },
-});`,
-  },
-  {
-    id: 'fetch-abort',
-    title: 'fetch & AbortController',
-    description: 'Native browser API for HTTP requests with cancellation support.',
-    language: 'javascript',
-    tags: ['fetch', 'http', 'abort'],
-    tier: 'core',
-    level: 'experienced',
-    since: 'ES2015',
-    code: `// Basic GET
-const res = await fetch('/api/users');
-const users = await res.json();
-
-// POST with JSON body
-const res = await fetch('/api/users', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ name: 'Alice' }),
-});
-
-// Error handling (fetch only rejects on network error)
-if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
-
-// AbortController — cancel in-flight requests
-const controller = new AbortController();
-const { signal } = controller;
-
-fetch('/api/data', { signal })
-  .then(r => r.json())
-  .catch(err => {
-    if (err.name === 'AbortError') return; // expected
-    throw err;
-  });
-
-controller.abort(); // cancel
-
-// Timeout pattern
-const timeout = setTimeout(() => controller.abort(), 5000);`,
-  },
-  {
-    id: 'error-handling',
-    title: 'Error Handling',
-    description: 'try/catch/finally patterns and custom error types.',
-    language: 'javascript',
-    tags: ['errors', 'try-catch', 'exceptions'],
-    tier: 'core',
-    level: 'experienced',
-    code: `// Basic try/catch/finally
-try {
-  const data = JSON.parse(rawInput);
-  processData(data);
-} catch (err) {
-  console.error(err.message);
-} finally {
-  cleanup(); // always runs
-}
-
-// Custom error classes
-class ValidationError extends Error {
-  constructor(field, message) {
-    super(message);
-    this.name = 'ValidationError';
-    this.field = field;
-  }
-}
-
-// Type-based error handling
-try {
-  validate(input);
-} catch (err) {
-  if (err instanceof ValidationError) {
-    showFieldError(err.field, err.message);
-  } else if (err instanceof NetworkError) {
-    retry();
-  } else {
-    throw err; // re-throw unknown errors
-  }
-}
-
-// Error cause (ES2022)
-throw new Error('Failed to load', { cause: originalError });`,
-  },
-  {
-    id: 'logical-assignment',
-    title: 'Logical Assignment Operators',
-    description: 'Combine logical operators with assignment for concise conditional mutation.',
-    language: 'javascript',
-    tags: ['operators', 'assignment'],
-    tier: 'core',
-    level: 'experienced',
-    since: 'ES2021',
-    code: `// ??= — assign if null or undefined
-let config = null;
-config ??= { theme: 'dark' }; // assigns
-
-let active = false;
-active ??= true; // does NOT assign — false is not null/undefined
-
-// ||= — assign if falsy
-let name = '';
-name ||= 'Anonymous'; // assigns — '' is falsy
-
-let count = 0;
-count ||= 1; // assigns — 0 is falsy (often unintended!)
-
-// &&= — assign if truthy
-let user = { name: 'Alice' };
-user &&= { ...user, loggedIn: true }; // assigns
-
-let guest = null;
-guest &&= { loggedIn: true }; // does NOT assign — null is falsy
-
-// Common pattern: memoization
-cache[key] ??= expensiveComputation(key);`,
-  },
-  {
-    id: 'symbol',
-    title: 'Symbol',
-    description: 'Unique, immutable primitive values used as object property keys.',
-    language: 'javascript',
-    tags: ['symbol', 'unique-keys'],
-    tier: 'advanced',
-    level: 'expert',
-    since: 'ES2015',
-    code: `// Every Symbol is unique
-const s1 = Symbol('id');
-const s2 = Symbol('id');
-s1 === s2; // false
-
-// As non-colliding object keys
-const ID = Symbol('id');
-const obj = { [ID]: 42, name: 'Alice' };
-obj[ID]; // 42
-Object.keys(obj); // ['name'] — Symbol not enumerated
-
-// Well-known symbols (hooks into JS internals)
-class Range {
-  constructor(start, end) {
-    this.start = start;
-    this.end = end;
-  }
-
-  [Symbol.iterator]() {
-    let current = this.start;
-    const end = this.end;
-    return {
-      next() {
-        return current <= end
-          ? { value: current++, done: false }
-          : { done: true };
-      },
-    };
-  }
-}
-
-[...new Range(1, 5)]; // [1, 2, 3, 4, 5]`,
   },
   {
     id: 'debounce-throttle-impl',
@@ -829,43 +742,130 @@ function useMemoShim(factory, deps) {
 }`,
   },
   {
-    id: 'execution-context',
-    title: 'Execution Context & Call Stack',
-    description: 'Every function call creates an Execution Context — the environment in which code runs.',
+    id: 'generators',
+    title: 'Generators',
+    description: 'Functions that can pause and resume execution, producing a sequence of values on demand.',
     language: 'javascript',
-    tags: ['execution-context', 'call-stack', 'scope'],
+    tags: ['generators', 'iterators'],
     tier: 'advanced',
-    level: 'experienced',
-    code: `// There are 3 types of Execution Context:
-// 1. Global EC — created once when the script loads
-// 2. Function EC — created each time a function is called
-// 3. Eval EC — created inside eval() (avoid)
+    level: 'expert',
+    since: 'ES2015',
+    code: `function* counter(start = 0) {
+  while (true) {
+    yield start++;
+  }
+}
 
-// Each EC has two phases:
-//   Creation  → hoisting happens, scope chain set up, 'this' bound
-//   Execution → code runs line-by-line
+const gen = counter(5);
+gen.next(); // { value: 5, done: false }
+gen.next(); // { value: 6, done: false }
 
-function outer() {
-  let x = 10; // part of outer's EC (Variable Environment)
+// Finite generator
+function* range(start, end, step = 1) {
+  for (let i = start; i < end; i += step) {
+    yield i;
+  }
+}
+[...range(0, 6, 2)]; // [0, 2, 4]
 
-  function inner() {
-    let y = 20; // inner's EC
-    console.log(x + y); // scope chain lookup: x found in outer's EC
+// Generator for custom iterables
+function* entries(obj) {
+  for (const key of Object.keys(obj)) {
+    yield [key, obj[key]];
+  }
+}
+
+// Async generators (ES2018)
+async function* paginate(url) {
+  let page = 1;
+  while (true) {
+    const data = await fetch(\`\${url}?page=\${page++}\`).then(r => r.json());
+    if (!data.length) return;
+    yield data;
+  }
+}`,
+  },
+  {
+    id: 'symbol',
+    title: 'Symbol',
+    description: 'Unique, immutable primitive values used as object property keys.',
+    language: 'javascript',
+    tags: ['symbol', 'unique-keys'],
+    tier: 'advanced',
+    level: 'expert',
+    since: 'ES2015',
+    code: `// Every Symbol is unique
+const s1 = Symbol('id');
+const s2 = Symbol('id');
+s1 === s2; // false
+
+// As non-colliding object keys
+const ID = Symbol('id');
+const obj = { [ID]: 42, name: 'Alice' };
+obj[ID]; // 42
+Object.keys(obj); // ['name'] — Symbol not enumerated
+
+// Well-known symbols (hooks into JS internals)
+class Range {
+  constructor(start, end) {
+    this.start = start;
+    this.end = end;
   }
 
-  inner(); // pushes inner's EC onto the Call Stack
-}         // inner's EC is popped on return
+  [Symbol.iterator]() {
+    let current = this.start;
+    const end = this.end;
+    return {
+      next() {
+        return current <= end
+          ? { value: current++, done: false }
+          : { done: true };
+      },
+    };
+  }
+}
 
-outer();  // pushes outer's EC → inner's EC → pop inner → pop outer
+[...new Range(1, 5)]; // [1, 2, 3, 4, 5]`,
+  },
+  {
+    id: 'proxy-reflect',
+    title: 'Proxy & Reflect',
+    description: 'Intercept and redefine fundamental operations on objects.',
+    language: 'javascript',
+    tags: ['proxy', 'reflect', 'meta-programming'],
+    tier: 'advanced',
+    level: 'expert',
+    since: 'ES2015',
+    code: `// Validation proxy
+const validator = {
+  set(target, prop, value) {
+    if (prop === 'age' && typeof value !== 'number') {
+      throw new TypeError('Age must be a number');
+    }
+    return Reflect.set(target, prop, value);
+  },
+};
 
-// Call Stack trace (top = current):
-// ┌──────────────┐
-// │  inner()  EC │
-// ├──────────────┤
-// │  outer()  EC │
-// ├──────────────┤
-// │  Global   EC │
-// └──────────────┘`,
+const person = new Proxy({}, validator);
+person.age = 25;    // OK
+person.age = '25';  // TypeError
+
+// Logging proxy
+function createLogged(target) {
+  return new Proxy(target, {
+    get(obj, prop) {
+      console.log(\`Getting \${prop}\`);
+      return Reflect.get(obj, prop);
+    },
+  });
+}
+
+// Default values proxy
+const withDefaults = new Proxy({}, {
+  get(obj, prop) {
+    return prop in obj ? obj[prop] : \`<\${prop}>\`;
+  },
+});`,
   },
 ];
 

@@ -32,6 +32,35 @@ const htmlSyntax: SyntaxEntry[] = [
 </footer>`,
   },
   {
+    id: 'meta-tags',
+    title: 'Meta Tags',
+    description: 'Essential <head> meta tags for character encoding, viewport, SEO, and social sharing.',
+    language: 'html',
+    tags: ['meta', 'seo', 'head', 'og', 'viewport'],
+    tier: 'core',
+    level: 'fresher',
+    code: `<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Page description for SEO (150–160 chars)" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph (Facebook, LinkedIn) -->
+  <meta property="og:title" content="Page Title" />
+  <meta property="og:description" content="Page description" />
+  <meta property="og:image" content="https://example.com/og.jpg" />
+  <meta property="og:url" content="https://example.com/page" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Page Title" />
+
+  <title>Page Title | Site Name</title>
+  <link rel="canonical" href="https://example.com/page" />
+</head>`,
+  },
+  {
     id: 'input-types',
     title: 'Input Types',
     description: 'HTML input types trigger native validation, mobile keyboards, and UI controls.',
@@ -97,119 +126,6 @@ const htmlSyntax: SyntaxEntry[] = [
   <button type="submit">Submit</button>
   <button type="reset">Clear</button>
 </form>`,
-  },
-  {
-    id: 'meta-tags',
-    title: 'Meta Tags',
-    description: 'Essential <head> meta tags for character encoding, viewport, SEO, and social sharing.',
-    language: 'html',
-    tags: ['meta', 'seo', 'head', 'og', 'viewport'],
-    tier: 'core',
-    level: 'fresher',
-    code: `<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Page description for SEO (150–160 chars)" />
-  <meta name="robots" content="index, follow" />
-
-  <!-- Open Graph (Facebook, LinkedIn) -->
-  <meta property="og:title" content="Page Title" />
-  <meta property="og:description" content="Page description" />
-  <meta property="og:image" content="https://example.com/og.jpg" />
-  <meta property="og:url" content="https://example.com/page" />
-  <meta property="og:type" content="website" />
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Page Title" />
-
-  <title>Page Title | Site Name</title>
-  <link rel="canonical" href="https://example.com/page" />
-</head>`,
-  },
-  {
-    id: 'script-loading',
-    title: 'Script Loading Strategies',
-    description: 'defer and async attributes control when scripts are fetched and executed relative to HTML parsing.',
-    language: 'html',
-    tags: ['script', 'defer', 'async', 'performance'],
-    tier: 'core',
-    level: 'experienced',
-    code: `<!-- Blocking — fetch & execute immediately, parsing pauses -->
-<script src="app.js"></script>
-
-<!-- async — fetch in parallel, execute as soon as downloaded (order not guaranteed) -->
-<script async src="analytics.js"></script>
-
-<!-- defer — fetch in parallel, execute AFTER parsing, in document order -->
-<script defer src="app.js"></script>
-
-<!-- type="module" — always deferred, supports import/export -->
-<script type="module" src="app.mjs"></script>
-
-<!-- Inline module -->
-<script type="module">
-  import { init } from './app.mjs';
-  init();
-</script>
-
-<!-- Preload critical resources -->
-<link rel="preload" href="critical.js" as="script" />
-<link rel="prefetch" href="lazy-page.js" as="script" />`,
-  },
-  {
-    id: 'picture-srcset',
-    title: 'Responsive Images',
-    description: 'picture, srcset, and sizes enable art direction and resolution switching for responsive images.',
-    language: 'html',
-    tags: ['images', 'responsive', 'performance', 'picture'],
-    tier: 'core',
-    level: 'experienced',
-    code: `<!-- srcset + sizes — resolution switching -->
-<img
-  src="photo-800.jpg"
-  srcset="photo-400.jpg 400w, photo-800.jpg 800w, photo-1600.jpg 1600w"
-  sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 800px"
-  alt="A scenic mountain view"
-  loading="lazy"
-  decoding="async"
-/>
-
-<!-- picture — art direction (different crops per breakpoint) -->
-<picture>
-  <source
-    media="(max-width: 600px)"
-    srcset="photo-portrait.webp"
-    type="image/webp"
-  />
-  <source
-    media="(max-width: 600px)"
-    srcset="photo-portrait.jpg"
-  />
-  <img src="photo-landscape.jpg" alt="Photo" width="800" height="450" />
-</picture>`,
-  },
-  {
-    id: 'data-attributes',
-    title: 'Data Attributes',
-    description: 'Custom data-* attributes store extra information on HTML elements accessible via JavaScript.',
-    language: 'html',
-    tags: ['data-attributes', 'javascript', 'dom'],
-    tier: 'core',
-    level: 'experienced',
-    code: `<!-- HTML — any attribute starting with data- -->
-<button
-  data-action="delete"
-  data-id="42"
-  data-confirm="true"
->
-  Delete
-</button>
-
-<ul id="list">
-  <li data-id="1" data-category="fruit">Apple</li>
-  <li data-id="2" data-category="veggie">Broccoli</li>
-</ul>`,
   },
   {
     id: 'details-summary',
@@ -280,23 +196,86 @@ const htmlSyntax: SyntaxEntry[] = [
 </table>`,
   },
   {
-    id: 'dialog-element',
-    title: 'dialog Element',
-    description: 'Native modal and non-modal dialogs with built-in focus trapping and backdrop.',
+    id: 'figure-figcaption',
+    title: 'figure & figcaption',
+    description: 'Group self-contained media (images, diagrams, code) with their caption.',
     language: 'html',
-    tags: ['dialog', 'modal', 'accessibility', 'html5'],
-    tier: 'advanced',
-    level: 'experienced',
-    code: `<dialog id="confirm-dialog" aria-labelledby="dialog-title">
-  <h2 id="dialog-title">Confirm Delete</h2>
-  <p>This action cannot be undone.</p>
-  <form method="dialog">
-    <button value="cancel">Cancel</button>
-    <button value="confirm" autofocus>Delete</button>
-  </form>
-</dialog>
+    tags: ['figure', 'figcaption', 'images', 'semantic'],
+    tier: 'core',
+    level: 'fresher',
+    code: `<!-- Image with caption -->
+<figure>
+  <img
+    src="diagram.svg"
+    alt="System architecture diagram showing three tiers"
+    width="640"
+    height="480"
+  />
+  <figcaption>
+    Figure 1: Three-tier architecture overview.
+  </figcaption>
+</figure>
 
-<button id="open-btn">Open Dialog</button>`,
+<!-- Code listing with caption -->
+<figure>
+  <figcaption>Listing 3: Fibonacci sequence</figcaption>
+  <pre><code>function fib(n) { ... }</code></pre>
+</figure>`,
+  },
+  {
+    id: 'video-audio',
+    title: 'video & audio',
+    description: 'Native media elements with controls, fallback sources, and accessibility tracks.',
+    language: 'html',
+    tags: ['video', 'audio', 'media', 'html5', 'accessibility'],
+    tier: 'core',
+    level: 'fresher',
+    code: `<video
+  controls
+  width="640"
+  height="360"
+  poster="thumbnail.jpg"
+  preload="metadata"
+  aria-label="Product demo video"
+>
+  <source src="demo.webm" type="video/webm" />
+  <source src="demo.mp4"  type="video/mp4" />
+  <track
+    kind="captions"
+    src="captions-en.vtt"
+    srclang="en"
+    label="English"
+    default
+  />
+  <p>Your browser doesn't support HTML video. <a href="demo.mp4">Download</a></p>
+</video>
+
+<audio controls preload="none">
+  <source src="podcast.opus" type="audio/ogg; codecs=opus" />
+  <source src="podcast.mp3"  type="audio/mpeg" />
+</audio>`,
+  },
+  {
+    id: 'data-attributes',
+    title: 'Data Attributes',
+    description: 'Custom data-* attributes store extra information on HTML elements accessible via JavaScript.',
+    language: 'html',
+    tags: ['data-attributes', 'javascript', 'dom'],
+    tier: 'core',
+    level: 'experienced',
+    code: `<!-- HTML — any attribute starting with data- -->
+<button
+  data-action="delete"
+  data-id="42"
+  data-confirm="true"
+>
+  Delete
+</button>
+
+<ul id="list">
+  <li data-id="1" data-category="fruit">Apple</li>
+  <li data-id="2" data-category="veggie">Broccoli</li>
+</ul>`,
   },
   {
     id: 'aria-roles',
@@ -335,31 +314,66 @@ const htmlSyntax: SyntaxEntry[] = [
 <span id="error-msg" role="alert">Required field</span>`,
   },
   {
-    id: 'figure-figcaption',
-    title: 'figure & figcaption',
-    description: 'Group self-contained media (images, diagrams, code) with their caption.',
+    id: 'script-loading',
+    title: 'Script Loading Strategies',
+    description: 'defer and async attributes control when scripts are fetched and executed relative to HTML parsing.',
     language: 'html',
-    tags: ['figure', 'figcaption', 'images', 'semantic'],
+    tags: ['script', 'defer', 'async', 'performance'],
     tier: 'core',
-    level: 'fresher',
-    code: `<!-- Image with caption -->
-<figure>
-  <img
-    src="diagram.svg"
-    alt="System architecture diagram showing three tiers"
-    width="640"
-    height="480"
-  />
-  <figcaption>
-    Figure 1: Three-tier architecture overview.
-  </figcaption>
-</figure>
+    level: 'experienced',
+    code: `<!-- Blocking — fetch & execute immediately, parsing pauses -->
+<script src="app.js"></script>
 
-<!-- Code listing with caption -->
-<figure>
-  <figcaption>Listing 3: Fibonacci sequence</figcaption>
-  <pre><code>function fib(n) { ... }</code></pre>
-</figure>`,
+<!-- async — fetch in parallel, execute as soon as downloaded (order not guaranteed) -->
+<script async src="analytics.js"></script>
+
+<!-- defer — fetch in parallel, execute AFTER parsing, in document order -->
+<script defer src="app.js"></script>
+
+<!-- type="module" — always deferred, supports import/export -->
+<script type="module" src="app.mjs"></script>
+
+<!-- Inline module -->
+<script type="module">
+  import { init } from './app.mjs';
+  init();
+</script>
+
+<!-- Preload critical resources -->
+<link rel="preload" href="critical.js" as="script" />
+<link rel="prefetch" href="lazy-page.js" as="script" />`,
+  },
+  {
+    id: 'picture-srcset',
+    title: 'Responsive Images',
+    description: 'picture, srcset, and sizes enable art direction and resolution switching for responsive images.',
+    language: 'html',
+    tags: ['images', 'responsive', 'performance', 'picture'],
+    tier: 'core',
+    level: 'experienced',
+    code: `<!-- srcset + sizes — resolution switching -->
+<img
+  src="photo-800.jpg"
+  srcset="photo-400.jpg 400w, photo-800.jpg 800w, photo-1600.jpg 1600w"
+  sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 800px"
+  alt="A scenic mountain view"
+  loading="lazy"
+  decoding="async"
+/>
+
+<!-- picture — art direction (different crops per breakpoint) -->
+<picture>
+  <source
+    media="(max-width: 600px)"
+    srcset="photo-portrait.webp"
+    type="image/webp"
+  />
+  <source
+    media="(max-width: 600px)"
+    srcset="photo-portrait.jpg"
+  />
+  <img src="photo-landscape.jpg" alt="Photo" width="800" height="450" />
+</picture>`,
   },
   {
     id: 'link-preload-prefetch',
@@ -389,6 +403,25 @@ const htmlSyntax: SyntaxEntry[] = [
 </head>`,
   },
   {
+    id: 'dialog-element',
+    title: 'dialog Element',
+    description: 'Native modal and non-modal dialogs with built-in focus trapping and backdrop.',
+    language: 'html',
+    tags: ['dialog', 'modal', 'accessibility', 'html5'],
+    tier: 'advanced',
+    level: 'experienced',
+    code: `<dialog id="confirm-dialog" aria-labelledby="dialog-title">
+  <h2 id="dialog-title">Confirm Delete</h2>
+  <p>This action cannot be undone.</p>
+  <form method="dialog">
+    <button value="cancel">Cancel</button>
+    <button value="confirm" autofocus>Delete</button>
+  </form>
+</dialog>
+
+<button id="open-btn">Open Dialog</button>`,
+  },
+  {
     id: 'template-element',
     title: 'template Element',
     description: 'Client-side HTML template that is parsed but not rendered until cloned into the DOM via JS.',
@@ -403,39 +436,6 @@ const htmlSyntax: SyntaxEntry[] = [
     <p class="card-body"></p>
   </div>
 </template>`,
-  },
-  {
-    id: 'video-audio',
-    title: 'video & audio',
-    description: 'Native media elements with controls, fallback sources, and accessibility tracks.',
-    language: 'html',
-    tags: ['video', 'audio', 'media', 'html5', 'accessibility'],
-    tier: 'core',
-    level: 'fresher',
-    code: `<video
-  controls
-  width="640"
-  height="360"
-  poster="thumbnail.jpg"
-  preload="metadata"
-  aria-label="Product demo video"
->
-  <source src="demo.webm" type="video/webm" />
-  <source src="demo.mp4"  type="video/mp4" />
-  <track
-    kind="captions"
-    src="captions-en.vtt"
-    srclang="en"
-    label="English"
-    default
-  />
-  <p>Your browser doesn't support HTML video. <a href="demo.mp4">Download</a></p>
-</video>
-
-<audio controls preload="none">
-  <source src="podcast.opus" type="audio/ogg; codecs=opus" />
-  <source src="podcast.mp3"  type="audio/mpeg" />
-</audio>`,
   },
 ];
 

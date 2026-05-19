@@ -30,6 +30,32 @@ The DOM is live — modifying it through JavaScript immediately affects what the
     level: 'fresher',
   },
   {
+    id: 'block-vs-inline',
+    title: 'Block vs Inline Elements',
+    summary: 'Block elements start on a new line and take full width; inline elements flow within text.',
+    body: `Block-level elements (div, p, h1-h6, ul, ol, section, article, etc.) start on a new line and, by default, stretch to fill their container's full width. They can contain block and inline elements.
+
+Inline elements (span, a, strong, em, code, img, button, etc.) flow within surrounding text without breaking onto a new line. They only take up as much width as their content. You can't set explicit width/height on pure inline elements (use inline-block or flex/grid).
+
+CSS display property overrides the default: display: block, inline, inline-block, flex, grid, none. HTML5 introduced a more nuanced "content model" (flow, phrasing, sectioning content) but the block/inline mental model remains useful for layout reasoning.`,
+    diagram: {
+      type: 'ascii',
+      content: `Block elements:
+┌─────────────────────────────────┐
+│ <div>  full width               │
+└─────────────────────────────────┘
+┌─────────────────────────────────┐
+│ <p>    full width               │
+└─────────────────────────────────┘
+
+Inline elements:
+Text <strong>bold</strong> more <a>link</a> text`,
+    },
+    tags: ['block', 'inline', 'display', 'layout'],
+    tier: 'core',
+    level: 'fresher',
+  },
+  {
     id: 'semantic-html',
     title: 'Semantic HTML & Accessibility',
     summary: 'Semantic elements convey meaning — improving SEO, maintainability, and assistive technology support.',
@@ -41,25 +67,6 @@ ARIA (Accessible Rich Internet Applications) roles, states, and properties augme
     tags: ['semantic', 'accessibility', 'aria', 'seo'],
     tier: 'core',
     level: 'fresher',
-  },
-  {
-    id: 'critical-rendering-path',
-    title: 'Critical Rendering Path',
-    summary: 'The sequence of steps browsers take to convert HTML, CSS, and JS into pixels on screen.',
-    body: `The critical rendering path has five steps: (1) Parse HTML → construct the DOM tree. (2) Parse CSS → construct the CSSOM tree. (3) Combine DOM + CSSOM → Render tree (only visible nodes). (4) Layout (Reflow) — calculate position and size of each node. (5) Paint — fill in pixels, then composite layers.
-
-CSS blocks rendering — the browser won't paint until all stylesheets are downloaded and parsed (CSSOM must be complete). JavaScript blocks HTML parsing by default — the parser stops until the script finishes executing. This is why render-blocking resources appear above the fold issue.
-
-Optimizations: defer/async for non-critical scripts, inline critical CSS, preload key fonts and images, reduce paint complexity, minimize layout thrashing (reading then writing layout properties in a loop forces multiple reflows).`,
-    diagram: {
-      type: 'ascii',
-      content: `HTML bytes → Parse → DOM
-CSS bytes  → Parse → CSSOM  ──> Render Tree → Layout → Paint
-JS bytes   → Parse → Execute (may mutate DOM/CSSOM)`,
-    },
-    tags: ['rendering', 'performance', 'dom', 'cssom', 'layout'],
-    tier: 'advanced',
-    level: 'experienced',
   },
   {
     id: 'head-vs-body',
@@ -88,30 +95,32 @@ Use novalidate on the <form> to disable native UI while keeping the API, then bu
     level: 'fresher',
   },
   {
-    id: 'block-vs-inline',
-    title: 'Block vs Inline Elements',
-    summary: 'Block elements start on a new line and take full width; inline elements flow within text.',
-    body: `Block-level elements (div, p, h1-h6, ul, ol, section, article, etc.) start on a new line and, by default, stretch to fill their container's full width. They can contain block and inline elements.
+    id: 'browser-storage-options',
+    title: 'Browser Storage: Cookies, localStorage, sessionStorage, IndexedDB',
+    summary: 'Four storage mechanisms with different capacities, lifetimes, scope, and server accessibility.',
+    body: `Cookies: sent with every HTTP request (including to the server). 4KB limit. Configurable expiry, path, domain, Secure (HTTPS only), HttpOnly (JS can't read — prevents XSS theft), SameSite (prevents CSRF). Use for: session tokens (HttpOnly, Secure), user preferences shared with the server.
 
-Inline elements (span, a, strong, em, code, img, button, etc.) flow within surrounding text without breaking onto a new line. They only take up as much width as their content. You can't set explicit width/height on pure inline elements (use inline-block or flex/grid).
+localStorage: persistent across sessions (survives browser close). ~5MB. Synchronous API — blocks the main thread for large reads. Origin-scoped (protocol + domain + port). Use for: user preferences, persisted UI state.
 
-CSS display property overrides the default: display: block, inline, inline-block, flex, grid, none. HTML5 introduced a more nuanced "content model" (flow, phrasing, sectioning content) but the block/inline mental model remains useful for layout reasoning.`,
+sessionStorage: same API as localStorage but cleared when the tab closes. Session-scoped — not shared between tabs. Use for: multi-step wizard state, temporary draft data.
+
+IndexedDB: async, transactional, large storage (100MB+). Supports indexes, complex queries, structured data. Use for: offline data, large datasets, file storage. The foundation for libraries like Dexie.js and PouchDB.
+
+Cache API (Service Worker): stores Request/Response pairs. Use for: offline assets, network responses.`,
     diagram: {
       type: 'ascii',
-      content: `Block elements:
-┌─────────────────────────────────┐
-│ <div>  full width               │
-└─────────────────────────────────┘
-┌─────────────────────────────────┐
-│ <p>    full width               │
-└─────────────────────────────────┘
-
-Inline elements:
-Text <strong>bold</strong> more <a>link</a> text`,
+      content: `            Cookies     localStorage  sessionStorage  IndexedDB
+────────────────────────────────────────────────────────────────
+Capacity    ~4KB        ~5MB          ~5MB            100MB+
+Lifetime    Expiry set  Permanent     Tab session     Permanent
+Sent to srv Yes         No            No              No
+JS access   (if !HttpOnly) Yes        Yes             Yes (async)
+Scope       Domain      Origin        Tab+Origin      Origin
+API         document.cookie  setItem  setItem         IDBTransaction`,
     },
-    tags: ['block', 'inline', 'display', 'layout'],
+    tags: ['storage', 'cookies', 'localstorage', 'sessionstorage', 'indexeddb', 'security'],
     tier: 'core',
-    level: 'fresher',
+    level: 'experienced',
   },
   {
     id: 'seo-fundamentals',
@@ -154,6 +163,39 @@ WCAG 2.1 AA is the most commonly required conformance level in accessibility law
     level: 'experienced',
   },
   {
+    id: 'progressive-enhancement',
+    title: 'Progressive Enhancement vs Graceful Degradation',
+    summary: 'Two strategies for handling browser capability differences — one builds up from a baseline, the other builds down from a target.',
+    body: `Progressive enhancement starts with the most basic, universally supported implementation and layers enhancements on top for more capable environments. The baseline (semantic HTML) works everywhere. JavaScript behavior is an enhancement. Advanced CSS is an enhancement.
+
+Benefits: works without JS (SEO, slower networks, JS errors), inherently accessible, robust against browser inconsistencies.
+
+Graceful degradation takes the opposite approach: build the full experience first, then add fallbacks for less capable environments. Historically used when new browser APIs were being adopted widely.
+
+In practice: use semantic HTML as the foundation, ensure core content and actions work without CSS, use feature detection (CSS @supports, JavaScript feature checks) rather than browser detection, and add JavaScript as an enhancement.
+
+Modern example: a form submits via HTML action/method by default (works without JS). JavaScript enhances it with async submission and better error UX.`,
+    diagram: {
+      type: 'ascii',
+      content: `Progressive Enhancement:     Graceful Degradation:
+────────────────────────     ───────────────────────
+Start: semantic HTML         Start: full JS app
++ CSS layout & styling       + fallback for no CSS
++ CSS animations             + basic HTML fallback
++ JavaScript enhancements    + nothing for no JS
+
+Feature detection (correct approach):
+if ('IntersectionObserver' in window) {
+  // use intersection observer
+} else {
+  // simpler scroll listener fallback
+}`,
+    },
+    tags: ['progressive-enhancement', 'graceful-degradation', 'html', 'accessibility', 'seo'],
+    tier: 'core',
+    level: 'experienced',
+  },
+  {
     id: 'critical-rendering-path',
     title: 'Critical Rendering Path',
     summary: 'The browser\'s pipeline from bytes to pixels — understanding it is key to optimizing page load performance.',
@@ -188,67 +230,6 @@ Optimization targets: reduce critical resources (inline critical CSS), reduce cr
     },
     tags: ['critical-rendering-path', 'performance', 'dom', 'cssom', 'render-blocking'],
     tier: 'advanced',
-    level: 'experienced',
-  },
-  {
-    id: 'progressive-enhancement',
-    title: 'Progressive Enhancement vs Graceful Degradation',
-    summary: 'Two strategies for handling browser capability differences — one builds up from a baseline, the other builds down from a target.',
-    body: `Progressive enhancement starts with the most basic, universally supported implementation and layers enhancements on top for more capable environments. The baseline (semantic HTML) works everywhere. JavaScript behavior is an enhancement. Advanced CSS is an enhancement.
-
-Benefits: works without JS (SEO, slower networks, JS errors), inherently accessible, robust against browser inconsistencies.
-
-Graceful degradation takes the opposite approach: build the full experience first, then add fallbacks for less capable environments. Historically used when new browser APIs were being adopted widely.
-
-In practice: use semantic HTML as the foundation, ensure core content and actions work without CSS, use feature detection (CSS @supports, JavaScript feature checks) rather than browser detection, and add JavaScript as an enhancement.
-
-Modern example: a form submits via HTML action/method by default (works without JS). JavaScript enhances it with async submission and better error UX.`,
-    diagram: {
-      type: 'ascii',
-      content: `Progressive Enhancement:     Graceful Degradation:
-────────────────────────     ───────────────────────
-Start: semantic HTML         Start: full JS app
-+ CSS layout & styling       + fallback for no CSS
-+ CSS animations             + basic HTML fallback
-+ JavaScript enhancements    + nothing for no JS
-
-Feature detection (correct approach):
-if ('IntersectionObserver' in window) {
-  // use intersection observer
-} else {
-  // simpler scroll listener fallback
-}`,
-    },
-    tags: ['progressive-enhancement', 'graceful-degradation', 'html', 'accessibility', 'seo'],
-    tier: 'core',
-    level: 'experienced',
-  },
-  {
-    id: 'browser-storage-options',
-    title: 'Browser Storage: Cookies, localStorage, sessionStorage, IndexedDB',
-    summary: 'Four storage mechanisms with different capacities, lifetimes, scope, and server accessibility.',
-    body: `Cookies: sent with every HTTP request (including to the server). 4KB limit. Configurable expiry, path, domain, Secure (HTTPS only), HttpOnly (JS can't read — prevents XSS theft), SameSite (prevents CSRF). Use for: session tokens (HttpOnly, Secure), user preferences shared with the server.
-
-localStorage: persistent across sessions (survives browser close). ~5MB. Synchronous API — blocks the main thread for large reads. Origin-scoped (protocol + domain + port). Use for: user preferences, persisted UI state.
-
-sessionStorage: same API as localStorage but cleared when the tab closes. Session-scoped — not shared between tabs. Use for: multi-step wizard state, temporary draft data.
-
-IndexedDB: async, transactional, large storage (100MB+). Supports indexes, complex queries, structured data. Use for: offline data, large datasets, file storage. The foundation for libraries like Dexie.js and PouchDB.
-
-Cache API (Service Worker): stores Request/Response pairs. Use for: offline assets, network responses.`,
-    diagram: {
-      type: 'ascii',
-      content: `            Cookies     localStorage  sessionStorage  IndexedDB
-────────────────────────────────────────────────────────────────
-Capacity    ~4KB        ~5MB          ~5MB            100MB+
-Lifetime    Expiry set  Permanent     Tab session     Permanent
-Sent to srv Yes         No            No              No
-JS access   (if !HttpOnly) Yes        Yes             Yes (async)
-Scope       Domain      Origin        Tab+Origin      Origin
-API         document.cookie  setItem  setItem         IDBTransaction`,
-    },
-    tags: ['storage', 'cookies', 'localstorage', 'sessionstorage', 'indexeddb', 'security'],
-    tier: 'core',
     level: 'experienced',
   },
 ];
