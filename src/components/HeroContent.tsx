@@ -1,67 +1,69 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import useLoadingStore from '@/store/useLoadingStore';
 import styles from './HeroContent.module.scss';
 
+const EASE = 'easeOut' as const;
+
 export default function HeroContent() {
   const setLoading = useLoadingStore((s) => s.setLoading);
+  const prefersReduced = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { setMounted(true); }, []);
+
+  // Only animate on first paint; skip entirely if user prefers reduced motion
+  const shouldAnimate = mounted && !prefersReduced;
+
   return (
-    <div className={styles.content}>
+    <div className={styles.hero}>
       <motion.div
-        className={styles.badge}
-        initial={{ opacity: 0, y: -10 }}
+        className={styles.eyebrow}
+        initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.6, delay: 0, ease: EASE }}
       >
-        ✦ Frontend Interview Prep
+        A focused frontend interview library
       </motion.div>
 
       <motion.h1
         className={styles.title}
-        initial={{ opacity: 0, y: 30 }}
+        initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.15 }}
+        transition={{ duration: 0.6, delay: 0.1, ease: EASE }}
       >
-        Master the
-        <span className={styles.gradient}> Frontend</span>
-        <br />Interview
+        One place to revise<br />
+        everything before the<br />
+        <em>next interview.</em>
       </motion.h1>
 
       <motion.p
-        className={styles.tagline}
-        initial={{ opacity: 0, y: 20 }}
+        className={styles.lede}
+        initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.3 }}
+        transition={{ duration: 0.6, delay: 0.22, ease: EASE }}
       >
-        JavaScript · HTML · CSS · React — syntax, theory, versions,<br />
-        interactive playgrounds, and interview Q&amp;A.
+        JavaScript, HTML, CSS and React — distilled into syntax cards, theory, version
+        diffs, runnable playgrounds and 600+ interviewer-style Q&amp;A. Track what you
+        know, drill what you don&apos;t.
       </motion.p>
 
       <motion.div
-        className={styles.actions}
-        initial={{ opacity: 0, y: 20 }}
+        className={styles.ctaRow}
+        initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.45 }}
+        transition={{ duration: 0.6, delay: 0.32, ease: EASE }}
       >
-        <Link href="/hub" className={styles.ctaBtn} onClick={() => setLoading(true)}>
-          Start Studying →
+        <Link href="/hub" className={styles.btnPrimary} onClick={() => setLoading(true)}>
+          Start a study session <span className={styles.arr}>→</span>
         </Link>
-        <Link href="/javascript/syntax" className={styles.ghostBtn} onClick={() => setLoading(true)}>
-          Jump to JavaScript
+        <Link href="/drill" className={styles.btnGhost} onClick={() => setLoading(true)}>
+          Quick drill (10 min)
         </Link>
-      </motion.div>
-
-      <motion.div
-        className={styles.languagePills}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.65 }}
-      >
-        {['JavaScript', 'HTML', 'CSS', 'React'].map((lang) => (
-          <span key={lang} className={styles.pill}>{lang}</span>
-        ))}
       </motion.div>
     </div>
   );
