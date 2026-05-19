@@ -1,63 +1,78 @@
+// design_handoff_frontprep_redesign — drop-in tokens.scss
+// Replaces src/styles/_tokens.scss in the existing Next.js codebase.
+// Keep the existing CSS-variable surface so component SCSS modules don't break;
+// only the values change. New tokens are added at the bottom.
+
 :root {
-  // Background layers
-  --color-bg-deep: #20222b;
-  --color-bg-mid: #2a1535;
-  --color-bg-surface: #1e1a2e;
-  --color-bg-card: #231d33;
-  --color-bg-overlay: rgba(32, 34, 43, 0.85);
+  // ─── Surfaces (warm dark) ──────────────────────────────────────
+  --color-bg-deep:    #14110e;   // was #20222b
+  --color-bg-mid:     #1a1612;   // was #2a1535
+  --color-bg-surface: #221c17;   // was #1e1a2e
+  --color-bg-card:    #1a1612;   // was #231d33
+  --color-bg-overlay: rgba(20, 17, 14, 0.85);
 
-  // Primary (purple/magenta)
-  --color-primary: #e461fb;
-  --color-primary-dim: #b040c8;
-  --color-primary-glow: rgba(232, 128, 250, 0.2);
-  --color-primary-border: rgba(232, 128, 250, 0.3);
+  // ─── Accent (warm amber, replaces magenta) ─────────────────────
+  --color-primary:        #d4a04a;   // was #e461fb
+  --color-primary-dim:    #b07f2c;   // was #b040c8
+  --color-primary-glow:   rgba(212, 160, 74, 0.14);
+  --color-primary-border: rgba(212, 160, 74, 0.35);
 
-  // Text
-  --color-text: #fdfdfd;
-  --color-text-muted: #a090b0;
-  --color-text-dim: #6a5a7a;
+  // ─── Text ──────────────────────────────────────────────────────
+  --color-text:       #ece7dd;   // was #fdfdfd
+  --color-text-muted: #a39a8c;   // was #a090b0 (now AAA on bg-deep)
+  --color-text-dim:   #6f6759;   // was #6a5a7a
 
-  // Language accent colors
-  --color-js: #f7df1e;
-  --color-html: #e34c26;
-  --color-css: #264de4;
-  --color-react: #61dafb;
+  // ─── Language accent colors (kept; only used as dots/fills now) ─
+  --color-js:    #e8c547;   // softened from #f7df1e
+  --color-html:  #d97757;   // softened from #e34c26
+  --color-css:   #6f93d6;   // softened from #264de4
+  --color-react: #6fc3d6;   // softened from #61dafb
 
-  // Difficulty / level colors (fresher → experienced → expert)
-  --color-junior: #4ade80;
-  --color-mid: #facc15;
-  --color-senior: #f87171;
-  --color-fresher: #4ade80;
-  --color-experienced: #facc15;
-  --color-expert: #f87171;
+  // ─── Difficulty (kept) ─────────────────────────────────────────
+  --color-junior: #88b07a;
+  --color-mid:    #d4a04a;
+  --color-senior: #cf6f5f;
+  --color-fresher:     #88b07a;
+  --color-experienced: #d4a04a;
+  --color-expert:      #cf6f5f;
 
-  // Tier colors
-  --color-core: #34d399;
-  --color-core-bg: rgba(52, 211, 153, 0.12);
-  --color-core-border: rgba(52, 211, 153, 0.35);
-  --color-advanced: #fb923c;
-  --color-advanced-bg: rgba(251, 146, 60, 0.12);
-  --color-advanced-border: rgba(251, 146, 60, 0.35);
+  // ─── Tier (re-tuned to warm palette) ───────────────────────────
+  --color-core:         #88b07a;
+  --color-core-bg:      rgba(136, 176, 122, 0.12);
+  --color-core-border:  rgba(136, 176, 122, 0.35);
+  --color-advanced:        #d4a04a;
+  --color-advanced-bg:     rgba(212, 160, 74, 0.12);
+  --color-advanced-border: rgba(212, 160, 74, 0.35);
 
-  // Border / radius
-  --radius-xs: 3px;
-  --radius-sm: 5px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  // ─── Radius (kept) ─────────────────────────────────────────────
+  --radius-xs:   3px;
+  --radius-sm:   5px;
+  --radius-md:   8px;     // was 10px — calmer corners
+  --radius-lg:   14px;    // was 16px
+  --radius-xl:   20px;    // was 24px
   --radius-full: 9999px;
 
-  // Layout
-  --sidebar-width: 240px;
-  --topnav-height: 56px;
+  // ─── Layout (kept) ─────────────────────────────────────────────
+  --sidebar-width:  240px;
+  --topnav-height:  56px;
 
-  // Shadows
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 20px rgba(228, 97, 251, 0.25);
+  // ─── Shadows (kept; glow tinted to amber) ──────────────────────
+  --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md:   0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px rgba(212, 160, 74, 0.22);
 
-  // Transitions
+  // ─── Transitions (kept) ────────────────────────────────────────
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
   --transition-slow: 400ms ease;
+
+  // ─── NEW: editorial rules & dim tones ──────────────────────────
+  --line:        rgba(236, 231, 221, 0.09);
+  --line-strong: rgba(236, 231, 221, 0.16);
+
+  // ─── NEW: type stacks ──────────────────────────────────────────
+  // Load via app/layout.tsx using next/font/google.
+  --font-display: var(--font-instrument-serif), "Iowan Old Style", Georgia, serif;
+  --font-sans:    var(--font-plex-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:    var(--font-jetbrains-mono), "Fira Code", ui-monospace, monospace;
 }
