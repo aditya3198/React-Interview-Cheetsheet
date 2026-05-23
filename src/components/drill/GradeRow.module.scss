@@ -1,18 +1,18 @@
-.hint {
+﻿.hint {
   text-align: center;
   font-size: 13px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   padding: 8px 0;
 }
 .kbd {
   display: inline-block;
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 11px;
   background: rgba(236, 231, 221, 0.06);
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius-xs);
+  border-radius: var(--r-sm);
   padding: 1px 6px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   margin: 0 2px;
 }
 
@@ -23,9 +23,9 @@
   gap: 12px;
 }
 .label {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 11px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   letter-spacing: 0.06em;
   text-align: center;
 }
@@ -45,25 +45,25 @@
   justify-content: center;
   gap: 8px;
   padding: 13px 16px;
-  border-radius: var(--radius-md);
+  border-radius: var(--r);
   border: 1px solid var(--line);
   background: rgba(236, 231, 221, 0.03);
   cursor: pointer;
   font-size: 14px;
-  transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
 
   &:hover { transform: translateY(-1px); }
   &:active { transform: translateY(0); }
 }
 
 .key {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 10px;
   background: rgba(236, 231, 221, 0.06);
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius-xs);
+  border-radius: var(--r-sm);
   padding: 1px 6px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   flex-shrink: 0;
 }
 .btnLabel {
@@ -71,7 +71,7 @@
   letter-spacing: 0.01em;
 }
 .interval {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 10.5px;
   opacity: 0.65;
   margin-left: auto;
@@ -85,12 +85,12 @@
   &:hover { background: rgba(207, 111, 95, 0.1); border-color: rgba(207, 111, 95, 0.4); }
   .key { color: #cf6f5f; border-color: rgba(207, 111, 95, 0.35); background: rgba(207, 111, 95, 0.1); }
 }
-.almost {
-  color: var(--color-primary);
-  border-color: var(--color-primary-border);
+.ok {
+  color: var(--accent);
+  border-color: var(--accent-line);
   background: rgba(212, 160, 74, 0.05);
   &:hover { background: rgba(212, 160, 74, 0.1); border-color: rgba(212, 160, 74, 0.5); }
-  .key { color: var(--color-primary); border-color: var(--color-primary-border); background: rgba(212, 160, 74, 0.1); }
+  .key { color: var(--accent); border-color: var(--accent-line); background: rgba(212, 160, 74, 0.1); }
 }
 .got {
   color: #88b07a;

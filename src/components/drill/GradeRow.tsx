@@ -1,6 +1,8 @@
+'use client';
+
 import styles from './GradeRow.module.scss';
 
-type GradeValue = 'again' | 'almost' | 'got';
+type GradeValue = 'again' | 'ok' | 'got';
 
 interface Props {
   revealed: boolean;
@@ -31,12 +33,12 @@ export default function GradeRow({ revealed, onGrade }: Props) {
         </button>
 
         <button
-          className={`${styles.btn} ${styles.almost}`}
-          onClick={() => onGrade('almost')}
+          className={`${styles.btn} ${styles.ok}`}
+          onClick={() => onGrade('ok')}
           type="button"
         >
           <span className={styles.key}>2</span>
-          <span className={styles.btnLabel}>Almost</span>
+          <span className={styles.btnLabel}>Ok</span>
           <span className={styles.interval}>2 days</span>
         </button>
 

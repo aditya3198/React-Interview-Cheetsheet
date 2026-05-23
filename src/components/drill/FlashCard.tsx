@@ -1,24 +1,34 @@
+'use client';
+
 import type { QnaItem } from '@/types/content';
 import type { LanguageSlug } from '@/types/navigation';
+import CodeBlock from '@/components/shared/CodeBlock';
 import styles from './FlashCard.module.scss';
 
 interface Props {
-  item: QnaItem;
+  item: QnaItem & { lang: LanguageSlug; key: string };
   lang: LanguageSlug;
   langColor: string;
   revealed: boolean;
   onReveal: () => void;
 }
 
+const LANG_LABEL: Record<LanguageSlug, string> = {
+  javascript: 'JavaScript',
+  html: 'HTML',
+  css: 'CSS',
+  react: 'React',
+};
+
 export default function FlashCard({ item, lang, langColor, revealed, onReveal }: Props) {
   return (
     <div className={`${styles.card} ${revealed ? styles.revealed : ''}`}>
-      {/* Card meta row */}
+      {/* ── Meta row ── */}
       <div className={styles.meta}>
         <span className={styles.dot} style={{ background: langColor }} />
-        <span className={styles.langLabel}>{lang}</span>
+        <span className={styles.langLabel}>{LANG_LABEL[lang]}</span>
         <span className={styles.metaSep}>·</span>
-        <span className={styles.section}>qna</span>
+        <span className={styles.section}>Q&A</span>
         {item.tier && (
           <span className={styles.tier} data-tier={item.tier}>{item.tier}</span>
         )}
@@ -27,10 +37,10 @@ export default function FlashCard({ item, lang, langColor, revealed, onReveal }:
         )}
       </div>
 
-      {/* Question */}
+      {/* ── Question ── */}
       <h2 className={styles.question}>{item.question}</h2>
 
-      {/* Answer side */}
+      {/* ── Answer side ── */}
       {!revealed ? (
         <button className={styles.revealBtn} onClick={onReveal} type="button">
           Reveal answer
@@ -39,9 +49,23 @@ export default function FlashCard({ item, lang, langColor, revealed, onReveal }:
       ) : (
         <div className={styles.answer}>
           <div className={styles.divider} />
-          <p className={styles.answerText}>{item.answer}</p>
+          {item.answer.split('\n\n').map((para, i) => (
+            <p key={i} className={styles.answerText}>{para}</p>
+          ))}
           {item.codeExample && (
-            <pre className={styles.code}>{item.codeExample}</pre>
+            <div className={styles.codeWrap}>
+              <CodeBlock
+                code={item.codeExample}
+                language={item.codeLanguage ?? 'javascript'}
+              />
+            </div>
+          )}
+          {item.tags.length > 0 && (
+            <div className={styles.tags}>
+              {item.tags.map((tag) => (
+                <span key={tag} className={styles.tag}>{tag}</span>
+              ))}
+            </div>
           )}
         </div>
       )}
