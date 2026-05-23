@@ -1,78 +1,139 @@
-// design_handoff_frontprep_redesign — drop-in tokens.scss
-// Replaces src/styles/_tokens.scss in the existing Next.js codebase.
-// Keep the existing CSS-variable surface so component SCSS modules don't break;
-// only the values change. New tokens are added at the bottom.
+// Lantern design tokens — CSS custom properties
+// Light theme applied via [data-theme="light"] on <html>.
+// Dark is the default (matches prefers-color-scheme: dark and explicit data-theme="dark").
 
-:root {
-  // ─── Surfaces (warm dark) ──────────────────────────────────────
-  --color-bg-deep:    #14110e;   // was #20222b
-  --color-bg-mid:     #1a1612;   // was #2a1535
-  --color-bg-surface: #221c17;   // was #1e1a2e
-  --color-bg-card:    #1a1612;   // was #231d33
-  --color-bg-overlay: rgba(20, 17, 14, 0.85);
-
-  // ─── Accent (warm amber, replaces magenta) ─────────────────────
-  --color-primary:        #d4a04a;   // was #e461fb
-  --color-primary-dim:    #b07f2c;   // was #b040c8
-  --color-primary-glow:   rgba(212, 160, 74, 0.14);
-  --color-primary-border: rgba(212, 160, 74, 0.35);
-
-  // ─── Text ──────────────────────────────────────────────────────
-  --color-text:       #ece7dd;   // was #fdfdfd
-  --color-text-muted: #a39a8c;   // was #a090b0 (now AAA on bg-deep)
-  --color-text-dim:   #6f6759;   // was #6a5a7a
-
-  // ─── Language accent colors (kept; only used as dots/fills now) ─
-  --color-js:    #e8c547;   // softened from #f7df1e
-  --color-html:  #d97757;   // softened from #e34c26
-  --color-css:   #6f93d6;   // softened from #264de4
-  --color-react: #6fc3d6;   // softened from #61dafb
-
-  // ─── Difficulty (kept) ─────────────────────────────────────────
-  --color-junior: #88b07a;
-  --color-mid:    #d4a04a;
-  --color-senior: #cf6f5f;
-  --color-fresher:     #88b07a;
-  --color-experienced: #d4a04a;
-  --color-expert:      #cf6f5f;
-
-  // ─── Tier (re-tuned to warm palette) ───────────────────────────
-  --color-core:         #88b07a;
-  --color-core-bg:      rgba(136, 176, 122, 0.12);
-  --color-core-border:  rgba(136, 176, 122, 0.35);
-  --color-advanced:        #d4a04a;
-  --color-advanced-bg:     rgba(212, 160, 74, 0.12);
-  --color-advanced-border: rgba(212, 160, 74, 0.35);
-
-  // ─── Radius (kept) ─────────────────────────────────────────────
-  --radius-xs:   3px;
-  --radius-sm:   5px;
-  --radius-md:   8px;     // was 10px — calmer corners
-  --radius-lg:   14px;    // was 16px
-  --radius-xl:   20px;    // was 24px
-  --radius-full: 9999px;
-
-  // ─── Layout (kept) ─────────────────────────────────────────────
-  --sidebar-width:  240px;
-  --topnav-height:  56px;
-
-  // ─── Shadows (kept; glow tinted to amber) ──────────────────────
-  --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md:   0 4px 20px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 20px rgba(212, 160, 74, 0.22);
-
-  // ─── Transitions (kept) ────────────────────────────────────────
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 400ms ease;
-
-  // ─── NEW: editorial rules & dim tones ──────────────────────────
+:root,
+[data-theme="dark"] {
+  // ── Surfaces ──────────────────────────────────────────────
+  --bg:   #14110e;
+  --bg-1: #1a1612;
+  --bg-2: #221c17;
+  --bg-3: #2b241d;
   --line:        rgba(236, 231, 221, 0.09);
   --line-strong: rgba(236, 231, 221, 0.16);
 
-  // ─── NEW: type stacks ──────────────────────────────────────────
-  // Load via app/layout.tsx using next/font/google.
-  --font-display: var(--font-instrument-serif), "Iowan Old Style", Georgia, serif;
-  --font-sans:    var(--font-plex-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono:    var(--font-jetbrains-mono), "Fira Code", ui-monospace, monospace;
+  // ── Text ──────────────────────────────────────────────────
+  --fg:      #ece7dd;
+  --fg-mute: #a39a8c;
+  --fg-dim:  #6f6759;
+
+  // ── Accent (the flame) ────────────────────────────────────
+  --accent:      #d4a04a;
+  --accent-soft: rgba(212, 160, 74, 0.14);
+  --accent-line: rgba(212, 160, 74, 0.35);
+  --accent-ink:  #1a1305;
+
+  // ── Code blocks ───────────────────────────────────────────
+  --code-bg:  #0f0c09;
+  --code-fg:  #ece7dd;
+  --code-com: #6f6759;
+  --code-kw:  #cf6f5f;
+  --code-str: #88b07a;
+  --code-id:  #d4a04a;
+  --code-num: #c69aff;
+
+  // ── Shadow ────────────────────────────────────────────────
+  --shadow-card: 0 1px 0 rgba(236, 231, 221, 0.04) inset,
+                 0 12px 32px -16px rgba(0, 0, 0, 0.4);
+
+  // ── Language dot colours ──────────────────────────────────
+  --lang-js:    #e8c547;
+  --lang-html:  #d97757;
+  --lang-css:   #6f93d6;
+  --lang-react: #6fc3d6;
+
+  // ── Difficulty / level colours ────────────────────────────
+  --level-easy: #88b07a;
+  --level-med:  #d4a04a;
+  --level-hard: #cf6f5f;
+
+  // ── Tier badges (Core = green, Advanced = amber) ──────────
+  --tier-core:      #88b07a;
+  --tier-core-soft: rgba(136, 176, 122, 0.12);
+  --tier-core-line: rgba(136, 176, 122, 0.35);
+}
+
+[data-theme="light"] {
+  --bg:   #f3ede0;
+  --bg-1: #ebe5d6;
+  --bg-2: #e0d9c7;
+  --bg-3: #d6cebb;
+  --line:        rgba(28, 26, 22, 0.10);
+  --line-strong: rgba(28, 26, 22, 0.20);
+
+  --fg:      #1c1a16;
+  --fg-mute: #5d5648;
+  --fg-dim:  #8a8273;
+
+  --accent:      #b87a26;
+  --accent-soft: rgba(184, 122, 38, 0.14);
+  --accent-line: rgba(184, 122, 38, 0.40);
+  --accent-ink:  #fff7e6;
+
+  --code-bg:  #ece5d3;
+  --code-fg:  #1c1a16;
+  --code-com: #8a8273;
+  --code-kw:  #a8462f;
+  --code-str: #4f6c3f;
+  --code-id:  #946017;
+  --code-num: #6a4ec0;
+
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.6) inset,
+                 0 12px 32px -18px rgba(60, 40, 10, 0.18);
+
+  --lang-js:    #c69a16;
+  --lang-html:  #b8552f;
+  --lang-css:   #3a64bd;
+  --lang-react: #2d8aa5;
+
+  --level-easy: #5a8049;
+  --level-med:  #b87a26;
+  --level-hard: #a8462f;
+
+  --tier-core:      #5a8049;
+  --tier-core-soft: rgba(90, 128, 73, 0.12);
+  --tier-core-line: rgba(90, 128, 73, 0.35);
+}
+
+// ── Type, spacing, radii, motion ──────────────────────────────
+:root {
+  // Font stacks (variables injected by next/font via layout.tsx)
+  --display: var(--font-instrument-serif), "Iowan Old Style", Georgia, serif;
+  --sans:    var(--font-plex-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono:    var(--font-jetbrains-mono), "Fira Code", ui-monospace, monospace;
+
+  // Type scale
+  --t-hero:       clamp(48px, 7.5vw, 96px);
+  --t-h1:         56px;
+  --t-h2:         36px;
+  --t-h3:         22px;
+  --t-body:       16px;
+  --t-small:      13.5px;
+  --t-mono-label: 11px;
+
+  // Radii
+  --r-sm: 4px;
+  --r:    8px;
+  --r-lg: 14px;
+  --r-xl: 18px;
+
+  // Spacing scale (4-base)
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  // Motion
+  --ease:     cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 280ms;
+
+  // Layout
+  --topnav-height: 60px;
+  --sidebar-width: 240px;
 }
