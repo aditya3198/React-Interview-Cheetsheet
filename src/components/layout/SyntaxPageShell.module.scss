@@ -1,7 +1,8 @@
+// ─── 2-column shell (sidebar lives in [language]/layout) ─
 .container {
   display: flex;
-  gap: 0;
   align-items: flex-start;
+  min-height: calc(100vh - var(--topnav-height));
 }
 
 .content {
@@ -11,8 +12,6 @@
 }
 
 .aside {
-  width: 320px;
-  flex-shrink: 0;
   border-left: 1px solid var(--line);
   position: sticky;
   top: var(--topnav-height);
@@ -25,28 +24,54 @@
   }
 }
 
+// ─── Page heading ─────────────────────────────────────────
+.pageHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.pageTitle {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 40px;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--fg);
+  line-height: 1.1;
+}
+
+.pageSub {
+  color: var(--fg-mute);
+  font-size: 13.5px;
+  max-width: 50ch;
+  margin: 6px 0 0;
+}
+
 // ─── Pinned panel ─────────────────────────────────────────
 .panel { margin-bottom: 0; }
 
 .panelLabel {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   margin: 0 0 14px;
 }
 
 .emptyPins {
   border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-md);
+  border-radius: var(--r);
   padding: 18px;
   font-size: 12.5px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   text-align: center;
   line-height: 1.55;
 
-  b { color: var(--color-primary); }
+  b { color: var(--accent); }
 }
 
 .pinList {
@@ -56,9 +81,9 @@
 }
 
 .pinItem {
-  border: 1px solid var(--color-primary-border);
+  border: 1px solid var(--accent-line);
   background: rgba(212, 160, 74, 0.05);
-  border-radius: var(--radius-md);
+  border-radius: var(--r);
   padding: 12px 12px 10px;
 }
 
@@ -73,13 +98,13 @@
 .pinTitle {
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--fg);
   line-height: 1.3;
 }
 
 .pinRemove {
-  color: var(--color-text-dim);
-  font-family: var(--font-mono);
+  color: var(--fg-dim);
+  font-family: var(--mono);
   font-size: 14px;
   cursor: pointer;
   background: none;
@@ -87,19 +112,19 @@
   padding: 0 2px;
   line-height: 1;
   flex-shrink: 0;
-  transition: color var(--transition-fast);
+  transition: color var(--dur-fast) var(--ease);
 
-  &:hover { color: var(--color-text); }
+  &:hover { color: var(--fg); }
 }
 
 .pinCode {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 10.5px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   padding: 8px 10px;
-  background: var(--color-bg-deep);
+  background: var(--bg);
   border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
+  border-radius: var(--r-sm);
   overflow-x: auto;
   white-space: pre;
   margin: 0;

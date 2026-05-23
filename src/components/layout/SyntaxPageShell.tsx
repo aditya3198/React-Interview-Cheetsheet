@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import type { SyntaxEntry } from '@/types/content';
 import type { LanguageSlug } from '@/types/navigation';
+import { getLanguageMeta } from '@/data/navigation';
 import SyntaxSection from '@/components/sections/SyntaxSection';
 import TableOfContents from './TableOfContents';
 import { useProgressStore } from '@/store/useProgressStore';
@@ -14,19 +15,26 @@ interface SyntaxPageShellProps {
   section?: string;
 }
 
+const LANG_DESCS: Record<string, string> = {
+  javascript: 'declarations, control flow, async, and modern operators',
+  html:       'elements, attributes, semantics, and accessibility',
+  css:        'selectors, layout, animations, and custom properties',
+  react:      'hooks, components, state, and concurrent features',
+};
+
 export default function SyntaxPageShell({ entries, language, section = 'syntax' }: SyntaxPageShellProps) {
   const [filteredEntries, setFilteredEntries] = useState<SyntaxEntry[]>(entries);
   const pins = useProgressStore((s) => s.pins);
   const togglePin = useProgressStore((s) => s.togglePin);
+  const langMeta = getLanguageMeta(language);
 
   const cardKey = useCallback((id: string) => `${language}/${section}/${id}`, [language, section]);
 
-  // Pinned entries for this page
-  const pinnedEntries = useMemo(() => {
-    return entries.filter((e) => pins.includes(cardKey(e.id)));
-  }, [entries, pins, cardKey]);
+  const pinnedEntries = useMemo(
+    () => entries.filter((e) => pins.includes(cardKey(e.id))),
+    [entries, pins, cardKey]
+  );
 
-  // TOC items from filtered entries
   const tocItems = useMemo(
     () => filteredEntries.map((e) => ({ id: e.id, title: e.title })),
     [filteredEntries]
@@ -35,6 +43,14 @@ export default function SyntaxPageShell({ entries, language, section = 'syntax' 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
+        <div className={styles.pageHead}>
+          <h1 className={styles.pageTitle}>{langMeta?.label} syntax</h1>
+          <p className={styles.pageSub}>
+            {entries.length} cards covering {LANG_DESCS[language] ?? 'key concepts and patterns'}.
+            Pin anything to keep it visible in the side panel.
+          </p>
+        </div>
+
         <SyntaxSection
           entries={entries}
           language={language}
@@ -44,7 +60,6 @@ export default function SyntaxPageShell({ entries, language, section = 'syntax' 
       </div>
 
       <aside className={styles.aside}>
-        {/* Pinned list */}
         <div className={styles.panel}>
           <h4 className={styles.panelLabel}>Pinned ({pinnedEntries.length})</h4>
           {pinnedEntries.length === 0 ? (
@@ -66,14 +81,15 @@ export default function SyntaxPageShell({ entries, language, section = 'syntax' 
                       ×
                     </button>
                   </div>
-                  <pre className={styles.pinCode}>{e.code.slice(0, 120)}{e.code.length > 120 ? '…' : ''}</pre>
+                  <pre className={styles.pinCode}>
+                    {e.code.slice(0, 120)}{e.code.length > 120 ? '…' : ''}
+                  </pre>
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        {/* TOC */}
         {tocItems.length > 0 && (
           <div className={styles.toc}>
             <TableOfContents items={tocItems} />

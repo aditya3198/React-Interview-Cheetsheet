@@ -1,11 +1,11 @@
-.hint {
+﻿.hint {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
   padding: 1rem 0.5rem;
   text-align: center;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
 
   p {
     margin: 0;
@@ -35,7 +35,7 @@
 .title {
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--fg);
   margin: 0;
   line-height: 1.3;
 }
@@ -50,23 +50,23 @@
   font-size: 1rem;
   line-height: 1;
   background: transparent;
-  border: 1px solid var(--color-primary-border);
-  border-radius: var(--radius-sm);
-  color: var(--color-text-muted);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-sm);
+  color: var(--fg-mute);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--dur-fast) var(--ease);
   padding: 0;
 
   &:hover {
-    background: var(--color-primary-dim);
-    color: var(--color-text);
-    border-color: var(--color-primary);
+    background: var(--accent);
+    color: var(--fg);
+    border-color: var(--accent);
   }
 }
 
 .description {
   margin: 0;
   font-size: 0.75rem;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   line-height: 1.5;
 }
