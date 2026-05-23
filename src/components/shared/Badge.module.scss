@@ -1,8 +1,8 @@
-.badge {
+﻿.badge {
   display: inline-flex;
   align-items: center;
   padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-full);
+  border-radius: 9999px;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -16,9 +16,9 @@
 }
 
 .tag {
-  background: var(--color-primary-glow);
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary-border);
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent-line);
 }
 
 .breaking {
@@ -41,11 +41,11 @@
 }
 
 .tier_core {
-  color: var(--color-core);
+  color: var(--tier-core);
 }
 
 .tier_advanced {
-  color: var(--color-advanced);
+  color: var(--accent);
 }
 
 .level {
@@ -55,13 +55,13 @@
 }
 
 .level_fresher {
-  color: var(--color-fresher);
+  color: var(--level-easy);
 }
 
 .level_experienced {
-  color: var(--color-experienced);
+  color: var(--level-med);
 }
 
 .level_expert {
-  color: var(--color-expert);
+  color: var(--level-hard);
 }

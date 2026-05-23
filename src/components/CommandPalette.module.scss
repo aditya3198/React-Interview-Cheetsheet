@@ -1,4 +1,4 @@
-// The cmdk Dialog renders a portal; we need to style the overlay + panel globally
+﻿// The cmdk Dialog renders a portal; we need to style the overlay + panel globally
 // We use :global since these nodes are portaled outside the component tree.
 
 .dialog {
@@ -20,11 +20,11 @@
   transform: translateX(-50%);
   z-index: 201;
   width: min(640px, calc(100vw - 32px));
-  background: var(--color-bg-mid);
+  background: var(--bg-1);
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius-lg);
+  border-radius: var(--r-lg);
   overflow: hidden;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-card);
   animation: slideDown 150ms ease;
 }
 
@@ -48,12 +48,12 @@
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--line);
-  color: var(--color-text);
-  font-family: var(--font-sans);
+  color: var(--fg);
+  font-family: var(--sans);
   font-size: 15px;
   outline: none;
 
-  &::placeholder { color: var(--color-text-dim); }
+  &::placeholder { color: var(--fg-dim); }
 }
 
 .list {
@@ -65,18 +65,18 @@
 .empty {
   padding: 24px 20px;
   font-size: 13.5px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   text-align: center;
 }
 
 .group {
   // cmdk applies [cmdk-group-heading]
   & [cmdk-group-heading] {
-    font-family: var(--font-mono);
+    font-family: var(--mono);
     font-size: 10.5px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-text-dim);
+    color: var(--fg-dim);
     padding: 8px 20px 4px;
   }
 }
@@ -87,13 +87,13 @@
   gap: 10px;
   padding: 8px 20px;
   font-size: 13.5px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
 
   &[aria-selected='true'] {
-    background: var(--color-bg-surface);
-    color: var(--color-text);
+    background: var(--bg-2);
+    color: var(--fg);
   }
 }
 
@@ -108,7 +108,7 @@
   width: 14px;
   text-align: center;
   flex-shrink: 0;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   font-size: 12px;
 }
 
@@ -118,24 +118,24 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 .itemSec {
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   font-weight: 400;
   margin-left: 4px;
 }
 
 .itemDesc {
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   font-size: 12px;
 }
 
 .itemMeta {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 10.5px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -145,17 +145,17 @@
   gap: 16px;
   padding: 10px 20px;
   border-top: 1px solid var(--line);
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 11px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
 
   kbd {
     display: inline-block;
     background: rgba(236, 231, 221, 0.06);
     border: 1px solid var(--line);
-    border-radius: var(--radius-xs);
+    border-radius: var(--r-sm);
     padding: 1px 5px;
-    color: var(--color-text-muted);
+    color: var(--fg-mute);
     margin-right: 4px;
   }
 }

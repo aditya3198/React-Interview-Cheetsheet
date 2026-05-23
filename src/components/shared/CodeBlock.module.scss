@@ -1,7 +1,8 @@
 .wrapper {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-primary-border);
+  border-radius: var(--r);
+  border: 1px solid var(--line-strong);
   overflow: hidden;
+  background: var(--code-bg);
 }
 
 .borderless {
@@ -9,44 +10,107 @@
   border-radius: 0;
 }
 
+// ─── Header bar ──────────────────────────────────────────
 .header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: rgba(30, 26, 46, 0.9);
-  border-bottom: 1px solid var(--color-primary-border);
+  gap: 8px;
+  padding: 7px 14px;
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--line);
 }
 
 .filename {
-  font-size: 0.78rem;
-  color: var(--color-text-muted);
-  font-family: 'Fira Code', monospace;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--fg-mute);
   flex: 1;
 }
 
 .lang {
-  font-size: 0.72rem;
-  color: var(--color-text-dim);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--fg-dim);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-left: auto;
+  letter-spacing: 0.08em;
 }
 
 .copyBtn {
-  padding: 0.2rem 0.65rem;
-  font-size: 0.75rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-primary-border);
+  margin-left: auto;
+  padding: 2px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
   background: transparent;
-  color: var(--color-text-muted);
+  color: var(--fg-dim);
   cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition: background var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
   white-space: nowrap;
-  margin-left: 0.5rem;
 
   &:hover {
-    background: var(--color-primary-glow);
-    color: var(--color-primary);
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent-line);
   }
+}
+
+// ─── Code area ───────────────────────────────────────────
+.pre {
+  margin: 0;
+  padding: 14px 18px;
+  background: var(--code-bg);
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--code-fg);
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+}
+
+.line {
+  display: block;
+  min-height: 1.7em;
+}
+
+// ─── Output annotation line ───────────────────────────────
+// Full-width subtle tint for the // ▸ lines
+.lineOut {
+  background: rgba(212, 160, 74, 0.04);
+  margin: 0 -18px;
+  padding: 0 18px;
+}
+
+// ─── Syntax tokens ────────────────────────────────────────
+.keyword { color: var(--code-kw); }
+.string  { color: var(--code-str); }
+.comment { color: var(--code-com); }
+.number  { color: var(--code-num); }
+.plain   { color: var(--code-fg); }
+
+// ─── Output annotation parts ─────────────────────────────
+.outGlyph {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.outValue {
+  color: var(--fg-mute);
+}
+
+// ─── Optional line numbers ────────────────────────────────
+.lineNum {
+  display: inline-block;
+  width: 2.5ch;
+  margin-right: 16px;
+  color: var(--fg-dim);
+  user-select: none;
+  text-align: right;
+  font-size: 12px;
 }

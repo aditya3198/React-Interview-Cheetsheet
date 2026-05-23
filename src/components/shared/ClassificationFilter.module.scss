@@ -1,13 +1,13 @@
-@use '@/styles/mixins' as *;
+﻿@use '@/styles/mixins' as *;
 
 .wrapper {
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: 12px 16px;
-  background: var(--color-bg-card);
+  background: var(--bg-1);
   border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: var(--radius-md);
+  border-radius: var(--r);
   margin-bottom: 20px;
 }
 
@@ -28,7 +28,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   min-width: 68px;
   flex-shrink: 0;
 }
@@ -44,55 +44,55 @@
   align-items: center;
   gap: 5px;
   padding: 4px 12px;
-  border-radius: var(--radius-full);
+  border-radius: 9999px;
   font-size: 12px;
   font-weight: 500;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: transparent;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all var(--dur-fast) var(--ease);
 
   &:hover {
     border-color: rgba(255, 255, 255, 0.2);
-    color: var(--color-text);
+    color: var(--fg);
   }
 }
 
 .pillActive {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.25);
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 // Tier pills
 .pill_core {
   &.pillActive {
-    background: var(--color-core-bg);
-    border-color: var(--color-core-border);
-    color: var(--color-core);
+    background: var(--tier-core-soft);
+    border-color: var(--tier-core-line);
+    color: var(--tier-core);
   }
   &:not(.pillActive):hover {
-    border-color: var(--color-core-border);
-    color: var(--color-core);
+    border-color: var(--tier-core-line);
+    color: var(--tier-core);
   }
   .tierDot {
-    background: var(--color-core);
+    background: var(--tier-core);
   }
 }
 
 .pill_advanced {
   &.pillActive {
-    background: var(--color-advanced-bg);
-    border-color: var(--color-advanced-border);
-    color: var(--color-advanced);
+    background: var(--accent-soft);
+    border-color: var(--accent-line);
+    color: var(--accent);
   }
   &:not(.pillActive):hover {
-    border-color: var(--color-advanced-border);
-    color: var(--color-advanced);
+    border-color: var(--accent-line);
+    color: var(--accent);
   }
   .tierDot {
-    background: var(--color-advanced);
+    background: var(--accent);
   }
 }
 
@@ -101,7 +101,7 @@
   &.pillActive {
     background: rgba(74, 222, 128, 0.1);
     border-color: rgba(74, 222, 128, 0.35);
-    color: var(--color-fresher);
+    color: var(--level-easy);
   }
 }
 
@@ -109,7 +109,7 @@
   &.pillActive {
     background: rgba(250, 204, 21, 0.1);
     border-color: rgba(250, 204, 21, 0.35);
-    color: var(--color-experienced);
+    color: var(--level-med);
   }
 }
 
@@ -117,7 +117,7 @@
   &.pillActive {
     background: rgba(248, 113, 113, 0.1);
     border-color: rgba(248, 113, 113, 0.35);
-    color: var(--color-expert);
+    color: var(--level-hard);
   }
 }
 
