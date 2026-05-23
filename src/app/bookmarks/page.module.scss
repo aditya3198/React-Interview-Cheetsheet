@@ -1,4 +1,4 @@
-.page {
+﻿.page {
   padding-top: var(--topnav-height);
   min-height: 100vh;
 }
@@ -10,9 +10,9 @@
 }
 
 .crumbs {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 11.5px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   letter-spacing: 0.06em;
   margin-bottom: 12px;
   display: flex;
@@ -20,24 +20,24 @@
   gap: 6px;
 }
 .crumbLink {
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   text-decoration: none;
-  &:hover { color: var(--color-text-muted); }
+  &:hover { color: var(--fg-mute); }
 }
-.sep { color: var(--color-text-dim); }
+.sep { color: var(--fg-dim); }
 
 .h1 {
-  font-family: var(--font-display);
+  font-family: var(--display);
   font-weight: 400;
   font-size: 56px;
   letter-spacing: -0.02em;
   margin: 0 0 14px;
   line-height: 1;
-  color: var(--color-text);
+  color: var(--fg);
 }
 
 .lede {
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   font-size: 15px;
   margin: 0 0 40px;
   line-height: 1.5;
@@ -45,19 +45,19 @@
 
 .kbd {
   display: inline-block;
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 11px;
   background: rgba(236, 231, 221, 0.06);
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius-xs);
+  border-radius: var(--r-sm);
   padding: 1px 6px;
-  color: var(--color-primary);
+  color: var(--accent);
 }
 
 // ─── Empty state ──────────────────────────────────────────
 .empty {
   border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-lg);
+  border-radius: var(--r-lg);
   padding: 48px 32px;
   text-align: center;
   display: flex;
@@ -65,12 +65,12 @@
   gap: 10px;
   align-items: center;
 
-  p { color: var(--color-text-muted); font-size: 15px; margin: 0; }
+  p { color: var(--fg-mute); font-size: 15px; margin: 0; }
 }
 .startLink {
   margin-top: 8px;
   font-size: 14px;
-  color: var(--color-primary);
+  color: var(--accent);
   text-decoration: none;
   &:hover { text-decoration: underline; }
 }
@@ -99,18 +99,18 @@
   flex-shrink: 0;
 }
 .groupTitle {
-  font-family: var(--font-display);
+  font-family: var(--display);
   font-size: 24px;
   font-weight: 400;
   letter-spacing: -0.01em;
-  color: var(--color-text);
+  color: var(--fg);
   margin: 0;
   line-height: 1;
 }
 .groupCount {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 11px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   background: rgba(236, 231, 221, 0.06);
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -130,14 +130,14 @@
 }
 
 .card {
-  border: 1px solid var(--color-primary-border);
+  border: 1px solid var(--accent-line);
   background: rgba(212, 160, 74, 0.04);
-  border-radius: var(--radius-lg);
+  border-radius: var(--r-lg);
   padding: 16px 18px 14px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition: background var(--transition-fast);
+  transition: background var(--dur-fast) var(--ease);
 
   &:hover { background: rgba(212, 160, 74, 0.08); }
 }
@@ -150,17 +150,17 @@
 .cardTitle {
   font-size: 14px;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--fg);
   text-decoration: none;
   flex: 1;
   line-height: 1.3;
 
-  &:hover { color: var(--color-primary); }
+  &:hover { color: var(--accent); }
 }
 .sectionTag {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 10px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   border: 1px solid var(--line);
   padding: 1px 5px;
   border-radius: 999px;
@@ -170,8 +170,8 @@
   margin-top: 2px;
 }
 .removeBtn {
-  color: var(--color-text-dim);
-  font-family: var(--font-mono);
+  color: var(--fg-dim);
+  font-family: var(--mono);
   font-size: 15px;
   cursor: pointer;
   background: none;
@@ -179,26 +179,26 @@
   padding: 0 2px;
   line-height: 1;
   flex-shrink: 0;
-  transition: color var(--transition-fast);
+  transition: color var(--dur-fast) var(--ease);
 
-  &:hover { color: var(--color-text); }
+  &:hover { color: var(--fg); }
 }
 
 .cardDesc {
   font-size: 12.5px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   line-height: 1.5;
   margin: 0;
 }
 
 .cardCode {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 11px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   padding: 8px 10px;
-  background: var(--color-bg-deep);
+  background: var(--bg);
   border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
+  border-radius: var(--r-sm);
   overflow-x: auto;
   white-space: pre;
   margin: 0;

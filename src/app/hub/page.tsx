@@ -68,11 +68,11 @@ const GRAND_TOTAL = Object.values(LANG_COUNTS).reduce((s, c) => s + c.total, 0);
 export default function HubPage() {
   const setLoading = useLoadingStore((s) => s.setLoading);
   const cards = useProgressStore((s) => s.cards);
-  const reviewCards = useProgressStore((s) => s.reviewCards);
-  const lastSeenByLang = useProgressStore((s) => s.lastSeenByLang);
+  const weakCards = useProgressStore((s) => s.weakCards);
+  const lastSeen = useProgressStore((s) => s.lastSeen);
 
   // Overall progress
-  const totalSeen = Object.values(cards).filter((c) => c.status !== 'unseen').length;
+  const totalSeen = Object.values(cards).filter((c) => c.lastGrade !== null).length;
   const overallPct = GRAND_TOTAL > 0 ? Math.round((totalSeen / GRAND_TOTAL) * 100) : 0;
   const circumference = 2 * Math.PI * 48; // r=48 → 301.6
   const dashOffset = circumference * (1 - overallPct / 100);
@@ -81,18 +81,18 @@ export default function HubPage() {
   function langProgress(lang: LanguageSlug) {
     const total = LANG_COUNTS[lang].total;
     const seen = Object.keys(cards).filter(
-      (k) => k.startsWith(`${lang}/`) && cards[k].status !== 'unseen'
+      (k) => k.startsWith(`${lang}/`) && cards[k].lastGrade !== null
     ).length;
     const pct = total > 0 ? Math.round((seen / total) * 100) : 0;
     return { seen, total, pct };
   }
 
-  const reviewCount = reviewCards().length;
+  const reviewCount = weakCards().length;
 
   return (
     <main className={styles.wrap}>
       <div className={styles.crumbs}>
-        <Link href="/" className={styles.crumbLink}>frontprep</Link>
+        <Link href="/" className={styles.crumbLink}>lantern</Link>
         <span className={styles.crumbSep}>/</span>
         <span>hub</span>
       </div>
@@ -112,7 +112,7 @@ export default function HubPage() {
               <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(236,231,221,0.08)" strokeWidth="10" />
               <circle
                 cx="60" cy="60" r="48" fill="none"
-                stroke="var(--color-primary)" strokeWidth="10"
+                stroke="var(--accent)" strokeWidth="10"
                 strokeDasharray={circumference.toFixed(1)}
                 strokeDashoffset={dashOffset.toFixed(1)}
                 strokeLinecap="round"
@@ -152,7 +152,7 @@ export default function HubPage() {
           const slug = lang.slug as LanguageSlug;
           const { seen, total, pct } = langProgress(slug);
           const counts = LANG_COUNTS[slug];
-          const lastKey = lastSeenByLang[slug];
+          const lastKey = lastSeen[slug];
           const lastTitle = lastKey ? resolveTitle(lastKey) : null;
           const hasProgress = seen > 0;
 

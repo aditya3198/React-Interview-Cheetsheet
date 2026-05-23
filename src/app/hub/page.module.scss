@@ -1,4 +1,4 @@
-.wrap {
+﻿.wrap {
   max-width: 1100px;
   margin: 0 auto;
   padding: calc(var(--topnav-height) + 56px) 28px 80px;
@@ -6,9 +6,9 @@
 
 // ─── Breadcrumb ──────────────────────────────────────────
 .crumbs {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 11.5px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   letter-spacing: 0.06em;
   margin-bottom: 12px;
   display: flex;
@@ -16,25 +16,25 @@
   gap: 6px;
 }
 .crumbLink {
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   text-decoration: none;
-  transition: color var(--transition-fast);
-  &:hover { color: var(--color-text-muted); }
+  transition: color var(--dur-fast) var(--ease);
+  &:hover { color: var(--fg-mute); }
 }
-.crumbSep { color: var(--color-text-dim); }
+.crumbSep { color: var(--fg-dim); }
 
 // ─── Header ──────────────────────────────────────────────
 .h1 {
-  font-family: var(--font-display);
+  font-family: var(--display);
   font-weight: 400;
   font-size: 56px;
   letter-spacing: -0.02em;
   margin: 0 0 14px;
   line-height: 1;
-  color: var(--color-text);
+  color: var(--fg);
 }
 .lede {
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   font-size: 16px;
   max-width: 60ch;
   margin: 0 0 40px;
@@ -44,10 +44,10 @@
 // ─── Progress overview ───────────────────────────────────
 .progress {
   border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  border-radius: var(--r-lg);
   padding: 24px;
   margin-bottom: 40px;
-  background: var(--color-bg-card);
+  background: var(--bg-1);
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 32px;
@@ -57,11 +57,11 @@
   }
 }
 .overviewLabel {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   margin-bottom: 16px;
 }
 .donut {
@@ -77,20 +77,20 @@
   gap: 4px;
 }
 .pct {
-  font-family: var(--font-display);
+  font-family: var(--display);
   font-size: 48px;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--color-text);
+  color: var(--fg);
 
   small {
     font-size: 18px;
-    color: var(--color-text-muted);
+    color: var(--fg-mute);
   }
 }
 .cap {
   font-size: 13px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   max-width: 22ch;
   line-height: 1.45;
 }
@@ -112,7 +112,7 @@
   border-radius: 999px;
   display: inline-block;
 }
-.rowName { font-weight: 500; color: var(--color-text); }
+.rowName { font-weight: 500; color: var(--fg); }
 .rowTrack {
   height: 6px;
   background: rgba(236, 231, 221, 0.06);
@@ -123,12 +123,12 @@
   display: block;
   height: 100%;
   border-radius: 999px;
-  transition: width var(--transition-base);
+  transition: width var(--dur-base) var(--ease);
 }
 .rowNum {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 12px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   text-align: right;
 }
 
@@ -144,17 +144,17 @@
 }
 .card {
   border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--color-bg-card);
+  border-radius: var(--r-lg);
+  background: var(--bg-1);
   padding: 26px;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
 
   &:hover {
     border-color: var(--line-strong);
-    background: var(--color-bg-surface);
+    background: var(--bg-2);
     transform: translateY(-1px);
   }
 }
@@ -175,25 +175,25 @@
   flex-shrink: 0;
 }
 .cardName {
-  font-family: var(--font-display);
+  font-family: var(--display);
   font-size: 30px;
   letter-spacing: -0.01em;
-  color: var(--color-text);
+  color: var(--fg);
   line-height: 1;
 }
 .pctBadge {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 11px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   border: 1px solid var(--line-strong);
   padding: 3px 7px;
   border-radius: 999px;
   white-space: nowrap;
 
-  b { color: var(--color-text); font-weight: 600; }
+  b { color: var(--fg); font-weight: 600; }
 }
 .cardDesc {
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   font-size: 13.5px;
   line-height: 1.55;
   margin: 0;
@@ -208,30 +208,30 @@
 }
 .sect {
   border: 1px solid var(--line);
-  border-radius: var(--radius-md);
+  border-radius: var(--r);
   padding: 10px 10px 12px;
   display: flex;
   flex-direction: column;
   gap: 6px;
   background: rgba(0, 0, 0, 0.18);
   text-decoration: none;
-  transition: border-color var(--transition-fast);
+  transition: border-color var(--dur-fast) var(--ease);
 
-  &:hover { border-color: var(--color-primary-border); }
+  &:hover { border-color: var(--accent-line); }
 }
 .sectTitle {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 10.5px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 .sectCount {
-  font-family: var(--font-display);
+  font-family: var(--display);
   font-size: 22px;
   line-height: 1;
   letter-spacing: -0.01em;
-  color: var(--color-text);
+  color: var(--fg);
 }
 .micro {
   height: 3px;
@@ -243,7 +243,7 @@
     display: block;
     height: 100%;
     width: 0%;
-    background: var(--color-primary);
+    background: var(--accent);
     border-radius: 999px;
   }
 }
@@ -256,18 +256,18 @@
   gap: 12px;
 }
 .resume {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 11.5px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  b { color: var(--color-text); font-weight: 500; }
+  b { color: var(--fg); font-weight: 500; }
 }
 .cta {
-  color: var(--color-primary);
+  color: var(--accent);
   font-size: 13.5px;
   font-weight: 500;
   white-space: nowrap;
@@ -279,30 +279,30 @@
 .quick {
   margin-top: 48px;
   border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-lg);
+  border-radius: var(--r-lg);
   padding: 22px 26px;
   display: flex;
   align-items: center;
   gap: 22px;
   text-decoration: none;
-  transition: border-color var(--transition-fast), background var(--transition-fast);
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
 
   &:hover {
-    border-color: var(--color-primary-border);
-    background: var(--color-primary-glow);
+    border-color: var(--accent-line);
+    background: var(--accent-soft);
   }
 }
 .quickIcon {
   width: 40px;
   height: 40px;
   border-radius: 999px;
-  background: var(--color-primary-glow);
+  background: var(--accent-soft);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
+  font-family: var(--display);
   font-style: italic;
-  color: var(--color-primary);
+  color: var(--accent);
   font-size: 22px;
   flex-shrink: 0;
 }
@@ -311,22 +311,22 @@
   margin: 0 0 4px;
   font-size: 15px;
   font-weight: 500;
-  font-family: var(--font-sans);
-  color: var(--color-text);
+  font-family: var(--sans);
+  color: var(--fg);
 }
 .quickP {
   margin: 0;
   font-size: 13px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   line-height: 1.5;
 }
 .quickGo {
   font-size: 13px;
-  color: var(--color-primary);
-  font-family: var(--font-sans);
+  color: var(--accent);
+  font-family: var(--sans);
   padding: 9px 14px;
-  border: 1px solid var(--color-primary-border);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r);
   white-space: nowrap;
   flex-shrink: 0;
 }

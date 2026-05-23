@@ -30,7 +30,7 @@ export default async function TheoryPage({
   return (
     <>
       <Breadcrumbs />
-      <TheorySection cards={cards} />
+      <TheorySection cards={cards} language={language as LanguageSlug} />
     </>
   );
 }
