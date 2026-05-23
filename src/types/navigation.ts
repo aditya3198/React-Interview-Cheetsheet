@@ -1,4 +1,4 @@
-export type LanguageSlug = 'javascript' | 'html' | 'css' | 'react';
+export type LanguageSlug = 'javascript' | 'html' | 'css' | 'react' | 'typescript';
 export type SectionSlug = 'syntax' | 'theory' | 'versions' | 'playground' | 'qna';
 
 export interface LanguageMeta {

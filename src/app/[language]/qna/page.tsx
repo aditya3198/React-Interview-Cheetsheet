@@ -3,6 +3,7 @@ import jsQna from '@/data/javascript/qna';
 import htmlQna from '@/data/html/qna';
 import cssQna from '@/data/css/qna';
 import reactQna from '@/data/react/qna';
+import tsQna from '@/data/typescript/qna';
 import type { LanguageSlug } from '@/types/navigation';
 import type { QnaItem } from '@/types/content';
 import QnaSection from '@/components/sections/QnaSection';
@@ -13,6 +14,7 @@ const dataMap: Record<LanguageSlug, QnaItem[]> = {
   html: htmlQna,
   css: cssQna,
   react: reactQna,
+  typescript: tsQna,
 };
 
 export function generateStaticParams() {

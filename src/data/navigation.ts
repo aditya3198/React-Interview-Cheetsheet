@@ -25,6 +25,12 @@ export const LANGUAGES: LanguageMeta[] = [
     color: '#6fc3d6',
     description: 'Hooks, reconciliation, concurrent features and React 19.',
   },
+  {
+    slug: 'typescript',
+    label: 'TypeScript',
+    color: '#3178c6',
+    description: 'Static typing, generics, utility types, and type-level programming.',
+  },
 ];
 
 export const SECTIONS: SectionMeta[] = [
@@ -35,7 +41,7 @@ export const SECTIONS: SectionMeta[] = [
   { slug: 'qna',        label: 'Q & A',        icon: '?' },
 ];
 
-export const LANGUAGE_SLUGS: LanguageSlug[] = ['javascript', 'html', 'css', 'react'];
+export const LANGUAGE_SLUGS: LanguageSlug[] = ['javascript', 'html', 'css', 'react', 'typescript'];
 
 export function getLanguageMeta(slug: string): LanguageMeta | undefined {
   return LANGUAGES.find((l) => l.slug === slug);

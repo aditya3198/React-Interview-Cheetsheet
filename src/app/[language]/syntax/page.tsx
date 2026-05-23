@@ -3,6 +3,7 @@ import jsSyntax from '@/data/javascript/syntax';
 import htmlSyntax from '@/data/html/syntax';
 import cssSyntax from '@/data/css/syntax';
 import reactSyntax from '@/data/react/syntax';
+import tsSyntax from '@/data/typescript/syntax';
 import type { LanguageSlug } from '@/types/navigation';
 import type { SyntaxEntry } from '@/types/content';
 import SyntaxPageShell from '@/components/layout/SyntaxPageShell';
@@ -13,6 +14,7 @@ const dataMap: Record<LanguageSlug, SyntaxEntry[]> = {
   html: htmlSyntax,
   css: cssSyntax,
   react: reactSyntax,
+  typescript: tsSyntax,
 };
 
 export function generateStaticParams() {

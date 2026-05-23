@@ -17,6 +17,7 @@ import jsQna from '@/data/javascript/qna';
 import htmlQna from '@/data/html/qna';
 import cssQna from '@/data/css/qna';
 import reactQna from '@/data/react/qna';
+import tsQna from '@/data/typescript/qna';
 
 // ── Data ──────────────────────────────────────────────────
 
@@ -25,15 +26,17 @@ const QNA_BY_LANG: Record<LanguageSlug, QnaItem[]> = {
   html: htmlQna,
   css: cssQna,
   react: reactQna,
+  typescript: tsQna,
 };
 
-const ALL_LANGS: LanguageSlug[] = ['javascript', 'html', 'css', 'react'];
+const ALL_LANGS: LanguageSlug[] = ['javascript', 'html', 'css', 'react', 'typescript'];
 
 const LANG_DISPLAY: Record<LanguageSlug, string> = {
   javascript: 'JavaScript',
   html: 'HTML',
   css: 'CSS',
   react: 'React',
+  typescript: 'TypeScript',
 };
 
 // ── Types ─────────────────────────────────────────────────

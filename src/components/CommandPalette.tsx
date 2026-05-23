@@ -22,6 +22,9 @@ import cssQna from '@/data/css/qna';
 import reactSyntax from '@/data/react/syntax';
 import reactTheory from '@/data/react/theory';
 import reactQna from '@/data/react/qna';
+import tsSyntax from '@/data/typescript/syntax';
+import tsTheory from '@/data/typescript/theory';
+import tsQna from '@/data/typescript/qna';
 
 type ContentItem = {
   id: string;
@@ -67,12 +70,16 @@ indexSection(cssQna,      'css',        'qna');
 indexSection(reactSyntax, 'react',      'syntax');
 indexSection(reactTheory, 'react',      'theory');
 indexSection(reactQna,    'react',      'qna');
+indexSection(tsSyntax,    'typescript', 'syntax');
+indexSection(tsTheory,    'typescript', 'theory');
+indexSection(tsQna,       'typescript', 'qna');
 
 const LANG_COLOR: Record<LanguageSlug, string> = {
   javascript: 'var(--color-js)',
   html: 'var(--color-html)',
   css: 'var(--color-css)',
   react: 'var(--color-react)',
+  typescript: '#3178c6',
 };
 
 export default function CommandPalette() {

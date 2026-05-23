@@ -3,6 +3,7 @@ import jsTheory from '@/data/javascript/theory';
 import htmlTheory from '@/data/html/theory';
 import cssTheory from '@/data/css/theory';
 import reactTheory from '@/data/react/theory';
+import tsTheory from '@/data/typescript/theory';
 import type { LanguageSlug } from '@/types/navigation';
 import type { ConceptCard } from '@/types/content';
 import TheorySection from '@/components/sections/TheorySection';
@@ -13,6 +14,7 @@ const dataMap: Record<LanguageSlug, ConceptCard[]> = {
   html: htmlTheory,
   css: cssTheory,
   react: reactTheory,
+  typescript: tsTheory,
 };
 
 export function generateStaticParams() {

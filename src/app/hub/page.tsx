@@ -25,6 +25,10 @@ import reactSyntax from '@/data/react/syntax';
 import reactTheory from '@/data/react/theory';
 import reactVersions from '@/data/react/versions';
 import reactQna from '@/data/react/qna';
+import tsSyntax from '@/data/typescript/syntax';
+import tsTheory from '@/data/typescript/theory';
+import tsVersions from '@/data/typescript/versions';
+import tsQna from '@/data/typescript/qna';
 
 import styles from './page.module.scss';
 
@@ -35,6 +39,7 @@ const LANG_COUNTS: Record<LanguageSlug, LangCounts> = {
   html:       { syntax: htmlSyntax.length, theory: htmlTheory.length, versions: htmlVersions.length, playground: htmlPlayground.length, qna: htmlQna.length, total: htmlSyntax.length + htmlTheory.length + htmlVersions.length + htmlPlayground.length + htmlQna.length },
   css:        { syntax: cssSyntax.length, theory: cssTheory.length, versions: cssVersions.length, playground: cssPlayground.length, qna: cssQna.length, total: cssSyntax.length + cssTheory.length + cssVersions.length + cssPlayground.length + cssQna.length },
   react:      { syntax: reactSyntax.length, theory: reactTheory.length, versions: reactVersions.length, playground: 0, qna: reactQna.length, total: reactSyntax.length + reactTheory.length + reactVersions.length + reactQna.length },
+  typescript: { syntax: tsSyntax.length, theory: tsTheory.length, versions: tsVersions.length, playground: 0, qna: tsQna.length, total: tsSyntax.length + tsTheory.length + tsVersions.length + tsQna.length },
 };
 
 // All data for resolving card keys → titles
@@ -51,6 +56,9 @@ const ALL_DATA: Record<string, { id: string; title?: string; question?: string }
   'react/syntax': reactSyntax,
   'react/theory': reactTheory,
   'react/qna': reactQna,
+  'typescript/syntax': tsSyntax,
+  'typescript/theory': tsTheory,
+  'typescript/qna': tsQna,
 };
 
 function resolveTitle(key: string): string {

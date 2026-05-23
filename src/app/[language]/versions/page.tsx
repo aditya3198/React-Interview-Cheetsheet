@@ -3,6 +3,7 @@ import jsVersions from '@/data/javascript/versions';
 import htmlVersions from '@/data/html/versions';
 import cssVersions from '@/data/css/versions';
 import reactVersions from '@/data/react/versions';
+import tsVersions from '@/data/typescript/versions';
 import type { LanguageSlug } from '@/types/navigation';
 import type { VersionEntry } from '@/types/content';
 import VersionsSection from '@/components/sections/VersionsSection';
@@ -13,6 +14,7 @@ const dataMap: Record<LanguageSlug, VersionEntry[]> = {
   html: htmlVersions,
   css: cssVersions,
   react: reactVersions,
+  typescript: tsVersions,
 };
 
 export function generateStaticParams() {

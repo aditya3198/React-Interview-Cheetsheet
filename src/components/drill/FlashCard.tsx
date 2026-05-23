@@ -18,6 +18,7 @@ const LANG_LABEL: Record<LanguageSlug, string> = {
   html: 'HTML',
   css: 'CSS',
   react: 'React',
+  typescript: 'TypeScript',
 };
 
 export default function FlashCard({ item, lang, langColor, revealed, onReveal }: Props) {
