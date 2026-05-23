@@ -1,0 +1,128 @@
+// ============================================================
+// Lantern — design tokens (SCSS / CSS-variables)
+// Drop this into your token pipeline or import directly.
+// Light theme is applied with [data-theme="light"] on <html>.
+// ============================================================
+
+:root,
+[data-theme="dark"] {
+  // ---- Surfaces (warm dark) ----
+  --bg:        #14110e;  // page ground
+  --bg-1:      #1a1612;  // raised card
+  --bg-2:      #221c17;  // elevated chip / inner surfaces
+  --bg-3:      #2b241d;  // hover/active surface
+  --line:        rgba(236, 231, 221, 0.09);  // hairlines
+  --line-strong: rgba(236, 231, 221, 0.16);  // borders / dividers
+
+  // ---- Text ----
+  --fg:        #ece7dd;  // primary text
+  --fg-mute:   #a39a8c;  // secondary text
+  --fg-dim:    #6f6759;  // tertiary / labels
+
+  // ---- Accent (the "flame") ----
+  --accent:        #d4a04a;
+  --accent-soft:   rgba(212, 160, 74, 0.14);
+  --accent-line:   rgba(212, 160, 74, 0.35);
+  --accent-ink:    #1a1305;  // ink colour ON accent (buttons)
+
+  // ---- Code blocks ----
+  --code-bg:   #0f0c09;
+  --code-line: rgba(236, 231, 221, 0.08);
+  --code-fg:   #ece7dd;
+  --code-com:  #6f6759;  // comments
+  --code-kw:   #cf6f5f;  // keywords
+  --code-str:  #88b07a;  // strings
+  --code-id:   #d4a04a;  // identifiers / built-ins
+  --code-num:  #c69aff;  // numbers
+
+  --shadow-card: 0 1px 0 rgba(236,231,221,0.04) inset, 0 12px 32px -16px rgba(0,0,0,0.4);
+}
+
+[data-theme="light"] {
+  --bg:        #f3ede0;  // paper
+  --bg-1:      #ebe5d6;
+  --bg-2:      #e0d9c7;
+  --bg-3:      #d6cebb;
+  --line:        rgba(28, 26, 22, 0.10);
+  --line-strong: rgba(28, 26, 22, 0.20);
+
+  --fg:        #1c1a16;
+  --fg-mute:   #5d5648;
+  --fg-dim:    #8a8273;
+
+  --accent:        #b87a26;  // darkened for AA on cream
+  --accent-soft:   rgba(184, 122, 38, 0.14);
+  --accent-line:   rgba(184, 122, 38, 0.40);
+  --accent-ink:    #fff7e6;
+
+  --code-bg:   #ece5d3;
+  --code-line: rgba(28, 26, 22, 0.10);
+  --code-fg:   #1c1a16;
+  --code-com:  #8a8273;
+  --code-kw:   #a8462f;
+  --code-str:  #4f6c3f;
+  --code-id:   #946017;
+  --code-num:  #6a4ec0;
+
+  --shadow-card: 0 1px 0 rgba(255,255,255,0.6) inset, 0 12px 32px -18px rgba(60,40,10,0.18);
+}
+
+// ---- Language dot colours (used as small data, never as backgrounds) ----
+:root, [data-theme="dark"] {
+  --lang-js:     #e8c547;
+  --lang-html:   #d97757;
+  --lang-css:    #6f93d6;
+  --lang-react:  #6fc3d6;
+
+  --level-easy: #88b07a;  // fresher
+  --level-med:  #d4a04a;  // experienced
+  --level-hard: #cf6f5f;  // expert
+}
+[data-theme="light"] {
+  --lang-js:     #c69a16;
+  --lang-html:   #b8552f;
+  --lang-css:    #3a64bd;
+  --lang-react:  #2d8aa5;
+
+  --level-easy: #5a8049;
+  --level-med:  #b87a26;
+  --level-hard: #a8462f;
+}
+
+// ---- Type scale ----
+:root {
+  --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --sans:    "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono:    "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+
+  // Display sizes (paired with line-height/letter-spacing)
+  --t-hero:   clamp(48px, 7.5vw, 96px);  // home h1
+  --t-h1:     56px;
+  --t-h2:     36px;
+  --t-h3:     22px;
+  --t-body:   16px;
+  --t-small:  13.5px;
+  --t-mono-label: 11px;   // mono uppercase eyebrows
+}
+
+// ---- Radii / spacing / motion ----
+:root {
+  --r-sm: 4px;
+  --r:    8px;
+  --r-lg: 14px;
+  --r-xl: 18px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --ease:        cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --dur-fast:    120ms;
+  --dur-base:    200ms;
+  --dur-slow:    280ms;
+}

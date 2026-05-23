@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<title>Lantern — adaptive favicon</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../prototypes/_shared.css">
+<script src="../prototypes/_theme.js" defer></script>
+<style>
+  body { padding: 56px 40px 80px; }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 1100px; margin: 0 auto 56px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 22px;
+  }
+  .head { max-width: 1100px; margin: 0 auto 40px; }
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); display: inline-flex; gap: 12px; align-items: center; margin-bottom: 22px; }
+  .kicker::before { content: ""; width: 24px; height: 1px; background: var(--accent); }
+  h1 { font-family: var(--display); font-weight: 400; font-size: 56px; letter-spacing: -0.02em; line-height: 1; margin: 0 0 16px; }
+  h1 em { color: var(--accent); font-style: italic; }
+  .lede { color: var(--fg-mute); font-size: 16px; line-height: 1.55; max-width: 62ch; margin: 0; }
+  .lede code { font-family: var(--mono); font-size: 13px; background: var(--bg-2); padding: 1px 6px; border-radius: 3px; color: var(--fg); }
+
+  .grid { max-width: 1100px; margin: 40px auto 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .pane { border-radius: 14px; padding: 28px; border: 1px solid; }
+  .pane.dark  { background: #1a1612; border-color: rgba(236,231,221,0.10); color: #ece7dd; }
+  .pane.light { background: #f3ede0; border-color: rgba(28,26,22,0.10); color: #1c1a16; }
+
+  .pane h3 { font-family: var(--display); font-weight: 400; font-size: 22px; letter-spacing: -0.01em; margin: 0 0 4px; }
+  .pane .tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 22px; }
+  .pane.dark .tag  { color: #6f6759; }
+  .pane.light .tag { color: #8a8273; }
+
+  .sizes { display: flex; align-items: flex-end; gap: 28px; padding: 28px; border-radius: 10px; margin-bottom: 18px; }
+  .pane.dark .sizes  { background: rgba(0,0,0,0.18); border: 1px dashed rgba(236,231,221,0.16); }
+  .pane.light .sizes { background: rgba(28,26,22,0.04); border: 1px dashed rgba(28,26,22,0.18); }
+  .sizes .row { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; }
+  .pane.dark .lbl  { color: #6f6759; }
+  .pane.light .lbl { color: #8a8273; }
+
+  .tabstrip { display: flex; gap: 2px; align-items: flex-end; padding-top: 18px; }
+  .tab { display: inline-flex; align-items: center; gap: 8px; padding: 8px 22px 8px 12px; border-radius: 8px 8px 0 0; font-size: 12.5px; max-width: 220px; min-width: 0; border-bottom: 0; }
+  .pane.dark .tab { background: #2a241d; color: #a39a8c; border: 1px solid rgba(236,231,221,0.09); }
+  .pane.dark .tab.active { background: #1a1612; color: #ece7dd; }
+  .pane.light .tab { background: #d9d2c1; color: #5d5648; border: 1px solid rgba(28,26,22,0.10); }
+  .pane.light .tab.active { background: #f3ede0; color: #1c1a16; }
+  .tab .ttl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tab .x { opacity: 0.5; margin-left: 4px; flex-shrink: 0; }
+
+  .desc { font-size: 13.5px; line-height: 1.55; margin: 18px 0 0; }
+  .pane.dark .desc  { color: #a39a8c; }
+  .pane.light .desc { color: #5d5648; }
+  .desc b { font-weight: 600; }
+  .pane.dark .desc b  { color: #ece7dd; }
+  .pane.light .desc b { color: #1c1a16; }
+
+  .notes { max-width: 1100px; margin: 56px auto 0; border-top: 1px solid var(--line); padding-top: 36px; display: grid; grid-template-columns: 200px 1fr; gap: 40px; }
+  .notes h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+  .notes p { color: var(--fg-mute); font-size: 14px; line-height: 1.65; margin: 0 0 12px; max-width: 65ch; }
+  .notes code { font-family: var(--mono); font-size: 12px; color: var(--fg); background: var(--bg-2); padding: 1px 5px; border-radius: 3px; }
+
+  .palette { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .swatch { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; font-family: var(--mono); font-size: 10.5px; color: var(--fg-mute); letter-spacing: 0.06em; }
+  .swatch .sq { width: 56px; height: 56px; border-radius: 8px; border: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="../prototypes/home.html" class="lantern-mark">
+    <span class="flame"></span>
+    <span>lantern</span>
+  </a>
+  <div data-theme-toggle></div>
+</div>
+
+<div class="head">
+  <div class="kicker">Brand · favicon · adaptive</div>
+  <h1>One SVG.<br/>Carries the <em>flame</em> in both modes.</h1>
+  <p class="lede">The favicon ships <code>prefers-color-scheme</code> media queries inside the file itself — no second asset, no <code>&lt;link&gt;</code> shuffling. The amber dot stays constant; the paper and the ink flip.</p>
+</div>
+
+<div class="grid">
+
+  <div class="pane dark">
+    <h3>Dark OS</h3>
+    <div class="tag">prefers-color-scheme: dark</div>
+    <div class="sizes">
+      <div class="row"><svg width="16" height="16" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#14110e"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="'Instrument Serif',Georgia,serif" font-style="italic" font-size="48" fill="#ece7dd" letter-spacing="-2">l</text></svg><span class="lbl">16</span></div>
+      <div class="row"><svg width="32" height="32" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#14110e"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="'Instrument Serif',Georgia,serif" font-style="italic" font-size="48" fill="#ece7dd" letter-spacing="-2">l</text></svg><span class="lbl">32</span></div>
+      <div class="row"><svg width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#14110e"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="'Instrument Serif',Georgia,serif" font-style="italic" font-size="48" fill="#ece7dd" letter-spacing="-2">l</text></svg><span class="lbl">32 @2x</span></div>
+      <div class="row"><svg width="128" height="128" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#14110e"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="'Instrument Serif',Georgia,serif" font-style="italic" font-size="48" fill="#ece7dd" letter-spacing="-2">l</text></svg><span class="lbl">128</span></div>
+    </div>
+    <div class="tabstrip">
+      <div class="tab"><svg width="14" height="14" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#14110e"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="Instrument Serif,Georgia,serif" font-style="italic" font-size="48" fill="#ece7dd" letter-spacing="-2">l</text></svg><span class="ttl">github.com</span><span class="x">×</span></div>
+      <div class="tab active"><svg width="14" height="14" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#14110e"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="Instrument Serif,Georgia,serif" font-style="italic" font-size="48" fill="#ece7dd" letter-spacing="-2">l</text></svg><span class="ttl">lantern — Hub</span><span class="x">×</span></div>
+      <div class="tab"><svg width="14" height="14" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#14110e"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="Instrument Serif,Georgia,serif" font-style="italic" font-size="48" fill="#ece7dd" letter-spacing="-2">l</text></svg><span class="ttl">mdn web docs</span><span class="x">×</span></div>
+    </div>
+    <p class="desc">Warm-dark ground with a cream italic "l" and an amber dot for the flame. <b>Mirrors the in-app navbar mark</b> exactly.</p>
+  </div>
+
+  <div class="pane light">
+    <h3>Light OS</h3>
+    <div class="tag">prefers-color-scheme: light</div>
+    <div class="sizes">
+      <div class="row"><svg width="16" height="16" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#f3ede0"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="'Instrument Serif',Georgia,serif" font-style="italic" font-size="48" fill="#14110e" letter-spacing="-2">l</text></svg><span class="lbl">16</span></div>
+      <div class="row"><svg width="32" height="32" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#f3ede0"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="'Instrument Serif',Georgia,serif" font-style="italic" font-size="48" fill="#14110e" letter-spacing="-2">l</text></svg><span class="lbl">32</span></div>
+      <div class="row"><svg width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#f3ede0"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="'Instrument Serif',Georgia,serif" font-style="italic" font-size="48" fill="#14110e" letter-spacing="-2">l</text></svg><span class="lbl">32 @2x</span></div>
+      <div class="row"><svg width="128" height="128" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#f3ede0"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="'Instrument Serif',Georgia,serif" font-style="italic" font-size="48" fill="#14110e" letter-spacing="-2">l</text></svg><span class="lbl">128</span></div>
+    </div>
+    <div class="tabstrip">
+      <div class="tab"><svg width="14" height="14" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#f3ede0"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="Instrument Serif,Georgia,serif" font-style="italic" font-size="48" fill="#14110e" letter-spacing="-2">l</text></svg><span class="ttl">github.com</span><span class="x">×</span></div>
+      <div class="tab active"><svg width="14" height="14" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#f3ede0"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="Instrument Serif,Georgia,serif" font-style="italic" font-size="48" fill="#14110e" letter-spacing="-2">l</text></svg><span class="ttl">lantern — Hub</span><span class="x">×</span></div>
+      <div class="tab"><svg width="14" height="14" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#f3ede0"/><circle cx="16" cy="20" r="4.5" fill="#d4a04a"/><text x="34" y="48" text-anchor="middle" font-family="Instrument Serif,Georgia,serif" font-style="italic" font-size="48" fill="#14110e" letter-spacing="-2">l</text></svg><span class="ttl">mdn web docs</span><span class="x">×</span></div>
+    </div>
+    <p class="desc">Cream paper with a dark italic "l" and the same amber dot. <b>Stays legible on any light tab strip</b>.</p>
+  </div>
+
+</div>
+
+<div class="notes">
+  <h4>The name</h4>
+  <div>
+    <p><b style="color:var(--fg)">Lantern</b> — the warm-dark UI, lit by a single amber accent, was already a lantern in everything but name. It's the light you keep on while you study at night.</p>
+    <p>The shipped file is <code>favicons/favicon.svg</code>. The previews above force each scheme so you can compare side-by-side. The flame dot, italic "l", and warm cream/ink are the same three tokens used everywhere else in the product.</p>
+    <div class="palette">
+      <div class="swatch"><span class="sq" style="background:#14110e"></span>#14110e ink</div>
+      <div class="swatch"><span class="sq" style="background:#f3ede0"></span>#f3ede0 paper</div>
+      <div class="swatch"><span class="sq" style="background:#d4a04a"></span>#d4a04a flame</div>
+      <div class="swatch"><span class="sq" style="background:#ece7dd"></span>#ece7dd cream</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lantern — Design Review</title>
+<link rel="icon" type="image/svg+xml" href="favicons/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f1ece1;
+    --paper-2: #ebe5d6;
+    --ink: #1c1a16;
+    --ink-2: #3e3a32;
+    --ink-mute: #6a6457;
+    --rule: rgba(28,26,22,0.14);
+    --rule-soft: rgba(28,26,22,0.07);
+    --accent: #9b5a2c;
+    --good: #4f6c3f;
+    --bad: #a8462f;
+
+    --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-feature-settings: "ss01";
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  a { color: inherit; }
+  ::selection { background: rgba(155,90,44,0.25); }
+
+  /* ===== Top strip ===== */
+  .strip {
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 36px;
+    display: flex; align-items: center; gap: 28px;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .strip .brand { color: var(--ink); }
+  .strip .brand b { font-weight: 600; }
+  .strip .meta { margin-left: auto; display: flex; gap: 22px; }
+
+  /* ===== Hero ===== */
+  .hero {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 100px 36px 64px;
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 60px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero .kicker {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--accent);
+    display: inline-flex; gap: 14px; align-items: center;
+    margin-bottom: 28px;
+  }
+  .hero .kicker::before { content: ""; width: 28px; height: 1px; background: var(--accent); }
+  .hero h1 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(60px, 9vw, 124px);
+    line-height: 0.94;
+    letter-spacing: -0.025em;
+    margin: 0 0 28px;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero .deck {
+    font-size: 19px;
+    line-height: 1.5;
+    max-width: 52ch;
+    color: var(--ink-2);
+    margin: 0;
+  }
+  .hero aside {
+    border-left: 1px solid var(--rule);
+    padding-left: 28px;
+    align-self: end;
+    display: flex; flex-direction: column; gap: 22px;
+  }
+  .factrow { display: flex; flex-direction: column; gap: 6px; }
+  .factrow .lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); }
+  .factrow .val { font-family: var(--display); font-size: 22px; line-height: 1.15; color: var(--ink); }
+
+  /* ===== Section ===== */
+  .section { max-width: 1180px; margin: 0 auto; padding: 80px 36px; border-bottom: 1px solid var(--rule);}
+  .section.no-rule { border-bottom: none; }
+  .sec-head {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 60px;
+    margin-bottom: 48px;
+  }
+  .sec-no {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--accent);
+  }
+  .sec-no .num { color: var(--ink); display: block; font-family: var(--display); font-size: 64px; line-height: 1; margin-top: 6px; letter-spacing: -0.01em; }
+  .sec-head h2 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin: 0 0 20px;
+    max-width: 22ch;
+  }
+  .sec-head p { font-size: 17px; color: var(--ink-2); max-width: 60ch; margin: 0; line-height: 1.55; }
+
+  /* Body text */
+  .prose { max-width: 720px; margin: 0 auto 0 280px; font-size: 16.5px; color: var(--ink-2); line-height: 1.7; }
+  .prose p { margin: 0 0 20px; }
+  .prose p:first-child::first-letter { font-family: var(--display); font-size: 64px; line-height: 0.85; float: left; margin: 6px 10px 0 -2px; color: var(--accent); }
+  .prose b { color: var(--ink); font-weight: 600; }
+  .prose code { font-family: var(--mono); font-size: 0.85em; background: rgba(28,26,22,0.06); padding: 1px 5px; border-radius: 3px; }
+
+  /* ===== Snapshot grid (current site recreations) ===== */
+  .snapshot-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .snap-card {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .snap-card .label {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--rule);
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute);
+  }
+  .snap-card .label .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--bad); }
+  .snap-card .body { padding: 0; aspect-ratio: 16/10; position: relative; overflow: hidden; }
+
+  /* Recreate the current frontprep hero */
+  .curr-hero {
+    width: 100%; height: 100%;
+    background:
+      radial-gradient(60% 50% at 50% 35%, rgba(228,97,251,0.20), transparent 70%),
+      linear-gradient(180deg, #20222b 0%, #2a1535 100%);
+    color: #fdfdfd;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 18px;
+    position: relative;
+  }
+  .curr-hero .topnav {
+    position: absolute; top: 0; left: 0; right: 0; height: 30px;
+    border-bottom: 1px solid rgba(232,128,250,0.3);
+    display: flex; align-items: center; padding: 0 14px;
+    font-size: 10px;
+  }
+  .curr-hero .topnav .logo { display: flex; gap: 4px; font-weight: 700; }
+  .curr-hero .topnav .logo .icn { color: #e461fb;}
+  .curr-hero .topnav .links { margin-left: auto; display:flex; gap: 8px; color: #a090b0; font-size: 9px;}
+  .curr-hero .topnav .links .a { color: #e461fb; background: rgba(232,128,250,0.2); padding: 1px 5px; border-radius: 3px;}
+  .curr-hero .badge {
+    display: inline-flex; gap: 4px; align-items: center;
+    padding: 2px 8px; border-radius: 999px;
+    border: 1px solid rgba(232,128,250,0.3);
+    background: rgba(232,128,250,0.2);
+    color: #e461fb;
+    font-size: 8.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .curr-hero .ttl {
+    font-size: 32px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+  .curr-hero .ttl .grad {
+    background: linear-gradient(135deg, #e461fb, #b040c8 50%, #7c3aed);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .curr-hero .tag { font-size: 10px; color: #a090b0; line-height: 1.4; margin-bottom: 12px; max-width: 60%; }
+  .curr-hero .ctas { display: flex; gap: 6px; }
+  .curr-hero .b1 { background: #e461fb; color: #111; padding: 5px 10px; border-radius: 6px; font-size: 9px; font-weight: 700; }
+  .curr-hero .b2 { border: 1px solid rgba(232,128,250,0.3); padding: 5px 10px; border-radius: 6px; color: #a090b0; font-size: 9px; font-weight: 600; }
+  .curr-hero .pills { display:flex; gap: 4px; margin-top: 14px; }
+  .curr-hero .pills span { padding: 1.5px 6px; border-radius: 999px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); font-size: 8px; color: #cdc2d8;}
+
+  /* Recreate current hub */
+  .curr-hub {
+    width: 100%; height: 100%;
+    background: #20222b;
+    color: #fdfdfd;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: 22px 18px;
+    position: relative;
+  }
+  .curr-hub .topnav {
+    position: absolute; top: 0; left: 0; right: 0; height: 26px;
+    background: rgba(32,34,43,0.85); border-bottom: 1px solid rgba(232,128,250,0.3);
+    display: flex; align-items: center; padding: 0 12px;
+    font-size: 9px;
+  }
+  .curr-hub h3 {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #e461fb, #b040c8);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-align: center; margin: 16px 0 4px;
+  }
+  .curr-hub .sub { font-size: 9px; color: #a090b0; text-align: center; margin: 0 auto 16px; max-width: 70%; line-height: 1.4; }
+  .curr-hub .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px;}
+  .curr-hub .card { background: #231d33; border-radius: 8px; overflow: hidden;}
+  .curr-hub .card .bar { height: 3px; }
+  .curr-hub .card .bd { padding: 9px 11px; }
+  .curr-hub .card h4 { font-size: 11px; margin: 0 0 4px; }
+  .curr-hub .card p { font-size: 8.5px; color: #a090b0; line-height: 1.4; margin: 0 0 6px; }
+  .curr-hub .card .cta { font-size: 8.5px; color: #e461fb; font-weight: 600; }
+
+  /* Annotation markers */
+  .annot {
+    margin-top: 12px;
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 14px 18px;
+    background: var(--paper);
+    border-top: 1px solid var(--rule);
+  }
+  .annot .a {
+    display: grid; grid-template-columns: 22px 1fr;
+    gap: 10px; font-size: 13px; color: var(--ink-2); line-height: 1.45;
+  }
+  .annot .a .num { font-family: var(--mono); font-size: 10.5px; color: var(--accent); padding-top: 2px; font-weight: 600;}
+  .annot .a b { color: var(--ink); font-weight: 600; }
+
+  /* ===== Finding block ===== */
+  .findings { display: flex; flex-direction: column; gap: 70px; }
+  .finding {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 60px;
+  }
+  .finding .left { position: sticky; top: 24px; align-self: start; }
+  .finding .left .idx {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase;
+  }
+  .finding .left h3 {
+    font-family: var(--display); font-weight: 400;
+    font-size: 32px; line-height: 1.05; letter-spacing: -0.015em;
+    margin: 8px 0 12px;
+  }
+  .finding .left .tag {
+    display: inline-block;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 999px;
+    background: rgba(155,90,44,0.12); color: var(--accent);
+  }
+  .finding .left .tag.high { background: rgba(168,70,47,0.12); color: var(--bad); }
+  .finding .left .tag.med  { background: rgba(155,90,44,0.12); color: var(--accent); }
+  .finding .left .tag.low  { background: rgba(79,108,63,0.12); color: var(--good); }
+
+  .finding .right p { font-size: 16px; line-height: 1.65; color: var(--ink-2); margin: 0 0 16px; max-width: 60ch;}
+  .finding .right p b { color: var(--ink); }
+
+  .compare {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 18px;
+  }
+  .compare > div { border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; background: var(--paper-2); }
+  .compare > div .h {
+    padding: 10px 14px;
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-mute);
+    border-bottom: 1px solid var(--rule);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .compare .x .h .dot { width: 7px; height: 7px; border-radius: 999px; background: var(--bad); }
+  .compare .y .h .dot { width: 7px; height: 7px; border-radius: 999px; background: var(--good); }
+  .compare .x .h { color: var(--bad); }
+  .compare .y .h { color: var(--good); }
+  .compare .body { padding: 16px; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+  .compare .body ul { margin: 0; padding-left: 18px; }
+  .compare .body li { margin-bottom: 6px; }
+
+  /* ===== Prototype embed ===== */
+  .proto {
+    margin-top: 32px;
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    overflow: hidden;
+    background: #14110e;
+  }
+  .proto .chrome {
+    padding: 12px 14px;
+    background: #1a1612;
+    border-bottom: 1px solid rgba(236,231,221,0.08);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .proto .chrome .dots { display: flex; gap: 6px; }
+  .proto .chrome .dots span { width: 11px; height: 11px; border-radius: 999px; background: rgba(236,231,221,0.16); }
+  .proto .chrome .url {
+    flex: 1; max-width: 420px; margin: 0 auto;
+    background: rgba(236,231,221,0.06);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-family: var(--mono); font-size: 11px;
+    color: rgba(236,231,221,0.6);
+    text-align: center;
+  }
+  .proto .chrome .open {
+    font-family: var(--mono); font-size: 10.5px;
+    color: rgba(236,231,221,0.6);
+    padding: 4px 10px; border: 1px solid rgba(236,231,221,0.18);
+    border-radius: 4px;
+    text-decoration: none;
+  }
+  .proto .chrome .open:hover { color: #d4a04a; border-color: rgba(212,160,74,0.4); }
+  .proto iframe {
+    display: block;
+    width: 100%;
+    height: 720px;
+    border: 0;
+    background: #14110e;
+  }
+
+  /* ===== Roadmap / priorities ===== */
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 20px;
+  }
+  .week {
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 22px;
+    background: var(--paper-2);
+  }
+  .week .when {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 10px;
+  }
+  .week h4 { font-family: var(--display); font-weight: 400; font-size: 24px; letter-spacing: -0.01em; margin: 0 0 14px;}
+  .week ul { margin: 0; padding-left: 20px; font-size: 14px; color: var(--ink-2); line-height: 1.55; }
+  .week ul li { margin-bottom: 6px; }
+  .week ul li b { color: var(--ink); font-weight: 600;}
+
+  /* ===== Footer ===== */
+  .end {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 80px 36px 100px;
+    text-align: center;
+  }
+  .end .seal {
+    width: 64px; height: 64px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    margin: 0 auto 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); font-style: italic; font-size: 26px; color: var(--accent);
+  }
+  .end p { font-family: var(--display); font-style: italic; font-size: 22px; line-height: 1.4; color: var(--ink-2); max-width: 50ch; margin: 0 auto 18px;}
+  .end .sig { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); }
+
+  /* Inline table of contents */
+  .toc-block {
+    margin-top: 28px;
+    padding: 20px 22px;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    background: var(--paper-2);
+    display: grid;
+    grid-template-columns: 24px 1fr 70px;
+    gap: 4px 18px;
+    font-size: 14.5px;
+  }
+  .toc-block .n { font-family: var(--mono); font-size: 11px; color: var(--accent); padding-top: 3px;}
+  .toc-block .ttl { color: var(--ink); }
+  .toc-block .pri { font-family: var(--mono); font-size: 10.5px; color: var(--ink-mute); padding-top: 3px; text-align: right;}
+  .toc-block a { text-decoration: none; display: contents;}
+  .toc-block a:hover .ttl { color: var(--accent); }
+
+  /* Small */
+  @media (max-width: 900px) {
+    .hero, .sec-head, .finding { grid-template-columns: 1fr; gap: 24px; }
+    .snapshot-grid, .compare, .roadmap { grid-template-columns: 1fr; }
+    .prose { margin-left: 0; }
+    .finding .left { position: static; }
+    .proto iframe { height: 560px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Top strip ===== -->
+<div class="strip">
+  <span class="brand"><b>lantern</b> · design review</span>
+  <span>v2 · may 2026</span>
+  <div class="meta">
+    <span>aditya garg</span>
+    <span>7 prototypes · 11 findings</span>
+    <a href="favicons/index.html" style="color:var(--accent);text-decoration:none">View brand ↗</a>
+  </div>
+</div>
+
+<!-- ===== Hero ===== -->
+<header class="hero">
+  <div>
+    <div class="kicker">A redesign of frontprep — now called <span style="color:var(--ink);font-weight:600">Lantern</span></div>
+    <h1>Less of a cheat&#8209;sheet,<br/>more of a <em>study habit.</em></h1>
+    <p class="deck">The site previously known as frontprep had the right surface area — JS, HTML, CSS, React. But it shipped only two of the six things an interview library needs: syntax cards and a flat Q&amp;A list. <b style="color:var(--ink); font-weight:600">Theory, version diffs, a playground, and a level-split Q&amp;A were missing entirely</b>, and drill mode was unusable for anyone who didn't already know all four languages. Renaming the product to <em style="color:var(--accent)">Lantern</em> let us start the visual identity over too — warm-dark, single amber accent, the light you keep on at night.</p>
+  </div>
+  <aside>
+    <div class="factrow"><div class="lbl">New name</div><div class="val">Lantern — frontprep was taken</div></div>
+    <div class="factrow"><div class="lbl">Surfaces shipped</div><div class="val">Home · Hub · Theory · Syntax · Versions · Playground · Q&amp;A · Drill</div></div>
+    <div class="factrow"><div class="lbl">Findings</div><div class="val">11 — 4 high, 5 medium, 2 low</div></div>
+    <div class="factrow"><div class="lbl">Deliverables</div><div class="val">7 interactive prototypes · adaptive favicon · light + dark themes</div></div>
+    <div class="factrow"><div class="lbl">Timeline suggested</div><div class="val">3 weeks, parallel-shippable</div></div>
+  </aside>
+</header>
+
+<!-- ===== Section 01 — Snapshot ===== -->
+<section class="section">
+  <div class="sec-head">
+    <div class="sec-no">Snapshot<span class="num">01</span></div>
+    <div>
+      <h2>What's on the site today.</h2>
+      <p>Built in Next.js, deployed on Pages. The visual system is committed to a saturated magenta gradient on a deep-purple ground, with each language colour-coded against its real brand colour. Layout patterns are conventional: full-bleed hero, 2-up card grid for the hub, sidebar + scroll for content pages.</p>
+    </div>
+  </div>
+
+  <div class="snapshot-grid">
+
+    <div class="snap-card">
+      <div class="label"><span class="dot"></span>Home — current</div>
+      <div class="body">
+        <div class="curr-hero">
+          <div class="topnav">
+            <div class="logo"><span class="icn">⟨/⟩</span><span>Interview Prep</span></div>
+            <div class="links">
+              <span>Hub</span><span>JavaScript</span><span>HTML</span><span>CSS</span><span class="a">React</span>
+            </div>
+          </div>
+          <div class="badge">✦ Frontend Interview Prep</div>
+          <h4 class="ttl">Master the <span class="grad">Frontend</span><br/>Interview</h4>
+          <div class="tag">JavaScript · HTML · CSS · React — syntax, theory, versions, interactive playgrounds, and interview Q&amp;A.</div>
+          <div class="ctas"><span class="b1">Start Studying →</span><span class="b2">Jump to JavaScript</span></div>
+          <div class="pills"><span>JavaScript</span><span>HTML</span><span>CSS</span><span>React</span></div>
+        </div>
+      </div>
+      <div class="annot">
+        <div class="a"><span class="num">1</span><span><b>Generic SaaS aesthetic.</b> Sparkle-badge + gradient-word + dual CTA is a template I've seen on five hundred landing pages this year — it telegraphs nothing about what the product is.</span></div>
+        <div class="a"><span class="num">2</span><span><b>Hero has no proof.</b> No counts, no progress, no preview of an actual card. A returning user can't tell whether the library has grown.</span></div>
+        <div class="a"><span class="num">3</span><span><b>Language pills are decorative.</b> They repeat the deck and aren't tap targets — pure ornament where signal could live.</span></div>
+      </div>
+    </div>
+
+    <div class="snap-card">
+      <div class="label"><span class="dot"></span>Hub — current</div>
+      <div class="body">
+        <div class="curr-hub">
+          <div class="topnav">
+            <div style="display:flex;gap:4px;"><span style="color:#e461fb">⟨/⟩</span><span style="font-weight:700">Interview Prep</span></div>
+            <div style="margin-left:auto;display:flex;gap:7px;color:#a090b0;font-size:8.5px;"><span style="color:#e461fb;background:rgba(232,128,250,0.2);padding:1px 5px;border-radius:3px;">Hub</span><span>JS</span><span>HTML</span><span>CSS</span><span>React</span></div>
+          </div>
+          <h3>Choose a Topic</h3>
+          <p class="sub">Pick a language to explore syntax, theory, versions, playground and Q&amp;A.</p>
+          <div class="grid">
+            <div class="card"><div class="bar" style="background:#f7df1e"></div><div class="bd"><h4 style="color:#f7df1e">JavaScript</h4><p>The language of the web — closures, async, ES2024.</p><span class="cta">Explore →</span></div></div>
+            <div class="card"><div class="bar" style="background:#e34c26"></div><div class="bd"><h4 style="color:#e34c26">HTML</h4><p>Structure, semantics, accessibility, HTML5.</p><span class="cta">Explore →</span></div></div>
+            <div class="card"><div class="bar" style="background:#264de4"></div><div class="bd"><h4 style="color:#264de4">CSS</h4><p>Flexbox, Grid, animations, custom properties.</p><span class="cta">Explore →</span></div></div>
+            <div class="card"><div class="bar" style="background:#61dafb"></div><div class="bd"><h4 style="color:#61dafb">React</h4><p>Hooks, concurrent features, React 19.</p><span class="cta">Explore →</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="annot">
+        <div class="a"><span class="num">4</span><span><b>Hub answers the wrong question.</b> The screen asks "which language?" — but the user already knows. The interesting question is <em style="font-style:italic">which language have I been avoiding?</em></span></div>
+        <div class="a"><span class="num">5</span><span><b>No state.</b> Visiting the hub twice in the same week shows the same screen. A revision tool that doesn't remember you defeats its premise.</span></div>
+        <div class="a"><span class="num">6</span><span><b>Every card looks equally important.</b> Whether you've spent 30 hours in React or 0 minutes in CSS, the cards weigh identically.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toc-block">
+    <a href="#f1"><span class="n">F1</span><span class="ttl">Rename to Lantern — frontprep was taken; new adaptive favicon</span><span class="pri">high</span></a>
+    <a href="#f2"><span class="n">F2</span><span class="ttl">A visual identity that signals study, not a SaaS launch</span><span class="pri">high</span></a>
+    <a href="#f3"><span class="n">F3</span><span class="ttl">Ship the four missing sections: Theory, Versions, Playground, Q&amp;A by level</span><span class="pri">high</span></a>
+    <a href="#f4"><span class="n">F4</span><span class="ttl">Drill must pick languages first — and show output in code comments</span><span class="pri">high</span></a>
+    <a href="#f5"><span class="n">F5</span><span class="ttl">Make the hub remember the user</span><span class="pri">medium</span></a>
+    <a href="#f6"><span class="n">F6</span><span class="ttl">Q&amp;A split into core/advanced × fresher/experienced/expert</span><span class="pri">medium</span></a>
+    <a href="#f7"><span class="n">F7</span><span class="ttl">Theory is the spine — give it long-form treatment</span><span class="pri">medium</span></a>
+    <a href="#f8"><span class="n">F8</span><span class="ttl">Versions deserve a diff view, not a list</span><span class="pri">medium</span></a>
+    <a href="#f9"><span class="n">F9</span><span class="ttl">Search and filter inside content pages</span><span class="pri">medium</span></a>
+    <a href="#f10"><span class="n">F10</span><span class="ttl">Treat emoji and brand colours as data, not decor</span><span class="pri">low</span></a>
+    <a href="#f11"><span class="n">F11</span><span class="ttl">Light + dark theme toggle (OS-driven by default)</span><span class="pri">low</span></a>
+  </div>
+</section>
+
+<!-- ===== Section 02 — Findings ===== -->
+<section class="section">
+  <div class="sec-head">
+    <div class="sec-no">Findings<span class="num">02</span></div>
+    <div>
+      <h2>Eight things, in priority order.</h2>
+      <p>Each finding is paired with a concrete change. The first three are the ones I'd ship first — they reshape what the product actually <em style="font-style:italic">is</em> for the returning user.</p>
+    </div>
+  </div>
+
+  <div class="findings">
+
+    <!-- F1 — Rename -->
+    <article class="finding" id="f1">
+      <div class="left">
+        <div class="idx">Finding 01</div>
+        <h3>Rename. “Frontprep” already exists — we are now Lantern.</h3>
+        <div class="tag high">High · brand</div>
+      </div>
+      <div class="right">
+        <p>frontprep.pages.dev shares its name with at least one other live interview-prep service — the kind of overlap that quietly kills word-of-mouth and SEO long before it kills product. The new name had two jobs: be unambiguous in a Google search, and <em style="font-style:italic">say what the site is</em> without needing a tagline.</p>
+        <p><b>Lantern</b> does both. The warm-dark UI with a single amber accent was already a lantern in everything but name — it is the light you keep on at night while you revise. The italic Instrument Serif "<em style="font-style:italic;color:var(--accent)">l</em>" wordmark and the amber dot ship as a <b>single adaptive SVG favicon</b> that flips with the OS theme — no two assets, no <code>&lt;link&gt;</code> shuffling.</p>
+        <div class="proto">
+          <div class="chrome">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <div class="url">lantern.study/brand</div>
+            <a href="favicons/index.html" target="_blank" class="open">Open ↗</a>
+          </div>
+          <iframe src="favicons/index.html" loading="lazy" title="Lantern favicon — light + dark"></iframe>
+        </div>
+      </div>
+    </article>
+
+    <!-- F2 — Visual identity -->
+    <article class="finding" id="f2">
+      <div class="left">
+        <div class="idx">Finding 02</div>
+        <h3>A visual identity that signals study, not a SaaS launch.</h3>
+        <div class="tag high">High · brand</div>
+      </div>
+      <div class="right">
+        <p>The current palette uses pure magenta on deep purple, with white headlines set in the system font and a gradient running through the word "Frontend". This is the same toolkit a hundred AI startups landed on last year — it reads as <b>generic launch page</b>, not as a place to study.</p>
+        <p>frontprep is a personal tool, used at night, often half-asleep, often on a phone in a coffee queue. The aesthetic should sit somewhere between an O'Reilly book and a moleskine — quiet, ink-on-paper feel for the content, with a single warm accent doing all the highlighting. The four language colours stay, but only as <b>small data points</b> (dots, badges, progress fills) — never full-bleed backgrounds.</p>
+        <div class="compare">
+          <div class="x">
+            <div class="h"><span class="dot"></span>Drop</div>
+            <div class="body">
+              <ul>
+                <li>Magenta–purple gradient ground</li>
+                <li>Gradient text on display headlines</li>
+                <li>Glow shadows on buttons</li>
+                <li>System-font display type — no character</li>
+                <li>"✦ Frontend Interview Prep" sparkle badge</li>
+              </ul>
+            </div>
+          </div>
+          <div class="y">
+            <div class="h"><span class="dot"></span>Adopt</div>
+            <div class="body">
+              <ul>
+                <li>Warm dark ground (<code>#14110e</code>) with cream type</li>
+                <li>Instrument Serif display · IBM Plex Sans body · JetBrains Mono code</li>
+                <li>One amber accent (<code>#d4a04a</code>) for state &amp; highlights</li>
+                <li>Language colours used only as 6–10&nbsp;px dots and fills</li>
+                <li>Editorial eyebrows / rules instead of badges</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- F3 — The four missing sections -->
+    <article class="finding" id="f3">
+      <div class="left">
+        <div class="idx">Finding 03</div>
+        <h3>Ship the four missing sections.</h3>
+        <div class="tag high">High · scope</div>
+      </div>
+      <div class="right">
+        <p>frontprep's nav promised six surfaces but shipped two. <b>Theory was missing entirely.</b> <b>Version comparisons</b> existed as long-form prose, never as a diff. <b>Playground</b> was a placeholder link. <b>Q&amp;A</b> existed but as one flat list — a fresher and an architect saw the same 600+ questions in the same order.</p>
+        <p>Each of those four now has a prototype. Theory adopts a long-form-chapter layout with a drop-cap, inline diagrams, a reading-progress rail, and "drill this chapter" as a sibling action. Versions becomes a side-by-side diff between two selectable releases. Playground is a real-feeling code editor with tabs, live preview and a console. Q&amp;A splits along two axes — depth (Core / Advanced) and audience level — covered in F6.</p>
+        <div class="compare">
+          <div class="x"><div class="h"><span class="dot"></span>Was missing or broken</div>
+            <div class="body"><ul>
+              <li><b>Theory</b> — nav link, no content</li>
+              <li><b>Versions</b> — prose, no diffs</li>
+              <li><b>Playground</b> — placeholder</li>
+              <li><b>Q&amp;A</b> — single flat list, no levels</li>
+            </ul></div>
+          </div>
+          <div class="y"><div class="h"><span class="dot"></span>Now shipped</div>
+            <div class="body"><ul>
+              <li><b>theory.html</b> — editorial chapter layout</li>
+              <li><b>versions.html</b> — from/to picker + diff cards</li>
+              <li><b>playground.html</b> — tabbed editor + preview + console</li>
+              <li><b>qa.html</b> — core/advanced × 3 levels (see F6)</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- F4 — Drill -->
+    <article class="finding" id="f4">
+      <div class="left">
+        <div class="idx">Finding 04</div>
+        <h3>Drill must pick languages first — and show output in comments.</h3>
+        <div class="tag high">High · core feature</div>
+      </div>
+      <div class="right">
+        <p>Two bugs made the existing drill mode unusable for most visitors. <b>One:</b> the deck shuffled all four stacks together with no way to opt out, so anyone who hadn't yet learned (say) React got hit with React questions and bounced. <b>Two:</b> every code snippet on the site showed input only — there was no annotation of what the code <em style="font-style:italic">prints</em>, which is exactly the trick interviewers test you on ("what does this log?"). A snippet without its output is a worse study aid than no snippet at all.</p>
+        <p>The redesigned drill opens on a <b>setup screen</b>: pick one or more languages from a four-card multi-select; pick a level (fresher / experienced / expert); pick a deck size; pick which sources fill the deck (Theory / Syntax / Core Q&amp;A / Advanced Q&amp;A / Version diffs / cards flagged "Review again"). A live summary line confirms what's about to load. <b>Every code block now ends with one comment per output line</b>, marked with a <code>▸</code> glyph so they stand out from inline comments. The same convention applies on syntax, theory, versions and Q&amp;A pages — it's a system, not a one-off.</p>
+        <div class="proto">
+          <div class="chrome">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <div class="url">lantern.study/drill</div>
+            <a href="prototypes/drill.html" target="_blank" class="open">Open ↗</a>
+          </div>
+          <iframe src="prototypes/drill.html" loading="lazy" title="Drill redesign"></iframe>
+        </div>
+      </div>
+    </article>
+
+    <!-- F5 — Hub -->
+    <article class="finding" id="f5">
+      <div class="left">
+        <div class="idx">Finding 05</div>
+        <h3>Make the hub remember the user.</h3>
+        <div class="tag med">Medium · IA &amp; state</div>
+      </div>
+      <div class="right">
+        <p>The hub today is a four-card chooser that's identical on first visit and hundredth visit. For an interview-prep tool, this is the most expensive miss on the page — the moment a user comes back, the site should already know what they were doing and which topics still scare them.</p>
+        <p>Three additions make the hub do real work: <b>a per-language progress ring</b>, <b>"last seen" deep-link</b> back into the exact card they left, and a <b>"27 cards marked review again"</b> shortcut. The card now also shows progress across all six sections (Theory / Syntax / Versions / Playground / Q&amp;A / Drill), not just four. Progress lives in localStorage — no account required.</p>
+        <div class="proto">
+          <div class="chrome">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <div class="url">lantern.study/hub</div>
+            <a href="prototypes/hub.html" target="_blank" class="open">Open ↗</a>
+          </div>
+          <iframe src="prototypes/hub.html" loading="lazy" title="Hub redesign"></iframe>
+        </div>
+      </div>
+    </article>
+
+    <!-- F6 — Q&A levels -->
+    <article class="finding" id="f6">
+      <div class="left">
+        <div class="idx">Finding 06</div>
+        <h3>Q&amp;A split into core/advanced × fresher/experienced/expert.</h3>
+        <div class="tag med">Medium · content</div>
+      </div>
+      <div class="right">
+        <p>A 0–2 year fresher and a 5+ year staff engineer should not see the same Q&amp;A list. The previous design did exactly that — every question, in source order, every visit. The new layout puts depth on one axis (<b>Core</b>: bedrock topics; <b>Advanced</b>: senior-only material) and audience on another (<b>Fresher / Experienced / Expert</b>). Inside each block, questions render in <b>quick-read mode</b>: every question visible at a glance, click to expand the answer, no drill loop required. "Drill these" CTA on each level block builds a focused deck from just that slice.</p>
+        <div class="proto">
+          <div class="chrome">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <div class="url">lantern.study/qa</div>
+            <a href="prototypes/qa.html" target="_blank" class="open">Open ↗</a>
+          </div>
+          <iframe src="prototypes/qa.html" loading="lazy" title="Q&A redesign"></iframe>
+        </div>
+      </div>
+    </article>
+
+    <!-- F7 — Theory -->
+    <article class="finding" id="f7">
+      <div class="left">
+        <div class="idx">Finding 07</div>
+        <h3>Theory is the spine. Give it long-form treatment.</h3>
+        <div class="tag med">Medium · content</div>
+      </div>
+      <div class="right">
+        <p>Every other section on the site indexes against the theory chapters — syntax cards point at them, Q&amp;A entries cite them, drill cards source their explanations from them. They deserve their own design language, not the same card-grid as syntax. Lantern's theory page borrows from book-editorial conventions: a drop-cap on the opening paragraph, Instrument Serif for headings and pull-quotes, an inline diagram per chapter, a reading-progress rail, and "drill this chapter / open in playground" as siblings of the text rather than buried in a footer.</p>
+        <div class="proto">
+          <div class="chrome">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <div class="url">lantern.study/javascript/theory/event-loop</div>
+            <a href="prototypes/theory.html" target="_blank" class="open">Open ↗</a>
+          </div>
+          <iframe src="prototypes/theory.html" loading="lazy" title="Theory redesign"></iframe>
+        </div>
+      </div>
+    </article>
+
+    <!-- F8 — Versions -->
+    <article class="finding" id="f8">
+      <div class="left">
+        <div class="idx">Finding 08</div>
+        <h3>Versions deserve a diff view, not a list.</h3>
+        <div class="tag med">Medium · content</div>
+      </div>
+      <div class="right">
+        <p>"What changed in ES2024" or "what shipped in React 19" is the exact kind of recall an interviewer probes. Long-form prose is the wrong format — the interview answer wants a <b>before/after diff</b>: left column the old way, right column the new way, with a one-line "why it shipped" caption. The right-hand sidebar becomes a <b>compare-versions</b> control: pick ES2018 → ES2024 and see only the deltas, plus a visual timeline showing where each delta lands.</p>
+        <div class="proto">
+          <div class="chrome">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <div class="url">lantern.study/javascript/versions</div>
+            <a href="prototypes/versions.html" target="_blank" class="open">Open ↗</a>
+          </div>
+          <iframe src="prototypes/versions.html" loading="lazy" title="Versions redesign"></iframe>
+        </div>
+      </div>
+    </article>
+
+    <!-- F9 — Search -->
+    <article class="finding" id="f9">
+      <div class="left">
+        <div class="idx">Finding 09</div>
+        <h3>Search and filter, inside every content page.</h3>
+        <div class="tag med">Medium · navigation</div>
+      </div>
+      <div class="right">
+        <p>JavaScript has 48 syntax cards and 110 Q&amp;A. CSS has 88 Q&amp;A. The current site has no search and no filter chip — to find "optional chaining" you scroll. This is the single biggest day-to-day friction.</p>
+        <p>Two things solve it: a page-level fuzzy filter pinned at the top (<kbd style="font-family:var(--mono);font-size:11px;background:rgba(28,26,22,0.06);padding:1px 5px;border-radius:3px">/</kbd> to focus, type to filter, supports operator strings like <code>?.</code> or <code>??=</code>) and a global command palette on <kbd style="font-family:var(--mono);font-size:11px;background:rgba(28,26,22,0.06);padding:1px 5px;border-radius:3px">⌘K</kbd> indexed across every card and question. While we're there, the existing right-panel "table of contents" earns its keep by becoming a real, sticky, current-section-highlighting TOC.</p>
+        <div class="proto">
+          <div class="chrome">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <div class="url">lantern.study/javascript/syntax</div>
+            <a href="prototypes/syntax.html" target="_blank" class="open">Open ↗</a>
+          </div>
+          <iframe src="prototypes/syntax.html" loading="lazy" title="Syntax redesign"></iframe>
+        </div>
+      </div>
+    </article>
+
+    <!-- F10 — Emoji/brand colours as data -->
+    <article class="finding" id="f10">
+      <div class="left">
+        <div class="idx">Finding 10</div>
+        <h3>Treat emoji and brand colours as data, not decor.</h3>
+        <div class="tag low">Low · system</div>
+      </div>
+      <div class="right">
+        <p>The previous sidebar used <span style="font-family:var(--mono);font-size:12px">📖 🕐 ⚡ 💬</span> as the only signifiers for Theory / Versions / Playground / Q&amp;A. Emoji look juvenile next to the rest of the type, render differently on every OS, and break in screenshots and PDFs. The four language colours, meanwhile, were used as <em style="font-style:italic">backgrounds</em> — 4&nbsp;px bars across cards and saturated text labels — which made the page noisy and overrode the role of "this is a state cue".</p>
+        <p>The system inverts both: section icons are now <b>typographic glyphs in mono</b> (<code>{ }</code> · <code>§</code> · <code>v.</code> · <code>▷</code> · <code>?</code> · <code>↻</code>), and the four brand colours move down to <b>6 px dots and 3 px progress fills</b>, never bigger. Colour now <em style="font-style:italic">means</em> something specific.</p>
+      </div>
+    </article>
+
+    <!-- F11 — Theme toggle -->
+    <article class="finding" id="f11">
+      <div class="left">
+        <div class="idx">Finding 11</div>
+        <h3>A light / dark theme toggle, OS-driven by default.</h3>
+        <div class="tag low">Low · polish</div>
+      </div>
+      <div class="right">
+        <p>The previous site was dark-only. People prep for interviews on the bus at 6 PM and at a desk at 9 AM — a forced theme is the wrong default. Lantern ships both: a warm-dark mode (the original lantern at night) and a paper-cream light mode (an open notebook at a coffee shop). The toggle lives in the top-right of every page; first visit picks up <code>prefers-color-scheme</code>, after that the user's explicit choice persists in localStorage. The favicon flips with the OS even when the in-app preference is overridden — it's a single SVG with media queries inside it.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== Section 03 — Roadmap ===== -->
+<section class="section">
+  <div class="sec-head">
+    <div class="sec-no">Roadmap<span class="num">03</span></div>
+    <div>
+      <h2>Three weeks, parallel-shippable.</h2>
+      <p>Suggested sequencing. None of the rows depend on a re-architecture — the existing Next.js + SCSS modules setup absorbs all of this. Drill mode is the longest single piece and should start day one.</p>
+    </div>
+  </div>
+
+  <div class="roadmap">
+    <div class="week">
+      <div class="when">Week 01 · Rename &amp; reskin</div>
+      <h4>Earn the new name.</h4>
+      <ul>
+        <li><b>Rebrand.</b> Lantern wordmark, adaptive favicon, all surface copy.</li>
+        <li><b>Swap tokens.</b> Instrument Serif + IBM Plex Sans + JetBrains Mono.</li>
+        <li><b>Light + dark.</b> Theme toggle, OS-driven default.</li>
+        <li><b>Strip emoji.</b> Mono glyphs for sections.</li>
+      </ul>
+    </div>
+    <div class="week">
+      <div class="when">Week 02 · Fill the gaps</div>
+      <h4>Ship the four missing sections.</h4>
+      <ul>
+        <li><b>Theory.</b> Long-form chapters with diagrams + reading rail.</li>
+        <li><b>Versions.</b> From/to picker + diff cards.</li>
+        <li><b>Playground.</b> Tabbed editor + live preview + console.</li>
+        <li><b>Q&amp;A.</b> Core/Advanced × fresher/experienced/expert.</li>
+      </ul>
+    </div>
+    <div class="week">
+      <div class="when">Week 03 · Drill &amp; memory</div>
+      <h4>The primary action, finally working.</h4>
+      <ul>
+        <li><b>Drill setup screen.</b> Language picker + level + sources.</li>
+        <li><b>Output in code comments.</b> Site-wide convention.</li>
+        <li><b>Hub remembers you.</b> Progress + last-seen + weak-cards drill.</li>
+        <li><b>⌘K palette.</b> Global fuzzy search.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Outro ===== -->
+<section class="end">
+  <div class="seal" style="font-family:var(--display);font-style:italic;color:var(--accent)">l</div>
+  <p>The site you've shipped is already 80% of the content most prep tools never reach.<br/>What's left is letting it teach you that <em style="font-style:italic">you</em> learned something.</p>
+  <div class="sig">end of review · lantern · may 2026</div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  
+  <rect class="bg" width="64" height="64" rx="12"></rect>
+  
+  <circle class="flame" cx="16" cy="20" r="4.5"></circle>
+  
+  <text x="34" y="48" text-anchor="middle" font-family="&#39;Instrument Serif&#39;,&#39;Iowan Old Style&#39;,Georgia,serif" font-style="italic" font-weight="400" font-size="48" letter-spacing="-2" class="ink">l</text>
+</svg>
