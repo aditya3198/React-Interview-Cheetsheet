@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="ember" cx="50%" cy="72%" r="55%">
+      <stop offset="0%"   stop-color="#8c2800"/>
+      <stop offset="35%"  stop-color="#3b1000"/>
+      <stop offset="100%" stop-color="#0c0806"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Handle -->
+  <path d="M27 16 C27 6 37 6 37 16"
+        fill="none" stroke="#5c5248" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Top cap -->
+  <rect x="20" y="16" width="24" height="7" rx="2" fill="#5c5248"/>
+
+  <!-- Frame body -->
+  <rect x="18" y="23" width="28" height="26" rx="3" fill="#5c5248"/>
+
+  <!-- Glass (dying ember glow at bottom) -->
+  <rect x="21" y="26" width="22" height="20" rx="2" fill="url(#ember)"/>
+
+  <!-- Ember specks -->
+  <circle cx="29"   cy="43"   r="1"   fill="#c84800" fill-opacity="0.85"/>
+  <circle cx="33.5" cy="44"   r="0.9" fill="#a03200" fill-opacity="0.75"/>
+  <circle cx="36.5" cy="42.5" r="0.7" fill="#c84800" fill-opacity="0.6"/>
+
+  <!-- Bottom cap -->
+  <rect x="20" y="49" width="24" height="6" rx="2" fill="#5c5248"/>
+
+  <!-- Foot -->
+  <rect x="27" y="55" width="10" height="3" rx="1.5" fill="#5c5248"/>
+</svg>
