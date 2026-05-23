@@ -15,14 +15,39 @@ interface SyntaxSectionProps {
   onFilteredChange?: (filtered: SyntaxEntry[]) => void;
 }
 
+type Grade = 'again' | 'ok' | 'got' | null;
+
+const GRADE_COLOR: Record<NonNullable<Grade>, string> = {
+  got:   'var(--level-easy)',
+  ok:    'var(--level-med)',
+  again: 'var(--level-hard)',
+};
+
+const GRADE_LABEL: Record<NonNullable<Grade>, string> = {
+  got:   'reviewed',
+  ok:    'review ok',
+  again: 'review again',
+};
+
+function GradeIndicator({ grade }: { grade: Grade }) {
+  if (!grade) return <span className={styles.markState}>not reviewed</span>;
+  return (
+    <span className={styles.markState}>
+      <span className={styles.gradeDot} style={{ background: GRADE_COLOR[grade] }} />
+      {GRADE_LABEL[grade]}
+    </span>
+  );
+}
+
 export default function SyntaxSection({ entries, language, section = 'syntax', onFilteredChange }: SyntaxSectionProps) {
   const [search, setSearch] = useState('');
   const [activeTier, setActiveTier] = useState<Tier | 'pinned' | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const pins = useProgressStore((s) => s.pins);
+  const cards = useProgressStore((s) => s.cards);
   const togglePin = useProgressStore((s) => s.togglePin);
-  const recordVisit = useProgressStore((s) => s.recordVisit);
+  const setLastSeen = useProgressStore((s) => s.setLastSeen);
 
   const cardKey = useCallback((id: string) => `${language}/${section}/${id}`, [language, section]);
 
@@ -66,7 +91,7 @@ export default function SyntaxSection({ entries, language, section = 'syntax', o
     return () => window.removeEventListener('keydown', handler);
   }, [hoveredId, togglePin, cardKey]);
 
-  // IntersectionObserver: recordVisit once per card per page load
+  // IntersectionObserver: setLastSeen once per card per page load
   const visitedRef = useRef<Set<string>>(new Set());
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -77,7 +102,7 @@ export default function SyntaxSection({ entries, language, section = 'syntax', o
           const id = (io.target as HTMLElement).dataset.cardId;
           if (id && io.isIntersecting && !visitedRef.current.has(id)) {
             visitedRef.current.add(id);
-            recordVisit(cardKey(id), language);
+            setLastSeen(language, cardKey(id));
           }
         });
       },
@@ -90,7 +115,7 @@ export default function SyntaxSection({ entries, language, section = 'syntax', o
     });
 
     return () => observerRef.current?.disconnect();
-  }, [filtered, language, section, cardKey, recordVisit]);
+  }, [filtered, language, section, cardKey, setLastSeen]);
 
   const pinnedCount = pins.filter((k) => k.startsWith(`${language}/${section}/`)).length;
 
@@ -146,7 +171,7 @@ export default function SyntaxSection({ entries, language, section = 'syntax', o
               className={`${styles.card} ${isPinned ? styles.pinned : ''}`}
               onMouseEnter={() => setHoveredId(entry.id)}
               onMouseLeave={() => setHoveredId(null)}
-              onClick={() => recordVisit(key, language)}
+              onClick={() => setLastSeen(language, key)}
             >
               <div className={styles.cardHead}>
                 <h3 className={styles.cardTitle}>{entry.title}</h3>
@@ -155,7 +180,7 @@ export default function SyntaxSection({ entries, language, section = 'syntax', o
                 )}
                 <button
                   className={`${styles.pinBtn} ${isPinned ? styles.pinBtnActive : ''}`}
-                  onClick={(e) => { e.stopPropagation(); togglePin(key); recordVisit(key, language); }}
+                  onClick={(e) => { e.stopPropagation(); togglePin(key); setLastSeen(language, key); }}
                   aria-label={isPinned ? 'Unpin card' : 'Pin card'}
                   title={isPinned ? 'Unpin (P)' : 'Pin (P)'}
                   type="button"
@@ -177,6 +202,7 @@ export default function SyntaxSection({ entries, language, section = 'syntax', o
                     <Badge key={tag} label={tag} variant="tag" />
                   ))}
                 </div>
+                <GradeIndicator grade={cards[cardKey(entry.id)]?.lastGrade ?? null} />
               </div>
             </article>
           );

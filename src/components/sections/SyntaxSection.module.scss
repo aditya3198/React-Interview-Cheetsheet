@@ -1,4 +1,4 @@
-.section {
+﻿.section {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -13,7 +13,7 @@
   position: sticky;
   top: var(--topnav-height);
   z-index: 10;
-  background: var(--color-bg-deep);
+  background: var(--bg);
   padding: 12px 0 8px;
 }
 
@@ -24,17 +24,17 @@
   align-items: center;
   gap: 10px;
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius-md);
+  border-radius: var(--r);
   padding: 9px 12px;
-  background: var(--color-bg-card);
+  background: var(--bg-1);
 
   &:focus-within {
-    border-color: var(--color-primary-border);
+    border-color: var(--accent-line);
   }
 }
 .searchIcon {
-  color: var(--color-text-dim);
-  font-family: var(--font-mono);
+  color: var(--fg-dim);
+  font-family: var(--mono);
   font-size: 14px;
 }
 .searchInput {
@@ -42,20 +42,20 @@
   background: transparent;
   border: none;
   outline: none;
-  color: var(--color-text);
-  font-family: var(--font-sans);
+  color: var(--fg);
+  font-family: var(--sans);
   font-size: 14px;
 
-  &::placeholder { color: var(--color-text-dim); }
+  &::placeholder { color: var(--fg-dim); }
   &::-webkit-search-cancel-button { display: none; }
 }
 .searchKbd {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 10.5px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   border: 1px solid var(--line);
   padding: 2px 5px;
-  border-radius: var(--radius-xs);
+  border-radius: var(--r-sm);
 }
 
 .chips {
@@ -65,33 +65,33 @@
 }
 .chip {
   font-size: 12px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   border: 1px solid var(--line-strong);
   padding: 6px 11px;
   border-radius: 999px;
-  font-family: var(--font-sans);
+  font-family: var(--sans);
   cursor: pointer;
   background: none;
   display: inline-flex;
   gap: 5px;
   align-items: center;
-  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 
-  &:hover { color: var(--color-text); }
+  &:hover { color: var(--fg); }
 }
 .chipActive {
-  background: var(--color-primary-glow);
-  color: var(--color-primary);
-  border-color: var(--color-primary-border);
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent-line);
 }
 .chipCount {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 10.5px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
 }
 
 .empty {
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   text-align: center;
   padding: 3rem 0;
   font-size: 14px;
@@ -111,20 +111,20 @@
 // ─── Syntax card ─────────────────────────────────────────
 .card {
   border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  border-radius: var(--r-lg);
   padding: 18px 18px 16px;
-  background: var(--color-bg-card);
+  background: var(--bg-1);
   display: flex;
   flex-direction: column;
   gap: 10px;
-  transition: border-color var(--transition-fast), background var(--transition-fast);
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
   scroll-margin-top: 120px;
   cursor: default;
 
-  &:hover { border-color: var(--line-strong); background: var(--color-bg-surface); }
+  &:hover { border-color: var(--line-strong); background: var(--bg-2); }
 }
 .pinned {
-  border-color: var(--color-primary-border) !important;
+  border-color: var(--accent-line) !important;
 }
 
 .cardHead {
@@ -135,16 +135,16 @@
 .cardTitle {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--fg);
   margin: 0;
   letter-spacing: -0.005em;
   flex: 1;
   line-height: 1.3;
 }
 .since {
-  font-family: var(--font-mono);
+  font-family: var(--mono);
   font-size: 10px;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   border: 1px solid var(--line);
   padding: 1px 5px;
   border-radius: 999px;
@@ -159,23 +159,23 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-dim);
-  border-radius: var(--radius-xs);
+  color: var(--fg-dim);
+  border-radius: var(--r-sm);
   font-size: 13px;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
   flex-shrink: 0;
-  transition: color var(--transition-fast), background var(--transition-fast);
+  transition: color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
 
-  &:hover { background: rgba(236, 231, 221, 0.06); color: var(--color-primary); }
+  &:hover { background: rgba(236, 231, 221, 0.06); color: var(--accent); }
 }
-.pinBtnActive { color: var(--color-primary); }
+.pinBtnActive { color: var(--accent); }
 
 .cardDesc {
   font-size: 12.5px;
-  color: var(--color-text-muted);
+  color: var(--fg-mute);
   line-height: 1.55;
   margin: 0;
 }
@@ -184,9 +184,29 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
 }
 .tags {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
+}
+
+// ─── Grade state indicator ────────────────────────────────
+.markState {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--fg-dim);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.gradeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }

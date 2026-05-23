@@ -1,138 +1,102 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import type { ConceptCard, Tier, Level } from '@/types/content';
-import Badge from '@/components/shared/Badge';
+import { useState } from 'react';
+import type { ConceptCard } from '@/types/content';
+import type { LanguageSlug } from '@/types/navigation';
+import { getLanguageMeta } from '@/data/navigation';
 import styles from './TheorySection.module.scss';
-
-const TIERS: Tier[] = ['core', 'advanced'];
-const LEVELS: Level[] = ['fresher', 'experienced', 'expert'];
 
 interface TheorySectionProps {
   cards: ConceptCard[];
+  language?: LanguageSlug;
 }
 
-export default function TheorySection({ cards }: TheorySectionProps) {
-  const [selectedId, setSelectedId] = useState<string>(cards[0]?.id ?? '');
-  const [search, setSearch] = useState('');
-  const [activeTier, setActiveTier] = useState<Tier | null>(null);
-  const [activeLevel, setActiveLevel] = useState<Level | null>(null);
-  const [mobileShowDetail, setMobileShowDetail] = useState(false);
+export default function TheorySection({ cards, language = 'javascript' }: TheorySectionProps) {
+  const [idx, setIdx] = useState(0);
+  const card = cards[idx] ?? null;
+  const prev = idx > 0 ? cards[idx - 1] : null;
+  const next = idx < cards.length - 1 ? cards[idx + 1] : null;
+  const pct = cards.length > 0 ? Math.round(((idx + 1) / cards.length) * 100) : 0;
+  const langMeta = getLanguageMeta(language);
 
-  const filtered = useMemo(() => {
-    const q = search.toLowerCase();
-    return cards.filter((c) => {
-      if (activeTier && c.tier !== activeTier) return false;
-      if (activeLevel && c.level !== activeLevel) return false;
-      if (q && !c.title.toLowerCase().includes(q) && !c.tags.some((t) => t.includes(q))) return false;
-      return true;
-    });
-  }, [cards, activeTier, activeLevel, search]);
-
-  // If selected topic is filtered out, fall back to first visible
-  const selected = filtered.find((c) => c.id === selectedId) ?? filtered[0] ?? null;
-
-  function selectTopic(id: string) {
-    setSelectedId(id);
-    setMobileShowDetail(true);
+  if (!card) {
+    return <p className={styles.empty}>No chapters available.</p>;
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.toolbar}>
-        <div className={styles.searchWrap}>
-          <span className={styles.searchIcon}>⌕</span>
-          <input
-            className={styles.search}
-            placeholder="Search topics..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <div className={styles.filters}>
-          <div className={styles.filterGroup}>
-            <button
-              className={`${styles.pill} ${activeTier === null ? styles.pillActive : ''}`}
-              onClick={() => setActiveTier(null)}
-            >All</button>
-            {TIERS.map((t) => (
-              <button
-                key={t}
-                className={`${styles.pill} ${styles[`pill_${t}`]} ${activeTier === t ? styles.pillActive : ''}`}
-                onClick={() => setActiveTier(activeTier === t ? null : t)}
-              >{t}</button>
-            ))}
-          </div>
-          <div className={styles.filterGroup}>
-            <button
-              className={`${styles.pill} ${activeLevel === null ? styles.pillActive : ''}`}
-              onClick={() => setActiveLevel(null)}
-            >All</button>
-            {LEVELS.map((l) => (
-              <button
-                key={l}
-                className={`${styles.pill} ${styles[`pill_${l}`]} ${activeLevel === l ? styles.pillActive : ''}`}
-                onClick={() => setActiveLevel(activeLevel === l ? null : l)}
-              >{l}</button>
-            ))}
-          </div>
-        </div>
-      </div>
+    <div className={styles.shell}>
+      {/* Article */}
+      <article className={styles.article}>
+        <p className={styles.eyebrow}>
+          Chapter {idx + 1}
+          <span className={styles.eyebrowStack}>{langMeta?.label ?? language} · Theory</span>
+        </p>
 
-      <div className={`${styles.layout} ${mobileShowDetail ? styles.showDetail : ''}`}>
-        <nav className={styles.topicList}>
-          <span className={styles.topicCount}>{filtered.length} topics</span>
-          {filtered.length === 0 ? (
-            <p className={styles.empty}>No topics match.</p>
-          ) : (
-            filtered.map((card) => (
-              <button
-                key={card.id}
-                className={`${styles.topicItem} ${selected?.id === card.id ? styles.topicActive : ''}`}
-                onClick={() => selectTopic(card.id)}
-              >
-                <span className={styles.topicTitle}>{card.title}</span>
-                <div className={styles.topicMeta}>
-                  {card.tier && <span className={`${styles.dot} ${styles[`dot_${card.tier}`]}`} />}
-                  {card.level && <span className={styles.topicLevel}>{card.level}</span>}
-                </div>
-              </button>
-            ))
+        <h1 className={styles.h1}>{card.title}</h1>
+        <p className={styles.dek}>{card.summary}</p>
+
+        <div className={styles.byline}>
+          <span>Chapter {idx + 1} of {cards.length}</span>
+          {card.tier && <><span className={styles.bylineSep}>·</span><span>{card.tier}</span></>}
+          {card.level && <><span className={styles.bylineSep}>·</span><span>{card.level}</span></>}
+        </div>
+
+        <div className={styles.body}>
+          {card.body.split('\n\n').map((para, i) => (
+            <p key={i} className={i === 0 ? styles.lead : undefined}>{para}</p>
+          ))}
+
+          {card.diagram && (
+            <figure className={styles.figure}>
+              <pre className={styles.diagram}>{card.diagram.content}</pre>
+              <figcaption className={styles.figcaption}>
+                <b>Diagram:</b> {card.title}
+              </figcaption>
+            </figure>
           )}
-        </nav>
+        </div>
 
-        <div className={styles.detail}>
-          {mobileShowDetail && (
-            <button className={styles.backBtn} onClick={() => setMobileShowDetail(false)}>
-              ← Back to topics
+        {/* Prev / Next pager */}
+        <nav className={styles.pager}>
+          {prev ? (
+            <button className={styles.pagerCard} onClick={() => { setIdx(idx - 1); window.scrollTo(0, 0); }} type="button">
+              <span className={styles.pagerDir}>← Previous</span>
+              <span className={styles.pagerTitle}>{prev.title}</span>
             </button>
-          )}
-          {selected ? (
-            <>
-              <div className={styles.detailHeader}>
-                <h2 className={styles.detailTitle}>{selected.title}</h2>
-                <div className={styles.detailMeta}>
-                  {selected.tier && <Badge label={selected.tier} variant="tier" tier={selected.tier} />}
-                  {selected.level && <Badge label={selected.level} variant="level" level={selected.level} />}
-                </div>
-                <div className={styles.detailTags}>
-                  {selected.tags.map((tag) => <Badge key={tag} label={tag} variant="tag" />)}
-                </div>
-              </div>
-              {selected.diagram && (
-                <pre className={styles.diagram}>{selected.diagram.content}</pre>
-              )}
-              <div className={styles.detailBody}>
-                {selected.body.split('\n\n').map((para, i) => (
-                  <p key={i} className={styles.para}>{para}</p>
-                ))}
-              </div>
-            </>
-          ) : (
-            <p className={styles.empty}>Select a topic from the list.</p>
-          )}
+          ) : <div />}
+          {next ? (
+            <button className={`${styles.pagerCard} ${styles.pagerNext}`} onClick={() => { setIdx(idx + 1); window.scrollTo(0, 0); }} type="button">
+              <span className={styles.pagerDir}>Next →</span>
+              <span className={styles.pagerTitle}>{next.title}</span>
+            </button>
+          ) : <div />}
+        </nav>
+      </article>
+
+      {/* Right rail */}
+      <aside className={styles.rail}>
+        <div className={styles.railProgress}>
+          <div className={styles.railProgressLabel}>{pct}% · Chapter {idx + 1} of {cards.length}</div>
+          <div className={styles.railBar}>
+            <span className={styles.railFill} style={{ width: `${pct}%` }} />
+          </div>
         </div>
-      </div>
+
+        <h4 className={styles.railHeading}>Chapters</h4>
+        <nav className={styles.chapterList}>
+          {cards.map((c, i) => (
+            <button
+              key={c.id}
+              className={`${styles.chapterItem} ${i === idx ? styles.chapterActive : ''}`}
+              onClick={() => { setIdx(i); window.scrollTo(0, 0); }}
+              type="button"
+            >
+              <span className={styles.chapterNum}>{i + 1}</span>
+              <span className={styles.chapterTitle}>{c.title}</span>
+            </button>
+          ))}
+        </nav>
+      </aside>
     </div>
   );
 }

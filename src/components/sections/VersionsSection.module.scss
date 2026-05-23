@@ -1,102 +1,270 @@
-.timeline {
+// ─── Outer wrap ───────────────────────────────────────────
+.wrap {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  padding: 0 32px 80px;
 }
 
-.block {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 1.5rem;
-  padding-bottom: 2rem;
-
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.leftCol {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-
-  @media (max-width: 640px) {
-    flex-direction: row;
-    align-items: center;
-  }
-}
-
-.versionBadge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-primary-border);
-  border-radius: var(--radius-md);
-  padding: 0.6rem 0.75rem;
+.empty {
+  color: var(--fg-mute);
+  font-size: 14px;
   text-align: center;
-  min-width: 100px;
-  flex-shrink: 0;
+  padding: 3rem 0;
 }
 
-.versionName {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--color-primary);
-}
-
-.year {
-  font-size: 0.72rem;
-  color: var(--color-text-muted);
-}
-
-.line {
-  width: 2px;
-  flex: 1;
-  background: linear-gradient(to bottom, var(--color-primary-border), transparent);
-  min-height: 20px;
-  margin-top: 0.5rem;
-
-  @media (max-width: 640px) {
-    display: none;
-  }
-}
-
-.rightCol {
-  padding-top: 0.25rem;
-}
-
-.highlights {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.highlight {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.highlightHeader {
+// ─── Compare bar ──────────────────────────────────────────
+.bar {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0 14px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 0;
+  position: sticky;
+  top: var(--topnav-height);
+  background: var(--bg);
+  z-index: 5;
   flex-wrap: wrap;
 }
 
-.feature {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-text);
+.barLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.desc {
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
+.pickLabel {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.pick {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--fg);
+  background: var(--bg-1);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  padding: 6px 10px;
+  cursor: pointer;
+  appearance: auto;
+
+  &:focus {
+    outline: 2px solid var(--accent-line);
+    outline-offset: 1px;
+  }
+}
+
+.swapBtn {
+  font-family: var(--mono);
+  font-size: 16px;
+  color: var(--fg-dim);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  line-height: 1;
+
+  &:hover {
+    color: var(--fg);
+    border-color: var(--accent-line);
+  }
+}
+
+.barMeta {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.barCount {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--fg-dim);
+
+  b { color: var(--fg); font-weight: 500; }
+}
+
+// ─── Timeline ─────────────────────────────────────────────
+.timelineWrap {
+  position: relative;
+  margin: 28px 0 0;
+  padding-bottom: 32px;
+}
+
+.timelineTrack {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--line);
+}
+
+.pins {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  flex: 1;
+
+  &:first-child { align-items: flex-start; }
+  &:last-child  { align-items: flex-end; }
+}
+
+.pinDot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: var(--bg);
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+  flex-shrink: 0;
+
+  .pinActive & {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+}
+
+.pinLabel {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--fg-dim);
+  letter-spacing: 0.04em;
+  transition: color var(--dur-fast) var(--ease);
+
+  .pinActive & {
+    color: var(--fg);
+  }
+}
+
+// ─── Filter row ───────────────────────────────────────────
+.filterRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.filterBtn {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--fg-mute);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+
+  &:hover { color: var(--fg); }
+}
+
+.filterActive {
+  color: var(--fg);
+  border-color: var(--accent-line);
+}
+
+.filterCount {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--accent);
+  border: 1px solid var(--accent-line);
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+// ─── Diff cards ───────────────────────────────────────────
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 18px 20px;
+  background: var(--bg-1);
+}
+
+.cardBreaking {
+  border-color: var(--level-hard);
+  background: color-mix(in srgb, var(--level-hard) 4%, var(--bg-1));
+}
+
+.diffHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.diffNum {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--fg-dim);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.diffFeature {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--fg);
+  flex: 1;
+}
+
+.diffVer {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--accent);
+  border: 1px solid var(--accent-line);
+  padding: 2px 7px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.breakingPill {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--level-hard);
+  border: 1px solid var(--level-hard);
+  padding: 2px 7px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.diffDesc {
+  font-size: 13.5px;
+  color: var(--fg-mute);
   line-height: 1.6;
-  margin: 0;
+  margin: 0 0 10px;
+}
+
+.diffCode {
+  margin-top: 10px;
 }
