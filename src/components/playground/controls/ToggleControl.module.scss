@@ -1,6 +1,4 @@
-@use '@/styles/mixins' as *;
-
-.toggle {
+﻿.toggle {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -10,8 +8,8 @@
 
 .label {
   font-size: 0.875rem;
-  color: var(--color-text-muted);
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  color: var(--fg-mute);
+  font-family: var(--mono);
 }
 
 .switch {
@@ -28,7 +26,7 @@
   height: 0;
 
   &:checked + .slider {
-    background: var(--color-primary);
+    background: var(--accent);
   }
 
   &:checked + .slider::before {
@@ -36,16 +34,17 @@
   }
 
   &:focus-visible + .slider {
-    @include focus-ring;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 }
 
 .slider {
   position: absolute;
   inset: 0;
-  background: var(--color-primary-border);
+  background: var(--accent-line);
   border-radius: 1rem;
-  transition: background var(--transition-fast);
+  transition: background var(--dur-fast) var(--ease);
 
   &::before {
     content: '';
@@ -56,7 +55,7 @@
     top: 0.125rem;
     background: white;
     border-radius: 50%;
-    transition: transform var(--transition-fast);
+    transition: transform var(--dur-fast) var(--ease);
   }
 }
 
@@ -68,7 +67,7 @@
 
 .hint {
   font-size: 0.75rem;
-  color: var(--color-text-dim);
+  color: var(--fg-dim);
   line-height: 1.4;
   margin: 0;
 }

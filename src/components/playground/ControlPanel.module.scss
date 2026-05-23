@@ -1,54 +1,61 @@
-@use '@/styles/mixins' as *;
-
+// ─── Panel card ───────────────────────────────────────────
 .panel {
-  @include glass-card;
-  padding: 1.5rem;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  height: 100%;
-  overflow-y: auto;
+  gap: 20px;
 }
 
+// ─── Header row ───────────────────────────────────────────
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 12px;
 }
 
 .title {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-text);
-}
-
-.description {
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
-  line-height: 1.5;
-  margin-top: -0.75rem;
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--fg);
+  margin: 0;
 }
 
 .resetBtn {
-  background: transparent;
-  border: 1px solid var(--color-primary-border);
-  border-radius: var(--radius-sm);
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
-  padding: 0.25rem 0.625rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  color: var(--fg-dim);
+  padding: 4px 10px;
   cursor: pointer;
-  transition: all var(--transition-fast);
   flex-shrink: 0;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 
   &:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
+    color: var(--fg-mute);
+    border-color: var(--line-strong);
   }
 }
 
+// ─── Description ──────────────────────────────────────────
+.description {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--fg-mute);
+  line-height: 1.55;
+  margin: -8px 0 0;
+}
+
+// ─── Controls list ────────────────────────────────────────
 .controls {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 20px;
 }

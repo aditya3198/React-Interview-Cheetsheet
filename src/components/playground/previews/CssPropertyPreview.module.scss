@@ -1,9 +1,9 @@
-.canvas {
+﻿.canvas {
   width: 100%;
   height: 100%;
   min-height: 220px;
-  background: var(--color-bg-deep);
-  border-radius: var(--radius-md);
+  background: var(--bg);
+  border-radius: var(--r);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,10 +15,10 @@
 }
 
 .item {
-  background: var(--color-primary);
-  color: var(--color-bg-deep);
+  background: var(--accent);
+  color: var(--bg);
   padding: 0.625rem 1rem;
-  border-radius: var(--radius-sm);
+  border-radius: var(--r-sm);
   font-size: 0.875rem;
   font-weight: 600;
   text-align: center;
@@ -30,20 +30,20 @@
   width: 100%;
   min-height: 220px;
   background: #1a2744;
-  border-radius: var(--radius-md);
+  border-radius: var(--r);
   overflow: auto;
 }
 
 .boxModelItem {
-  background: var(--color-primary);
-  color: var(--color-bg-deep);
+  background: var(--accent);
+  color: var(--bg);
   font-size: 0.875rem;
   font-weight: 600;
   text-align: center;
 }
 
 .typographyDemo {
-  color: var(--color-text);
+  color: var(--fg);
   max-width: 560px;
   margin: 0;
   padding: 0;
