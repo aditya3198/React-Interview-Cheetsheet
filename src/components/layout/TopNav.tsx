@@ -7,17 +7,9 @@ import useLoadingStore from '@/store/useLoadingStore';
 import { useProgressStore } from '@/store/useProgressStore';
 import { usePaletteStore } from '@/store/usePaletteStore';
 import { useTheme, toggleTheme } from '@/hooks/useTheme';
+import { LANGUAGES, LANGUAGE_SLUGS, SECTIONS } from '@/data/navigation';
+import type { LanguageSlug } from '@/types/navigation';
 import styles from './TopNav.module.scss';
-
-const NAV_LINKS = [
-  { href: '/hub',        label: 'Hub' },
-  { href: '/javascript/theory',  label: 'Theory' },
-  { href: '/javascript/syntax',  label: 'Syntax' },
-  { href: '/javascript/versions', label: 'Versions' },
-  { href: '/javascript/playground', label: 'Playground' },
-  { href: '/qa',         label: 'Q&A' },
-  { href: '/drill',      label: 'Drill' },
-];
 
 function SunIcon() {
   return (
@@ -51,22 +43,36 @@ export default function TopNav() {
   const openPalette = usePaletteStore((s) => s.setOpen);
   const [theme, setTheme] = useTheme();
 
+  const segments = pathname.split('/');
+  const currentLang: LanguageSlug = LANGUAGE_SLUGS.includes(segments[1] as LanguageSlug)
+    ? (segments[1] as LanguageSlug)
+    : 'javascript';
+  const currentSection = SECTIONS.find((s) => s.slug === segments[2])?.slug ?? 'syntax';
+
   const handleNavClick = (href: string) => {
     if (href !== pathname) setLoading(true);
     setMobileOpen(false);
   };
 
+  const sectionLinks = SECTIONS.map((s) => ({
+    href: `/${currentLang}/${s.slug}`,
+    label: s.label,
+  }));
+
+  const staticBefore = [{ href: '/hub', label: 'Hub' }];
+  const staticAfter = [{ href: '/drill', label: 'Drill' }];
+  const allNavLinks = [...staticBefore, ...sectionLinks, ...staticAfter];
+
   return (
     <nav className={styles.nav}>
       <div className={styles.inner}>
-        {/* Brand mark — italic serif "lantern" + amber dot */}
         <Link href="/" className={styles.logo} onClick={() => handleNavClick('/')}>
           <span className={styles.logoDot} aria-hidden="true" />
           <span className={styles.logoMark}>lantern</span>
         </Link>
 
         <div className={styles.links}>
-          {NAV_LINKS.map(({ href, label }) => (
+          {allNavLinks.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
@@ -79,7 +85,6 @@ export default function TopNav() {
 
           <span className={styles.divider} aria-hidden="true" />
 
-          {/* ⌘K search */}
           <button
             className={styles.cmdk}
             aria-label="Open command palette (⌘K)"
@@ -90,7 +95,6 @@ export default function TopNav() {
             <span className={styles.kbd}>⌘K</span>
           </button>
 
-          {/* Theme toggle */}
           <button
             className={styles.themeBtn}
             aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
@@ -100,7 +104,6 @@ export default function TopNav() {
             {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
           </button>
 
-          {/* GitHub */}
           <a
             href="https://github.com/aditya3198/React-Interview-Cheetsheet"
             target="_blank"
@@ -134,22 +137,71 @@ export default function TopNav() {
 
       {mobileOpen && (
         <div className={styles.mobileMenu}>
-          {NAV_LINKS.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => handleNavClick(href)}
-              className={styles.mobileLink}
-            >
-              {label}
-            </Link>
-          ))}
+          <Link
+            href="/hub"
+            onClick={() => handleNavClick('/hub')}
+            className={`${styles.mobileLink} ${pathname === '/hub' ? styles.mobileLinkActive : ''}`}
+          >
+            Hub
+          </Link>
+
+          <div className={styles.mobileDivider}>
+            <span className={styles.mobileDividerDot} style={{ background: LANGUAGES.find((l) => l.slug === currentLang)?.color }} />
+            {LANGUAGES.find((l) => l.slug === currentLang)?.label}
+          </div>
+
+          {SECTIONS.map((s) => {
+            const href = `/${currentLang}/${s.slug}`;
+            return (
+              <Link
+                key={s.slug}
+                href={href}
+                onClick={() => handleNavClick(href)}
+                className={`${styles.mobileLink} ${styles.mobileLinkIndented} ${pathname === href || pathname.startsWith(href + '/') ? styles.mobileLinkActive : ''}`}
+              >
+                <span className={styles.mobileLinkIcon}>{s.icon}</span>
+                {s.label}
+              </Link>
+            );
+          })}
+
+          <div className={styles.mobileDivider}>Languages</div>
+
+          <div className={styles.mobileLangRow}>
+            {LANGUAGES.map((lang) => {
+              const href = `/${lang.slug}/${currentSection}`;
+              const isActive = lang.slug === currentLang;
+              return (
+                <Link
+                  key={lang.slug}
+                  href={href}
+                  onClick={() => handleNavClick(href)}
+                  className={`${styles.mobileLangChip} ${isActive ? styles.mobileLangChipActive : ''}`}
+                  style={{ '--lang-color': lang.color } as React.CSSProperties}
+                >
+                  <span className={styles.mobileLangDot} style={{ background: lang.color }} />
+                  {lang.label}
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className={styles.mobileDivider}>More</div>
+
+          <Link
+            href="/drill"
+            onClick={() => handleNavClick('/drill')}
+            className={`${styles.mobileLink} ${pathname === '/drill' ? styles.mobileLinkActive : ''}`}
+          >
+            Drill
+          </Link>
+
           <button
             className={styles.mobileLink}
-            style={{ textAlign: 'left', fontFamily: 'var(--sans)', fontSize: '14px' }}
+            style={{ textAlign: 'left', fontFamily: 'var(--sans)', fontSize: '14px', width: '100%', cursor: 'pointer' }}
             onClick={() => { setTheme(toggleTheme(theme)); setMobileOpen(false); }}
           >
-            {theme === 'dark' ? 'Switch to light' : 'Switch to dark'}
+            {theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
           </button>
         </div>
       )}
