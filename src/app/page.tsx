@@ -140,7 +140,7 @@ export default function HomePage() {
       </section>
 
       <footer className={styles.foot}>
-        <span>Lantern · open source</span>
+        <span>Statecraft · open source</span>
         <div className={styles.footRight}>
           <a href="https://github.com/aditya3198/React-Interview-Cheetsheet" target="_blank" rel="noopener noreferrer">GitHub</a>
           <Link href="/hub">Hub</Link>

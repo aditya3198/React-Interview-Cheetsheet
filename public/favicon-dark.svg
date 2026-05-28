@@ -1,33 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <radialGradient id="ember" cx="50%" cy="72%" r="55%">
-      <stop offset="0%"   stop-color="#8c2800"/>
-      <stop offset="35%"  stop-color="#3b1000"/>
-      <stop offset="100%" stop-color="#0c0806"/>
-    </radialGradient>
-  </defs>
-
-  <!-- Handle -->
-  <path d="M27 16 C27 6 37 6 37 16"
-        fill="none" stroke="#5c5248" stroke-width="3" stroke-linecap="round"/>
-
-  <!-- Top cap -->
-  <rect x="20" y="16" width="24" height="7" rx="2" fill="#5c5248"/>
-
-  <!-- Frame body -->
-  <rect x="18" y="23" width="28" height="26" rx="3" fill="#5c5248"/>
-
-  <!-- Glass (dying ember glow at bottom) -->
-  <rect x="21" y="26" width="22" height="20" rx="2" fill="url(#ember)"/>
-
-  <!-- Ember specks -->
-  <circle cx="29"   cy="43"   r="1"   fill="#c84800" fill-opacity="0.85"/>
-  <circle cx="33.5" cy="44"   r="0.9" fill="#a03200" fill-opacity="0.75"/>
-  <circle cx="36.5" cy="42.5" r="0.7" fill="#c84800" fill-opacity="0.6"/>
-
-  <!-- Bottom cap -->
-  <rect x="20" y="49" width="24" height="6" rx="2" fill="#5c5248"/>
-
-  <!-- Foot -->
-  <rect x="27" y="55" width="10" height="3" rx="1.5" fill="#5c5248"/>
+  <!-- merlons -->
+  <rect x="10" y="8"  width="12" height="13" rx="1.5" fill="#ece7dd"/>
+  <rect x="26" y="8"  width="12" height="13" rx="1.5" fill="#ece7dd"/>
+  <rect x="42" y="8"  width="12" height="13" rx="1.5" fill="#ece7dd"/>
+  <!-- wall bar connecting merlons -->
+  <rect x="10" y="17" width="44" height="4"  fill="#ece7dd"/>
+  <!-- tower body -->
+  <rect x="12" y="21" width="40" height="24" fill="#ece7dd"/>
+  <!-- arrow slit -->
+  <rect x="29" y="27" width="6"  height="14" rx="3" fill="#d4a04a"/>
+  <!-- base -->
+  <rect x="7"  y="45" width="50" height="11" rx="2" fill="#ece7dd"/>
 </svg>

@@ -6,7 +6,7 @@ import CommandPalette from '@/components/CommandPalette';
 import { instrumentSerif, plexSans, jetbrainsMono } from './fonts';
 
 export const metadata: Metadata = {
-  title: 'Lantern — frontend interview prep',
+  title: 'Statecraft — frontend interview prep',
   description: 'JavaScript, HTML, CSS and React — distilled into syntax cards, theory, version diffs, runnable playgrounds and interview Q&A.',
   icons: { icon: '/favicon-light.svg' },
 };

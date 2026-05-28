@@ -100,7 +100,7 @@ export default function HubPage() {
   return (
     <main className={styles.wrap}>
       <div className={styles.crumbs}>
-        <Link href="/" className={styles.crumbLink}>lantern</Link>
+        <Link href="/" className={styles.crumbLink}>statecraft</Link>
         <span className={styles.crumbSep}>/</span>
         <span>hub</span>
       </div>

@@ -68,7 +68,7 @@ export default function TopNav() {
       <div className={styles.inner}>
         <Link href="/" className={styles.logo} onClick={() => handleNavClick('/')}>
           <span className={styles.logoDot} aria-hidden="true" />
-          <span className={styles.logoMark}>lantern</span>
+          <span className={styles.logoMark}>statecraft</span>
         </Link>
 
         <div className={styles.links}>
