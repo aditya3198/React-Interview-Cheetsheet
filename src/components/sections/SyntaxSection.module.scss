@@ -106,6 +106,17 @@
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
   }
+
+  @media (max-width: 640px) {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
 }
 
 // ─── Syntax card ─────────────────────────────────────────
@@ -120,8 +131,15 @@
   transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
   scroll-margin-top: 120px;
   cursor: default;
+  min-width: 0;
 
   &:hover { border-color: var(--line-strong); background: var(--bg-2); }
+
+  @media (max-width: 640px) {
+    flex-shrink: 0;
+    width: min(300px, calc(100vw - 96px));
+    scroll-snap-align: start;
+  }
 }
 .pinned {
   border-color: var(--accent-line) !important;
