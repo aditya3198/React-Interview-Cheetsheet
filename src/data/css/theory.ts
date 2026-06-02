@@ -385,6 +385,188 @@ Cascade Layers (@layer): The newest native tool — explicitly prioritize style 
     tier: 'advanced',
     level: 'expert',
   },
+  {
+    id: 'browser-rendering-pipeline',
+    title: 'Browser Rendering Pipeline',
+    summary: 'From HTML bytes to painted pixels — the six stages the browser executes to render every frame.',
+    body: `The browser follows a strict pipeline to turn markup and styles into visible pixels:
+
+1. Parse HTML → DOM tree. The parser builds the Document Object Model node by node. External scripts block parsing unless marked async or defer.
+
+2. Parse CSS → CSSOM tree. The browser builds the CSS Object Model from all stylesheets. CSS is render-blocking — the browser won't paint until CSSOM is complete.
+
+3. DOM + CSSOM → Render Tree. The browser combines both trees, keeping only visible nodes (display: none elements are excluded). Each node has its computed styles.
+
+4. Layout (Reflow). The browser calculates the exact position and size of every render tree node, starting from the root. This outputs a box model for every element.
+
+5. Paint. The browser fills in pixels for each layer: colors, text, shadows, borders. Elements are painted onto one or more layers.
+
+6. Composite. The GPU combines all painted layers in the correct stacking order and displays the final frame.
+
+Critical Rendering Path (CRP): the minimum work needed before the first pixel appears. Optimizing it means: minimize render-blocking CSS/JS, reduce DOM size, inline critical CSS, preload key resources.`,
+    diagram: {
+      type: 'ascii',
+      content: `HTML bytes
+    ↓  parse
+  DOM Tree      CSS bytes
+    │               ↓  parse
+    │           CSSOM Tree
+    └─────┬─────────┘
+          ↓  combine (visible nodes only)
+      Render Tree
+          ↓  calculate geometry
+        Layout
+          ↓  fill pixels
+        Paint
+          ↓  GPU combines layers
+       Composite
+          ↓
+    Screen (frame)`,
+    },
+    tags: ['rendering', 'critical-rendering-path', 'dom', 'cssom', 'layout', 'paint', 'composite'],
+    tier: 'core',
+    level: 'experienced',
+  },
+  {
+    id: 'reflow-repaint-compositing',
+    title: 'Reflow, Repaint & Compositing',
+    summary: 'Three levels of render work — understanding which operations trigger which level is the foundation of CSS performance.',
+    body: `Every visual change triggers one of three levels of browser work, from most to least expensive:
+
+Reflow (Layout): recalculates the geometry of the entire affected subtree — positions, sizes, scroll. Triggered by: DOM insertions/removals, element resizing, font changes, reading layout properties (offsetWidth, getBoundingClientRect). Expensive because it can cascade — moving one element can shift everything else.
+
+Repaint: re-draws pixels without geometry changes. Triggered by: color, background, visibility, shadow, border-radius changes. Less expensive than reflow but still forces the CPU to redraw the affected area.
+
+Compositing only: changes handled entirely on the GPU, skipping layout and paint. Only transform and opacity on elements promoted to their own layer qualify. This is the cheapest path — typically sub-millisecond.
+
+Layout thrashing: alternating DOM reads and writes in a loop, forcing the browser to recalculate layout on every iteration. Fix by batching all reads first, then all writes.
+
+CSS triggers reference: csstriggers.com maps every property to which pipeline stages it triggers.`,
+    diagram: {
+      type: 'ascii',
+      content: `Change type          Pipeline stages triggered
+─────────────────    ──────────────────────────────
+width / height       Layout → Paint → Composite  (most expensive)
+color / background   Paint → Composite
+transform / opacity  Composite only              (cheapest)
+
+Layout thrashing (avoid):
+for (el of els) {
+  el.style.width = el.offsetWidth + 10 + 'px'; // read → write → reflow
+}
+
+Batched (correct):
+const widths = els.map(el => el.offsetWidth);  // all reads
+els.forEach((el, i) => el.style.width = widths[i] + 10 + 'px'); // all writes`,
+    },
+    tags: ['reflow', 'repaint', 'compositing', 'layout-thrashing', 'performance', 'rendering'],
+    tier: 'core',
+    level: 'experienced',
+  },
+  {
+    id: 'gpu-compositing-layers',
+    title: 'GPU Layers, will-change & Composite-Only Animations',
+    summary: 'Promoting elements to their own compositor layer lets the GPU handle animations without touching layout or paint.',
+    body: `The browser paints elements onto one or more layers. Most elements share a layer. When you animate a property that only affects compositing (transform, opacity), the GPU can shift or fade that layer without re-running layout or paint on the CPU — enabling silky 60fps animations.
+
+Layer promotion: the browser creates a new compositor layer for elements with transform (3D), will-change, video, canvas, position: fixed/sticky, or opacity animations. Layers are textures uploaded to GPU memory.
+
+will-change: hints to the browser to promote an element before animation starts, avoiding jank at the first frame:
+will-change: transform — promotes immediately, GPU-ready.
+will-change: auto — no hint (default).
+
+Pitfalls: overusing will-change creates too many GPU textures, consuming large amounts of VRAM and potentially hurting performance on low-memory devices. Apply it only to elements that genuinely animate frequently, and remove it after animations end via JavaScript.
+
+Animate transform not position: animating left/top triggers layout every frame. animating transform: translateX() stays in the composite stage only.`,
+    diagram: {
+      type: 'ascii',
+      content: `/* Triggers layout every frame — avoid */
+.box { transition: left 0.3s; }
+
+/* GPU-only, no layout/paint — prefer this */
+.box { transition: transform 0.3s; }
+.box:hover { transform: translateX(20px); }
+
+/* Promote before animation starts */
+.modal-overlay {
+  will-change: transform, opacity;
+}
+
+/* Layer budget — each layer = GPU memory */
+❌ * { will-change: transform; }  /* promotes everything = VRAM bloat */
+✅  Only elements that actually animate`,
+    },
+    tags: ['will-change', 'compositing', 'gpu', 'layers', 'animation', 'transform', 'performance'],
+    tier: 'advanced',
+    level: 'experienced',
+  },
+  {
+    id: 'core-web-vitals',
+    title: 'Core Web Vitals (LCP, INP, CLS)',
+    summary: "Google's three user-experience metrics that measure loading, interactivity, and visual stability.",
+    body: `Core Web Vitals are standardized metrics that quantify real user experience. They feed into Google's search ranking and are measurable via Lighthouse, Chrome DevTools, PageSpeed Insights, and the web-vitals JS library.
+
+LCP — Largest Contentful Paint (target: ≤ 2.5s): time until the largest image or text block in the viewport is fully rendered. Usually a hero image, heading, or above-the-fold banner. Improve by: preloading the LCP resource (<link rel="preload">), optimizing server response time, using modern image formats (WebP/AVIF), not lazy-loading above-fold images.
+
+INP — Interaction to Next Paint (target: ≤ 200ms, replaced FID in 2024): measures the worst latency across all user interactions (click, key, tap) during a page visit. Improve by: breaking up long tasks with scheduler.yield() or setTimeout chunking, moving heavy work to Web Workers, deferring non-critical JS.
+
+CLS — Cumulative Layout Shift (target: ≤ 0.1): sum of all unexpected layout shifts during the page's life. A shift is unexpected if it happens without user input. Improve by: always setting width and height on images/videos, not inserting content above existing content, using CSS aspect-ratio to reserve space, avoiding late-loading ads that push content down.
+
+Measuring: new PerformanceObserver({ type: 'largest-contentful-paint' }) in JS, or import { onLCP, onINP, onCLS } from 'web-vitals'.`,
+    diagram: {
+      type: 'ascii',
+      content: `Metric   What it measures              Good     Needs work   Poor
+──────   ──────────────────────────   ──────   ──────────   ──────
+LCP      Largest element rendered     ≤ 2.5s   2.5–4s       > 4s
+INP      Input → next frame latency   ≤ 200ms  200–500ms    > 500ms
+CLS      Unexpected layout shifts     ≤ 0.1    0.1–0.25     > 0.25
+
+Common LCP killers:          Common CLS killers:
+• Unpreloaded hero image     • Images without width/height
+• Render-blocking CSS/JS     • Late-injected banners/ads
+• Slow server (TTFB)         • Web fonts causing FOIT/FOUT
+• Lazy-loaded above fold     • Dynamic content above fold`,
+    },
+    tags: ['core-web-vitals', 'lcp', 'inp', 'cls', 'performance', 'lighthouse', 'seo'],
+    tier: 'core',
+    level: 'experienced',
+  },
+  {
+    id: 'css-containment',
+    title: 'CSS Containment & content-visibility',
+    summary: 'Tell the browser an element is independent so it can skip layout and paint work outside its boundary.',
+    body: `CSS containment (contain property) lets you declare that a subtree is isolated from the rest of the page for layout, paint, or style purposes. The browser can then skip recalculating those aspects for the rest of the document when the contained element changes.
+
+contain: layout — changes inside the element don't affect layout outside. The element acts like a formatting context.
+contain: paint — the element's descendants don't render outside its border box. The browser can skip painting it when off-screen.
+contain: style — (limited) prevents counters and quotes from leaking out.
+contain: strict — all of the above simultaneously.
+contain: content — layout + paint (safe default, most commonly useful).
+
+content-visibility: auto — the browser skips rendering off-screen elements entirely (layout + paint), only doing work when they scroll into view. Massive performance win for long pages with many sections. Pair with contain-intrinsic-size to give the browser a placeholder size so scrollbar doesn't jump.
+
+Use cases: widget containers that update frequently, virtualized list items, off-screen modals, dashboard cards.`,
+    diagram: {
+      type: 'ascii',
+      content: `/* Contain layout recalculation to this widget */
+.widget {
+  contain: content; /* layout + paint */
+}
+
+/* Skip rendering off-screen sections entirely */
+.page-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px; /* estimated height */
+}
+
+Without content-visibility: browser renders ALL sections on load
+With content-visibility: auto: browser renders only visible sections
+→ Can reduce initial render time by 5–7x on long pages`,
+    },
+    tags: ['containment', 'content-visibility', 'contain', 'performance', 'rendering'],
+    tier: 'advanced',
+    level: 'expert',
+  },
 ];
 
 export default cssTheory;

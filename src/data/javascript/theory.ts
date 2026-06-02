@@ -481,6 +481,76 @@ new PerformanceObserver(list => {
     tier: 'advanced',
     level: 'expert',
   },
+  {
+    id: 'event-loop-rendering',
+    title: 'Event Loop, Tasks & Rendering',
+    summary: 'The browser renders between tasks — long JS tasks block frames and cause visible jank.',
+    body: `The browser's main thread runs one thing at a time via the event loop. Each iteration processes one task from the task queue, then flushes all microtasks, then (if a frame is due) runs requestAnimationFrame callbacks and paints.
+
+Tasks (macrotasks): setTimeout, setInterval, I/O events, user input events — one per event loop tick.
+Microtasks: Promise.then, queueMicrotask, MutationObserver — all queued microtasks run to completion after every task, before the next paint. Creating microtasks in a loop can starve the rendering pipeline.
+Animation frame: requestAnimationFrame runs just before the browser paints, synchronized to the display refresh rate (usually 60Hz = 16.7ms per frame). Ideal for visual updates.
+
+Long task problem: the browser targets 60fps — each frame budget is ~16ms. A synchronous JS task longer than 50ms is classified as a "long task" and blocks input handling and rendering. Users experience jank or unresponsiveness.
+
+Breaking up long tasks: use setTimeout(chunk, 0) or scheduler.yield() to release the main thread between chunks of work, allowing the browser to handle input and paint frames between them.`,
+    diagram: {
+      type: 'ascii',
+      content: `Event loop iteration:
+┌─────────────────────────────────────────────────┐
+│ 1. Pick one Task (setTimeout cb, click handler) │
+│ 2. Run it to completion                         │
+│ 3. Drain ALL microtasks (Promise.then)          │
+│ 4. If frame due: run rAF callbacks → Paint      │
+│ 5. Repeat                                       │
+└─────────────────────────────────────────────────┘
+
+Long task (bad):              Chunked (good):
+[====50ms+ task====]          [=10ms=] yield [=10ms=] yield [=10ms=]
+    ↑ blocks input                   ↑ input handled between chunks
+    ↑ drops frames`,
+    },
+    tags: ['event-loop', 'tasks', 'microtasks', 'requestAnimationFrame', 'long-tasks', 'rendering', 'performance'],
+    tier: 'core',
+    level: 'experienced',
+  },
+  {
+    id: 'profiling-devtools',
+    title: 'Performance Profiling with Chrome DevTools',
+    summary: 'A systematic workflow for finding and diagnosing main thread bottlenecks, memory leaks, and rendering issues.',
+    body: `Chrome DevTools provides several panels for performance investigation:
+
+Performance panel: Record while reproducing the issue. Read the flame chart (each bar = a function call, width = duration). Look for: long tasks (flagged with red triangles), layout/paint events (purple/green bars), JS execution time (yellow). The "Bottom-Up" and "Call Tree" tabs identify the most expensive functions. Check "Main" thread lane for blocked frames.
+
+Memory panel: Take heap snapshots before and after a suspected leak, then compare. Retained objects that grew between snapshots are suspects. "Allocation instrumentation on timeline" shows when objects are allocated. Search for "Detached" DOM nodes — elements removed from the DOM but still referenced in JS (classic leak).
+
+Coverage panel (Ctrl+Shift+P → "Coverage"): Shows which JS and CSS bytes are unused on load. Drives code-splitting and lazy loading decisions.
+
+Rendering panel (via More Tools): "Paint flashing" highlights areas being repainted each frame. "Layout shift regions" shows CLS sources. "Frame rendering stats" overlays FPS counter.
+
+Remote debugging: chrome://inspect — profile on a real Android device via USB for accurate mobile metrics. Desktop CPU is 5-8x faster; always test on target hardware.
+
+performance.now() vs Date.now(): use performance.now() for benchmarks — it's monotonic, sub-millisecond precision, and unaffected by system clock adjustments.`,
+    diagram: {
+      type: 'ascii',
+      content: `Performance panel anatomy:
+┌──────────────────────────────────────────────────┐
+│  FPS  ████████░░░░████████   ← green=good, red=drop
+│  CPU  ████░░████████░░████   ← yellow=JS, purple=layout
+│  NET  ─┬──┬─────────────    ← resource waterfall
+│        │  │
+│  Main: [Script][Layout][Paint][Composite]
+│        └── flame chart (call stack over time)    │
+└──────────────────────────────────────────────────┘
+
+Red triangle on task = Long Task (>50ms)
+Purple bar          = Layout / Reflow
+Green bar           = Paint`,
+    },
+    tags: ['profiling', 'devtools', 'performance', 'flame-chart', 'heap-snapshot', 'long-tasks', 'coverage'],
+    tier: 'advanced',
+    level: 'experienced',
+  },
 ];
 
 export default jsTheory;

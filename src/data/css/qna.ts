@@ -897,6 +897,109 @@ Minimum tap/click target size: 44×44px (WCAG 2.5.5) or 24×24px (WCAG 2.5.8 Lev
     tags: ['accessibility', 'a11y', 'focus-visible', 'reduced-motion', 'sr-only'],
     tier: 'core',
   },
+  {
+    id: 'reflow-vs-repaint',
+    question: 'What is the difference between reflow and repaint? Which properties trigger which?',
+    answer: `Reflow (layout) recalculates the geometry — position and size — of the affected element and everything downstream in the document. It is the most expensive render operation because it can cascade across the entire tree. Repaint re-draws pixels for an element whose appearance changed but whose geometry did not (color, background, shadow). Compositing-only changes (transform, opacity on a promoted layer) skip both and are handled entirely by the GPU. The rule: always prefer animating transform and opacity over properties like left, top, width, or background-color.`,
+    codeExample: `/* Triggers reflow every frame — expensive */
+.bad { transition: left 0.3s, width 0.3s; }
+
+/* Triggers repaint every frame */
+.ok  { transition: background-color 0.3s; }
+
+/* Composite only — GPU, no CPU layout or paint */
+.good { transition: transform 0.3s, opacity 0.3s; }
+
+/* Properties that trigger reflow (partial list):
+   width, height, padding, margin, border, top, left,
+   font-size, font-family, display, position,
+   offsetWidth, scrollTop (reading these forces sync layout) */`,
+    codeLanguage: 'css',
+    difficulty: 'experienced',
+    tags: ['reflow', 'repaint', 'compositing', 'performance', 'rendering'],
+    tier: 'advanced',
+  },
+  {
+    id: 'layout-thrashing',
+    question: 'What is layout thrashing and how do you fix it?',
+    answer: `Layout thrashing happens when JavaScript alternates DOM reads and writes in rapid succession, forcing the browser to recalculate layout (reflow) on every iteration instead of batching it. Reading layout properties like offsetWidth, getBoundingClientRect, or scrollTop after writing to the DOM invalidates the browser's cached layout and forces a synchronous recalculation. The fix is to batch all reads first, then all writes — the browser only reflows once at the end of the write phase.`,
+    codeExample: `// BAD — thrashing: read → write → reflow on every iteration
+elements.forEach(el => {
+  const width = el.offsetWidth; // forces reflow
+  el.style.width = width + 10 + 'px'; // write
+});
+
+// GOOD — batch reads, then batch writes
+const widths = elements.map(el => el.offsetWidth); // all reads (one reflow)
+elements.forEach((el, i) => {
+  el.style.width = widths[i] + 10 + 'px'; // all writes
+});
+
+// Also good: requestAnimationFrame to schedule writes
+requestAnimationFrame(() => {
+  elements.forEach((el, i) => {
+    el.style.width = widths[i] + 10 + 'px';
+  });
+});`,
+    codeLanguage: 'javascript',
+    difficulty: 'experienced',
+    tags: ['layout-thrashing', 'reflow', 'performance', 'dom', 'requestAnimationFrame'],
+    tier: 'advanced',
+  },
+  {
+    id: 'will-change-usage',
+    question: 'When should you use will-change and what are its pitfalls?',
+    answer: `will-change hints to the browser to promote an element to its own GPU compositor layer before an animation starts, preventing the jank of on-the-fly promotion at the first frame. Use it on elements that genuinely animate transform or opacity frequently. The main pitfall is overuse: each promoted layer is a texture stored in GPU memory (VRAM). Applying it broadly — especially to all elements or large sections — causes excessive VRAM consumption, slows compositing, and can hurt performance on mobile. Apply it surgically, and ideally remove it via JavaScript after the animation ends.`,
+    codeExample: `/* Good: targeted use on animated element */
+.drawer {
+  will-change: transform;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+.drawer.open {
+  transform: translateX(0);
+}
+
+/* Remove after animation to free layer */
+el.addEventListener('transitionend', () => {
+  el.style.willChange = 'auto';
+});
+
+/* Bad: promoting everything */
+* { will-change: transform; } /* destroys performance */
+
+/* Bad: on elements that rarely animate */
+.static-card { will-change: transform; } /* wasted VRAM */`,
+    codeLanguage: 'css',
+    difficulty: 'experienced',
+    tags: ['will-change', 'gpu', 'compositing', 'animation', 'performance'],
+    tier: 'advanced',
+  },
+  {
+    id: 'font-display-fout-foit',
+    question: 'What is FOIT and FOUT, and how does font-display fix them?',
+    answer: `FOIT (Flash of Invisible Text) is when the browser hides text while a web font loads, showing a blank space until the font arrives. FOUT (Flash of Unstyled Text) is when the browser shows text in a fallback system font first, then swaps to the web font once loaded — causing a visible layout shift. font-display in @font-face controls this tradeoff. font-display: swap eliminates FOIT by showing fallback text immediately and swapping when ready — best for body text. font-display: optional skips the swap entirely if the font isn't already cached — eliminates both FOIT and FOUT at the cost of the font not loading on first visit. Pair with <link rel="preload"> to reduce the swap window.`,
+    codeExample: `@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter.woff2') format('woff2');
+  font-display: swap; /* show fallback immediately, swap when loaded */
+}
+
+/* Preload critical fonts to shrink the swap window */
+/* In <head>: */
+/* <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin> */
+
+/* font-display values:
+   auto     — browser default (usually FOIT)
+   block    — short FOIT (3s invisible, then swap)
+   swap     — FOUT (show fallback immediately, swap anytime)
+   fallback — short FOIT (100ms), then fallback, swap within 3s only
+   optional — short FOIT (100ms), use cache only, no swap */`,
+    codeLanguage: 'css',
+    difficulty: 'experienced',
+    tags: ['font-display', 'foit', 'fout', 'web-fonts', 'performance', 'cls'],
+    tier: 'advanced',
+  },
 ];
 
 export default cssQna;

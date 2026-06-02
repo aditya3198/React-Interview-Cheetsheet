@@ -1135,6 +1135,97 @@ function App() {
     tags: ['micro-frontends', 'module-federation', 'architecture', 'webpack', 'scalability'],
     tier: 'advanced',
   },
+  {
+    id: 'hydration-explained',
+    question: 'What is hydration in React and why can it fail?',
+    answer: `Hydration is the process where React attaches event listeners and makes server-rendered HTML interactive on the client. The server renders a complete HTML string (fast first paint, SEO-friendly). The client receives that HTML, React renders the same component tree in memory, and then walks the existing DOM matching nodes — instead of creating new DOM nodes, it reuses the server-rendered ones and attaches event handlers. Hydration fails (mismatch error) when the server-rendered HTML doesn't match what React renders on the client. Common causes: using browser-only APIs (window, localStorage) during render without guards, rendering dates/times that differ between server and client timezones, conditional rendering based on Math.random() or Date.now(), and browser extensions that modify the DOM before hydration. React 18 recovers from mismatches in production but logs warnings in development.`,
+    codeExample: `// Hydration mismatch — bad: window not available on server
+function Component() {
+  return <div>{window.innerWidth}px</div>; // throws on server
+}
+
+// Fix: guard with useEffect (runs client-only)
+function Component() {
+  const [width, setWidth] = useState(0);
+  useEffect(() => setWidth(window.innerWidth), []);
+  return <div>{width}px</div>;
+}
+
+// Fix: suppress mismatch warning for known differences
+<time suppressHydrationWarning>
+  {new Date().toLocaleString()}
+</time>
+
+// React 18 hydrateRoot (replaces ReactDOM.hydrate)
+import { hydrateRoot } from 'react-dom/client';
+hydrateRoot(document.getElementById('root'), <App />);`,
+    codeLanguage: 'jsx',
+    difficulty: 'experienced',
+    tags: ['hydration', 'ssr', 'hydration-mismatch', 'server-rendering'],
+    tier: 'advanced',
+  },
+  {
+    id: 'selective-hydration-streaming',
+    question: 'What is selective hydration and how does React 18 streaming SSR work?',
+    answer: `Traditional SSR hydrates the entire page at once — the client must download and execute all JS before any part of the page becomes interactive. React 18 introduces two improvements. Streaming SSR: the server sends HTML in chunks as each Suspense boundary resolves, so the browser can render and display content progressively instead of waiting for the full page. Selective hydration: React prioritizes hydrating whichever part the user is interacting with first — if a user clicks a button in a section that hasn't hydrated yet, React hydrates that section immediately before others. Together these mean users see content faster, can interact with loaded parts sooner, and slow data-fetching components don't block the rest of the page.`,
+    codeExample: `// Suspense boundaries = hydration units
+// Server can stream each boundary independently
+function Page() {
+  return (
+    <Layout>
+      <Suspense fallback={<NavSkeleton />}>
+        <Nav />           {/* streamed + hydrated first */}
+      </Suspense>
+
+      <Suspense fallback={<HeroSkeleton />}>
+        <Hero />          {/* streamed when ready */}
+      </Suspense>
+
+      <Suspense fallback={<FeedSkeleton />}>
+        <SlowFeed />      {/* streams last, doesn't block above */}
+      </Suspense>
+    </Layout>
+  );
+}
+
+// User clicks <Hero> before <SlowFeed> hydrates?
+// React selectively hydrates <Hero> first`,
+    codeLanguage: 'jsx',
+    difficulty: 'expert',
+    tags: ['selective-hydration', 'streaming-ssr', 'suspense', 'react-18', 'performance'],
+    tier: 'advanced',
+  },
+  {
+    id: 'client-side-code-protection',
+    question: 'How do you prevent your client-side source code from being easily stolen?',
+    answer: `You cannot fully prevent it — if the browser can run it, a determined person can read it. The correct answer has two parts: architecture and obfuscation. Architecture is the real protection: any logic you truly cannot expose should live on the server and only be accessible via API. Secret algorithms, pricing rules, and credentials must never ship to the browser. For what does run client-side: disable source maps in production builds (sourceMap: false in tsconfig.json and sourcemap: false in your bundler) — source maps reconstruct your original TypeScript in DevTools. If you need source maps for error monitoring, generate them, upload to Sentry/Datadog via CLI, then delete them before deploying. Beyond that, code obfuscators (javascript-obfuscator) make reverse engineering significantly harder than minification alone, but still not impossible — they raise the cost, not a hard barrier. Add copyright notices for legal deterrence.`,
+    codeExample: `// tsconfig.json — disable in production
+{
+  "compilerOptions": {
+    "sourceMap": false
+  }
+}
+
+// vite.config.ts
+export default defineConfig({
+  build: { sourcemap: false }
+});
+
+// Best of both worlds: generate maps, upload privately, delete
+// (in CI pipeline)
+// 1. Build with sourcemaps
+// 2. sentry-cli sourcemaps upload ./dist --org=myorg --project=myapp
+// 3. rm -rf dist/**/*.map
+// 4. Deploy dist/ — no maps exposed to users
+
+// Architecture: never put secrets in frontend code
+const API_KEY = process.env.SECRET_KEY; // server only
+// Never: const API_KEY = 'sk-...' in React code`,
+    codeLanguage: 'javascript',
+    difficulty: 'experienced',
+    tags: ['security', 'source-maps', 'obfuscation', 'client-side', 'tsconfig'],
+    tier: 'advanced',
+  },
 ];
 
 export default reactQna;

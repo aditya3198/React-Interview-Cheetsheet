@@ -901,6 +901,248 @@ const result = ops[opName]?.(x, y); // lookup table — no eval`,
     tags: ['security', 'xss', 'csrf', 'prototype-pollution', 'csp'],
     tier: 'advanced',
   },
+  {
+    id: 'browser-rendering-pipeline-qna',
+    question: 'Walk me through what happens when a browser renders a page.',
+    answer: `The browser follows a fixed pipeline: (1) Parse HTML into the DOM tree. (2) Parse CSS into the CSSOM tree — CSS is render-blocking; painting waits until CSSOM is complete. (3) Combine DOM and CSSOM into the Render Tree (visible nodes only, with computed styles). (4) Layout (Reflow) — calculate exact position and size of every node. (5) Paint — fill in pixels for colors, borders, text, shadows onto layers. (6) Composite — the GPU combines layers in the correct stacking order and displays the frame. The Critical Rendering Path is the minimum work needed before the first pixel: minimizing render-blocking resources and DOM size directly reduces time-to-first-paint.`,
+    difficulty: 'experienced',
+    tags: ['rendering', 'critical-rendering-path', 'dom', 'cssom', 'layout', 'paint', 'composite'],
+    tier: 'core',
+  },
+  {
+    id: 'async-vs-defer',
+    question: 'What is the difference between async and defer on a script tag?',
+    answer: `Both async and defer download the script without blocking HTML parsing. The difference is when they execute. async executes as soon as the script finishes downloading — it may interrupt HTML parsing, and execution order between multiple async scripts is not guaranteed. Use it for fully independent scripts like analytics. defer executes after HTML parsing is fully complete, in document order. Use it for scripts that depend on the DOM or on each other. Scripts with type="module" are deferred by default.`,
+    codeExample: `<!-- Blocks HTML parsing — avoid for non-critical scripts -->
+<script src="app.js"></script>
+
+<!-- Downloads in parallel, executes when ready (may interrupt parsing) -->
+<script async src="analytics.js"></script>
+
+<!-- Downloads in parallel, executes after HTML parsed, in order -->
+<script defer src="vendor.js"></script>
+<script defer src="app.js"></script>
+<!-- app.js always runs after vendor.js -->
+
+<!-- Modules are deferred by default -->
+<script type="module" src="main.js"></script>`,
+    codeLanguage: 'html',
+    difficulty: 'experienced',
+    tags: ['async', 'defer', 'script', 'rendering', 'critical-rendering-path', 'performance'],
+    tier: 'core',
+  },
+  {
+    id: 'core-web-vitals-qna',
+    question: 'What are Core Web Vitals and how do you improve each one?',
+    answer: `Core Web Vitals are three metrics Google uses to quantify real user experience: LCP, INP, and CLS. LCP (Largest Contentful Paint, target ≤ 2.5s) measures when the biggest visible element is rendered — improve by preloading the hero image, optimizing server response time, using WebP/AVIF formats, and never lazy-loading above-fold images. INP (Interaction to Next Paint, target ≤ 200ms) measures the worst input-to-frame latency across the session — improve by breaking long tasks with scheduler.yield(), moving heavy work to Web Workers, deferring non-critical JS. CLS (Cumulative Layout Shift, target ≤ 0.1) measures unexpected layout shifts — improve by always setting width and height on images/videos, not injecting content above existing content, and using CSS aspect-ratio to reserve space.`,
+    codeExample: `// LCP — preload hero image
+// <link rel="preload" href="/hero.webp" as="image">
+
+// INP — break up long task
+async function processLargeData(items) {
+  for (let i = 0; i < items.length; i++) {
+    process(items[i]);
+    if (i % 100 === 0) await scheduler.yield(); // release main thread
+  }
+}
+
+// CLS — always reserve space for images
+img { width: 800px; height: 450px; } /* or aspect-ratio: 16/9 */
+
+// Measure with web-vitals library
+import { onLCP, onINP, onCLS } from 'web-vitals';
+onLCP(console.log);
+onINP(console.log);
+onCLS(console.log);`,
+    codeLanguage: 'javascript',
+    difficulty: 'experienced',
+    tags: ['core-web-vitals', 'lcp', 'inp', 'cls', 'performance', 'lighthouse'],
+    tier: 'advanced',
+  },
+  {
+    id: 'profiling-workflow',
+    question: 'How do you profile and diagnose a slow page using Chrome DevTools?',
+    answer: `Start with the Performance tab — record while reproducing the slowness, then read the flame chart for long tasks (red triangle = >50ms, blocks input and frames). Look for wide JS bars (yellow), layout/reflow bars (purple), and paint bars (green). The Bottom-Up tab ranks the costliest functions. For memory leaks, use the Memory tab: take a heap snapshot, interact with the page, force GC, take another snapshot and compare — objects that grew are suspects. Search for "Detached" DOM nodes. The Coverage tab shows unused JS/CSS bytes, driving code-splitting decisions. For CSS rendering issues, open the Rendering panel and enable Paint Flashing (highlights repaints per frame) and Layout Shift Regions (visualizes CLS). For mobile profiling, use chrome://inspect with a USB-connected Android device — desktop CPUs are 5-8x faster and mask real user experience.`,
+    difficulty: 'experienced',
+    tags: ['profiling', 'devtools', 'performance', 'flame-chart', 'memory-leak', 'heap-snapshot'],
+    tier: 'advanced',
+  },
+  {
+    id: 'performance-now-vs-date-now',
+    question: 'Why use performance.now() instead of Date.now() for benchmarking?',
+    answer: `performance.now() returns a high-resolution, monotonic timestamp with sub-millisecond (microsecond) precision, measured from the page's navigationStart. It never goes backwards and is unaffected by system clock adjustments (NTP sync, DST changes, manual clock changes). Date.now() is millisecond precision only and can jump or go backwards if the system clock is adjusted. For any performance measurement — timing function calls, measuring animation frame budgets, benchmarking — always use performance.now().`,
+    codeExample: `// Correct: high-res, monotonic
+const t0 = performance.now();
+doWork();
+const elapsed = performance.now() - t0;
+console.log(\`\${elapsed.toFixed(3)}ms\`); // e.g. 1.247ms
+
+// Wrong for benchmarks: low-res, not monotonic
+const t0 = Date.now(); // milliseconds only, can jump
+doWork();
+const elapsed = Date.now() - t0; // may be 0ms for fast ops
+
+// Named marks and measures (DevTools timeline)
+performance.mark('parse-start');
+parseData();
+performance.mark('parse-end');
+performance.measure('parse', 'parse-start', 'parse-end');`,
+    codeLanguage: 'javascript',
+    difficulty: 'experienced',
+    tags: ['performance', 'performance-now', 'benchmarking', 'profiling'],
+    tier: 'advanced',
+  },
+  {
+    id: 'babel-what-it-does',
+    question: 'What does Babel do, and why is it still relevant with modern browsers?',
+    answer: `Babel is a transpiler — it converts modern JavaScript (ES6+, JSX, TypeScript) into backwards-compatible code for older environments. It remains relevant because: (1) you may need to support older browsers or Node versions, (2) it handles JSX transformation for React, (3) it supports experimental proposals via plugins before they land in engines, and (4) it is deeply integrated into most bundler pipelines even when modern targets don't strictly require transpilation.`,
+    difficulty: 'experienced',
+    tags: ['babel', 'transpiler', 'build-tools', 'es6'],
+    tier: 'advanced',
+  },
+  {
+    id: 'babel-preset-vs-plugin',
+    question: 'What is the difference between a Babel preset and a plugin?',
+    answer: `A plugin is a single transformation (e.g. @babel/plugin-transform-arrow-functions). A preset is a curated collection of plugins. @babel/preset-env is the most important — it uses browserslist combined with a compatibility database to include only the transforms your target environments actually need, avoiding unnecessary bundle bloat.`,
+    codeExample: `// babel.config.js
+module.exports = {
+  presets: [
+    ['@babel/preset-env', {
+      targets: '> 0.5%, last 2 versions, not dead',
+      useBuiltIns: 'usage', // auto-inject only needed polyfills
+      corejs: 3,
+    }],
+    '@babel/preset-react',
+    '@babel/preset-typescript',
+  ],
+  plugins: [
+    '@babel/plugin-proposal-decorators', // single transform
+  ],
+};`,
+    codeLanguage: 'javascript',
+    difficulty: 'experienced',
+    tags: ['babel', 'preset-env', 'plugins', 'build-tools'],
+    tier: 'advanced',
+  },
+  {
+    id: 'transpiling-vs-polyfilling',
+    question: 'What is the difference between transpiling and polyfilling?',
+    answer: `Transpiling rewrites syntax — arrow functions become regular functions, class becomes prototype chains. Polyfilling adds missing runtime APIs that older environments lack (Promise, Array.prototype.flatMap, fetch). Babel handles transpiling; core-js or whatwg-fetch handle polyfills. Both are needed for full compatibility. Using @babel/preset-env with useBuiltIns: 'usage' automates injecting only the polyfills your code actually uses.`,
+    codeExample: `// Transpiling (syntax rewrite)
+// Before (ES6)
+const add = (a, b) => a + b;
+// After (ES5 output)
+var add = function(a, b) { return a + b; };
+
+// Polyfilling (runtime API addition)
+// core-js adds this if browser lacks it:
+Array.prototype.flatMap = function(...) { ... };
+
+// babel.config.js — auto polyfills
+['@babel/preset-env', {
+  useBuiltIns: 'usage', // only polyfills you use
+  corejs: 3,
+}]`,
+    codeLanguage: 'javascript',
+    difficulty: 'experienced',
+    tags: ['babel', 'polyfill', 'transpile', 'core-js', 'es6'],
+    tier: 'advanced',
+  },
+  {
+    id: 'source-maps-security',
+    question: 'How can source maps expose your original code, and how do you prevent it?',
+    answer: `When sourceMap is enabled in tsconfig.json or your bundler config, .map files are generated alongside your compiled output. These files contain the full mapping back to your original source — variable names, file paths, and readable code. If these are served publicly, anyone can open DevTools Sources tab and read your original TypeScript, completely defeating minification. The fix is to disable source maps in production builds. If you still need them for error monitoring (e.g. Sentry), generate the .map files, upload them to your error tracker via CLI, then delete them before deploying — users never see them but your stack traces remain readable.`,
+    codeExample: `// tsconfig.json — disable in production
+{
+  "compilerOptions": {
+    "sourceMap": false
+  }
+}
+
+// vite.config.ts
+build: {
+  sourcemap: false
+}
+
+// webpack.config.js
+devtool: false // production
+devtool: 'eval-source-map' // dev only
+
+// Best practice: generate but don't serve
+// Upload to Sentry, then delete before deploy
+sentry-cli sourcemaps upload ./dist
+rm dist/**/*.map`,
+    codeLanguage: 'javascript',
+    difficulty: 'experienced',
+    tags: ['source-maps', 'security', 'tsconfig', 'build-tools', 'sentry'],
+    tier: 'advanced',
+  },
+  {
+    id: 'npm-dependency-types',
+    question: 'What is the difference between dependencies, devDependencies, and peerDependencies?',
+    answer: `dependencies are needed at runtime (React, axios). devDependencies are only needed during development or build time (ESLint, Webpack, TypeScript) and are not included in production installs. peerDependencies declare compatibility requirements — "if you use this package, you must have React 18 installed yourself." The consuming app provides the peer package, avoiding duplicate instances of the same library (especially important for React and context/hooks).`,
+    codeExample: `// package.json
+{
+  "dependencies": {
+    "react": "^18.0.0",   // needed at runtime
+    "axios": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",  // build time only
+    "eslint": "^8.0.0",
+    "vite": "^5.0.0"
+  },
+  "peerDependencies": {
+    // for a component library:
+    "react": ">=17.0.0"      // host app must provide this
+  }
+}`,
+    codeLanguage: 'json',
+    difficulty: 'experienced',
+    tags: ['npm', 'package-management', 'dependencies', 'peerDependencies'],
+    tier: 'core',
+  },
+  {
+    id: 'package-lock-purpose',
+    question: 'What does package-lock.json do and why should it be committed?',
+    answer: `package-lock.json locks the exact resolved versions of every package in the entire dependency tree, ensuring reproducible installs across machines and CI environments. Without it, npm install might resolve to different patch or minor versions over time as new releases are published, causing "works on my machine" bugs. yarn.lock and pnpm-lock.yaml serve the same purpose for their respective tools. Always commit the lockfile — never add it to .gitignore.`,
+    difficulty: 'experienced',
+    tags: ['npm', 'package-lock', 'lockfile', 'reproducible-builds'],
+    tier: 'core',
+  },
+  {
+    id: 'npm-vs-yarn-vs-pnpm',
+    question: 'What are the differences between npm, yarn, and pnpm?',
+    answer: `npm is the default Node package manager, much improved in v7+ with workspaces and automatic peer dependency installs. Yarn introduced parallel installs, offline caching, and workspaces; Yarn Berry (v2+) uses Plug'n'Play which eliminates node_modules entirely. pnpm uses a content-addressable global store with hard links — each version of a package is stored once on disk and linked into projects, making it significantly faster and more disk-efficient. pnpm is also strict by default, preventing phantom dependencies.`,
+    difficulty: 'experienced',
+    tags: ['npm', 'yarn', 'pnpm', 'package-management', 'build-tools'],
+    tier: 'advanced',
+  },
+  {
+    id: 'phantom-dependency',
+    question: 'What is a phantom dependency?',
+    answer: `A phantom dependency is a package your code imports that is not listed in your package.json but happens to be installed because another dependency brought it in. npm and yarn hoist packages to the root node_modules, accidentally making them importable. This is fragile — if the package that pulled it in is updated or removed, your code silently breaks. pnpm's strict linking prevents this: your code can only import packages explicitly declared in your own package.json.`,
+    codeExample: `// package.json only lists "react-router"
+// but react-router depends on "history"
+// With npm/yarn hoisting, this works (phantom dep):
+import { createBrowserHistory } from 'history'; // dangerous!
+
+// With pnpm strict mode, this throws:
+// Cannot find module 'history'
+// Fix: explicitly add it to your dependencies`,
+    codeLanguage: 'javascript',
+    difficulty: 'expert',
+    tags: ['npm', 'pnpm', 'phantom-dependency', 'package-management'],
+    tier: 'advanced',
+  },
+  {
+    id: 'grunt-obsolescence',
+    question: 'Why did Grunt become obsolete?',
+    answer: `Grunt is a task runner that executes sequential, file-based tasks defined in config objects. It is slow because every task reads from disk and writes back to disk between steps. Webpack, Rollup, and Vite replaced it for bundling because they work with in-memory module graphs — far faster. For simple scripting tasks, npm scripts in package.json replaced Grunt for most projects. Gulp was a transitional step between Grunt and modern bundlers, using Node streams instead of disk I/O. Today, the combination of a bundler (Vite/Webpack) and npm scripts handles everything Grunt once did, with better performance and less configuration overhead.`,
+    difficulty: 'experienced',
+    tags: ['grunt', 'gulp', 'build-tools', 'task-runner', 'history'],
+    tier: 'advanced',
+  },
 ];
 
 export default jsQna;
