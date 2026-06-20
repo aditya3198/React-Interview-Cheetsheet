@@ -4,7 +4,7 @@ const jsSyntax: SyntaxEntry[] = [
   {
     id: 'var-let-const',
     title: 'var, let, const',
-    description: 'Variable declarations with different scoping and mutability rules.',
+    description: 'Three ways to declare variables, each with different rules for where they can be used and whether they can be reassigned.',
     language: 'javascript',
     tags: ['variables', 'scope'],
     tier: 'core',
@@ -26,7 +26,7 @@ z.push(1); // OK — object contents can change
   {
     id: 'template-literals',
     title: 'Template Literals',
-    description: 'String literals with embedded expressions and multi-line support.',
+    description: 'A better way to write strings — embed variables or expressions directly using ${}, and write multi-line strings without hacks.',
     language: 'javascript',
     tags: ['strings', 'template-literals'],
     tier: 'core',
@@ -56,7 +56,7 @@ const result = highlight\`Price is \${price} USD\`;`,
   {
     id: 'arrow-functions',
     title: 'Arrow Functions',
-    description: 'Concise function syntax that lexically binds `this` from the enclosing scope.',
+    description: 'A shorter way to write functions. Arrow functions also borrow `this` from the surrounding code, which avoids a common bug in callbacks.',
     language: 'javascript',
     tags: ['functions', 'this'],
     tier: 'core',
@@ -86,7 +86,7 @@ class Timer {
   {
     id: 'array-methods',
     title: 'Array Methods',
-    description: 'Functional array transformations: map, filter, reduce, find, and more.',
+    description: 'Built-in methods for working with arrays — transform, filter, search, and combine values without writing manual loops.',
     language: 'javascript',
     tags: ['arrays', 'functional', 'map', 'filter', 'reduce'],
     tier: 'core',
@@ -120,7 +120,7 @@ Array.from({ length: 3 }, (_, i) => i); // [0, 1, 2]`,
   {
     id: 'destructuring',
     title: 'Destructuring',
-    description: 'Unpack values from arrays or properties from objects into distinct variables.',
+    description: 'Pull values out of arrays or objects into individual named variables in a single line.',
     language: 'javascript',
     tags: ['destructuring', 'arrays', 'objects'],
     tier: 'core',
@@ -149,7 +149,7 @@ function display({ title, author = 'Anonymous' }) {
   {
     id: 'spread-rest',
     title: 'Spread & Rest',
-    description: 'Spread expands iterables; rest collects remaining arguments into an array.',
+    description: 'Spread (...) expands an array or object into individual items. Rest (...) does the opposite — collects multiple items into a single array.',
     language: 'javascript',
     tags: ['spread', 'rest', 'arrays', 'objects'],
     tier: 'core',
@@ -179,7 +179,7 @@ const [head, ...tail] = [1, 2, 3, 4];
   {
     id: 'hoisting',
     title: 'Hoisting',
-    description: 'Declarations are moved to the top of their scope at compile time. var is hoisted and initialized to undefined; let/const are hoisted but stay in the Temporal Dead Zone until their declaration line.',
+    description: 'JavaScript moves declarations to the top of their scope before running your code. var gets set to undefined early; let and const are moved too but cannot be used until the actual declaration line — accessing them before that throws an error.',
     language: 'javascript',
     tags: ['hoisting', 'scope', 'variables'],
     tier: 'core',
@@ -213,7 +213,7 @@ var sayHi = () => console.log("Hi!");`,
   {
     id: 'error-handling',
     title: 'Error Handling',
-    description: 'try/catch/finally patterns and custom error types.',
+    description: 'How to catch and handle errors using try/catch/finally, and how to create your own error types for more specific error handling.',
     language: 'javascript',
     tags: ['errors', 'try-catch', 'exceptions'],
     tier: 'core',
@@ -256,7 +256,7 @@ throw new Error('Failed to load', { cause: originalError });`,
   {
     id: 'execution-context',
     title: 'Execution Context & Call Stack',
-    description: 'Every function call creates an Execution Context — the environment in which code runs.',
+    description: 'Every time a function runs, JavaScript creates an execution context — a container that holds that function\'s variables, its scope chain (links to outer scopes), and what `this` points to.',
     language: 'javascript',
     tags: ['execution-context', 'call-stack', 'scope'],
     tier: 'advanced',
@@ -295,7 +295,7 @@ outer();  // pushes outer's EC → inner's EC → pop inner → pop outer
   {
     id: 'classes',
     title: 'Classes',
-    description: 'Syntactic sugar over prototypal inheritance for defining object blueprints.',
+    description: 'A cleaner syntax for creating objects that share methods. Under the hood it still uses JavaScript\'s prototype system, but it looks and reads like classes in other languages.',
     language: 'javascript',
     tags: ['classes', 'oop', 'inheritance'],
     tier: 'core',
@@ -334,7 +334,7 @@ d instanceof Animal;  // true`,
   {
     id: 'es-modules',
     title: 'ES Modules',
-    description: 'Native JavaScript module system with static import/export syntax.',
+    description: 'The built-in way to split your code into separate files and share values between them using import and export.',
     language: 'javascript',
     tags: ['modules', 'import', 'export'],
     tier: 'core',
@@ -371,7 +371,7 @@ const { add } = await import('./math.js');`,
   {
     id: 'promises',
     title: 'Promises',
-    description: 'Objects representing the eventual completion or failure of an asynchronous operation.',
+    description: 'An object that represents a value you don\'t have yet — it will either resolve (succeed) or reject (fail) in the future, letting you attach callbacks for each case.',
     language: 'javascript',
     tags: ['promises', 'async'],
     tier: 'core',
@@ -405,7 +405,7 @@ results.forEach(r => {
   {
     id: 'async-await',
     title: 'async / await',
-    description: 'Syntactic sugar over Promises for writing asynchronous code in a synchronous style.',
+    description: 'A cleaner way to write code that waits for async operations. Instead of chaining .then() calls, you write code that looks synchronous and use await to pause until a Promise settles.',
     language: 'javascript',
     tags: ['async', 'await', 'promises'],
     tier: 'core',
@@ -438,47 +438,171 @@ async function loadAll(ids) {
   },
   {
     id: 'fetch-abort',
-    title: 'fetch & AbortController',
-    description: 'Native browser API for HTTP requests with cancellation support.',
+    title: 'Fetch API & AbortController',
+    description: 'The browser\'s built-in way to make HTTP requests. Covers GET/POST, checking for errors, cancelling requests with AbortController, adding timeouts, retrying on failure, and reading streamed responses.',
     language: 'javascript',
-    tags: ['fetch', 'http', 'abort'],
+    tags: ['fetch', 'http', 'abort', 'AbortController', 'network', 'streaming'],
     tier: 'core',
     level: 'experienced',
     since: 'ES2015',
-    code: `// Basic GET
+    code: `// --- Basic GET & POST ---
 const res = await fetch('/api/users');
+if (!res.ok) throw new Error(\`HTTP \${res.status}\`); // fetch only rejects on network error
 const users = await res.json();
 
-// POST with JSON body
-const res = await fetch('/api/users', {
+const created = await fetch('/api/users', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ name: 'Alice' }),
-});
+}).then(r => { if (!r.ok) throw new Error(\`HTTP \${r.status}\`); return r.json(); });
 
-// Error handling (fetch only rejects on network error)
-if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
-
-// AbortController — cancel in-flight requests
+// --- AbortController: cancel in-flight requests ---
 const controller = new AbortController();
 const { signal } = controller;
 
 fetch('/api/data', { signal })
   .then(r => r.json())
   .catch(err => {
-    if (err.name === 'AbortError') return; // expected
+    if (err.name === 'AbortError') return; // expected cancellation — not an error
     throw err;
   });
 
-controller.abort(); // cancel
+controller.abort(); // cancel immediately
+// Pass a reason (visible in AbortError.cause):
+controller.abort(new Error('User navigated away'));
 
-// Timeout pattern
-const timeout = setTimeout(() => controller.abort(), 5000);`,
+// --- Timeout: abort after N ms ---
+async function fetchWithTimeout(url, ms = 5000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), ms);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
+    return await res.json();
+  } finally {
+    clearTimeout(id); // always clean up
+  }
+}
+
+// --- Retry with exponential back-off ---
+async function fetchWithRetry(url, options = {}, retries = 3) {
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      const res = await fetch(url, options);
+      if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
+      return await res.json();
+    } catch (err) {
+      if (err.name === 'AbortError' || attempt === retries - 1) throw err;
+      await new Promise(r => setTimeout(r, 2 ** attempt * 200)); // 200, 400, 800ms
+    }
+  }
+}
+
+// --- Streaming response (large downloads, Server-Sent Events) ---
+async function streamText(url) {
+  const res = await fetch(url);
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let result = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    result += decoder.decode(value, { stream: true });
+    console.log('chunk:', decoder.decode(value));
+  }
+  return result;
+}
+
+// --- Upload with progress (XHR still needed for upload progress) ---
+// fetch does NOT support upload progress; use XHR or the newer fetch + ReadableStream`,
+  },
+  {
+    id: 'axios-advanced',
+    title: 'Axios: Instance, Interceptors & Cancellation',
+    description: 'How Axios improves on Fetch: it parses JSON automatically, rejects on HTTP errors, lets you attach middleware (interceptors) for things like adding auth tokens, and supports cancellation.',
+    language: 'javascript',
+    tags: ['axios', 'http', 'interceptors', 'AbortController', 'network', 'instance'],
+    tier: 'advanced',
+    level: 'experienced',
+    code: `import axios from 'axios';
+
+// --- Axios instance: shared base config ---
+const api = axios.create({
+  baseURL: 'https://api.example.com',
+  timeout: 10_000,
+  headers: { 'Content-Type': 'application/json' },
+});
+
+// --- Request interceptor: attach auth token ---
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) config.headers.Authorization = \`Bearer \${token}\`;
+    return config; // must return config
+  },
+  (error) => Promise.reject(error)
+);
+
+// --- Response interceptor: global error handling & token refresh ---
+api.interceptors.response.use(
+  (response) => response, // 2xx passes through
+  async (error) => {
+    const original = error.config;
+    if (error.response?.status === 401 && !original._retry) {
+      original._retry = true;
+      const newToken = await refreshToken();
+      original.headers.Authorization = \`Bearer \${newToken}\`;
+      return api(original); // retry original request
+    }
+    return Promise.reject(error); // propagate other errors
+  }
+);
+
+// --- Basic requests ---
+const { data: users } = await api.get('/users');
+const { data: user  } = await api.post('/users', { name: 'Alice' });
+const { data: updated } = await api.put(\`/users/\${id}\`, { name: 'Bob' });
+await api.delete(\`/users/\${id}\`);
+
+// --- Axios automatically rejects non-2xx (unlike fetch) ---
+try {
+  await api.get('/protected');
+} catch (err) {
+  if (axios.isAxiosError(err)) {
+    console.log(err.response?.status); // 401, 403, etc.
+    console.log(err.response?.data);   // server error body
+    console.log(err.request);          // request made but no response (network error)
+  }
+}
+
+// --- Cancellation with AbortController (Axios v1+) ---
+const controller = new AbortController();
+api.get('/users', { signal: controller.signal })
+  .catch(err => {
+    if (axios.isCancel(err)) return; // cancelled — not an error
+    throw err;
+  });
+controller.abort();
+
+// --- Concurrent requests ---
+const [usersRes, postsRes] = await Promise.all([
+  api.get('/users'),
+  api.get('/posts'),
+]);
+
+// --- Upload progress ---
+await api.post('/upload', formData, {
+  headers: { 'Content-Type': 'multipart/form-data' },
+  onUploadProgress: (event) => {
+    const pct = Math.round((event.loaded * 100) / event.total);
+    console.log(\`Upload: \${pct}%\`);
+  },
+});`,
   },
   {
     id: 'optional-chaining',
     title: 'Optional Chaining (?.)',
-    description: 'Safely access deeply nested properties without explicit null checks.',
+    description: 'Access nested properties on an object without crashing if something in the chain is null or undefined — it just returns undefined instead of throwing an error.',
     language: 'javascript',
     tags: ['optional-chaining', 'null-safety'],
     tier: 'core',
@@ -508,7 +632,7 @@ const city = user?.address?.city ?? 'Unknown';`,
   {
     id: 'nullish-coalescing',
     title: 'Nullish Coalescing (??)',
-    description: 'Returns the right-hand value only when the left is null or undefined.',
+    description: 'A fallback operator that returns the right-hand value only when the left side is null or undefined — unlike ||, it does not treat 0 or empty string as missing.',
     language: 'javascript',
     tags: ['nullish-coalescing', 'null-safety'],
     tier: 'core',
@@ -537,7 +661,7 @@ x ??= 'default'; // assigns only if x is null/undefined`,
   {
     id: 'logical-assignment',
     title: 'Logical Assignment Operators',
-    description: 'Combine logical operators with assignment for concise conditional mutation.',
+    description: 'Shorthand operators that only assign a value if a certain condition is true — useful for setting defaults or updating values only when needed.',
     language: 'javascript',
     tags: ['operators', 'assignment'],
     tier: 'core',
@@ -570,7 +694,7 @@ cache[key] ??= expensiveComputation(key);`,
   {
     id: 'object-methods',
     title: 'Object Methods',
-    description: 'Static methods on Object for transforming and inspecting object data.',
+    description: 'Built-in utility methods on the Object class for reading, copying, merging, and transforming plain objects.',
     language: 'javascript',
     tags: ['objects', 'entries', 'keys', 'values'],
     tier: 'core',
@@ -605,7 +729,7 @@ Object.defineProperty(user, 'id', {
   {
     id: 'set-map',
     title: 'Set & Map',
-    description: 'Built-in collection types for unique values (Set) and key-value pairs (Map).',
+    description: 'Two collection types built into JavaScript: Set stores only unique values, and Map stores key-value pairs where the keys can be any type — not just strings.',
     language: 'javascript',
     tags: ['set', 'map', 'collections'],
     tier: 'core',
@@ -641,7 +765,7 @@ new Map(Object.entries(obj));`,
   {
     id: 'debounce-throttle-impl',
     title: 'Debounce & Throttle',
-    description: 'Rate-limiting patterns: debounce delays until idle, throttle limits to one call per window.',
+    description: 'Two techniques to control how often a function runs. Debounce waits until the user stops triggering it. Throttle lets it run at most once per time window no matter how many times it is triggered.',
     language: 'javascript',
     tags: ['debounce', 'throttle', 'performance'],
     tier: 'advanced',
@@ -693,7 +817,7 @@ function throttleLeading(fn, limit) {
   {
     id: 'memoize-pattern',
     title: 'Memoization',
-    description: 'Cache the result of a function call keyed by its arguments to avoid redundant computation.',
+    description: 'Store the result of an expensive function call so that calling it again with the same arguments returns the cached result instead of recomputing it.',
     language: 'javascript',
     tags: ['memoization', 'performance', 'caching'],
     tier: 'advanced',
@@ -744,7 +868,7 @@ function useMemoShim(factory, deps) {
   {
     id: 'generators',
     title: 'Generators',
-    description: 'Functions that can pause and resume execution, producing a sequence of values on demand.',
+    description: 'Special functions that can pause mid-execution using yield and resume later. They produce a sequence of values one at a time, only when the caller asks for the next one.',
     language: 'javascript',
     tags: ['generators', 'iterators'],
     tier: 'advanced',
@@ -788,7 +912,7 @@ async function* paginate(url) {
   {
     id: 'symbol',
     title: 'Symbol',
-    description: 'Unique, immutable primitive values used as object property keys.',
+    description: 'A primitive value that is guaranteed to be unique every time you create one. Useful as object property keys when you want to avoid name collisions with other code.',
     language: 'javascript',
     tags: ['symbol', 'unique-keys'],
     tier: 'advanced',
@@ -830,7 +954,7 @@ class Range {
   {
     id: 'proxy-reflect',
     title: 'Proxy & Reflect',
-    description: 'Intercept and redefine fundamental operations on objects.',
+    description: 'Wrap an object so you can intercept and customize basic operations like reading a property, writing a value, or calling a function — without changing the original object.',
     language: 'javascript',
     tags: ['proxy', 'reflect', 'meta-programming'],
     tier: 'advanced',
