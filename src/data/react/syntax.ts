@@ -4,7 +4,7 @@ const reactSyntax: SyntaxEntry[] = [
   {
     id: 'jsx-basics',
     title: 'JSX Basics',
-    description: 'JSX is a syntax extension that lets you write HTML-like code in JavaScript files.',
+    description: 'JSX lets you write HTML-like markup directly in your JavaScript files. It compiles down to regular JavaScript function calls.',
     language: 'jsx',
     tags: ['jsx', 'syntax', 'expressions'],
     tier: 'core',
@@ -37,7 +37,7 @@ const form = (
   {
     id: 'usestate',
     title: 'useState',
-    description: 'Adds local state to a function component. Returns the current value and a setter function.',
+    description: 'Adds local state (data that can change over time) to a function component. Returns the current value and a function to update it.',
     language: 'jsx',
     tags: ['hooks', 'state', 'useState'],
     tier: 'core',
@@ -71,7 +71,7 @@ const [data, setData] = useState(() => JSON.parse(localStorage.getItem('data') ?
   {
     id: 'useeffect',
     title: 'useEffect',
-    description: 'Synchronize a component with an external system. Runs after render; cleanup runs before next effect or unmount.',
+    description: 'Run code after a component renders to connect it to something outside React — like an API, a timer, or a browser event. The cleanup function runs when the component is removed or before the effect runs again.',
     language: 'jsx',
     tags: ['hooks', 'effects', 'useEffect', 'lifecycle'],
     tier: 'core',
@@ -105,7 +105,7 @@ useEffect(() => { document.title = count.toString(); });`,
   {
     id: 'useref',
     title: 'useRef',
-    description: 'Holds a mutable value that persists across renders without causing re-renders. Also used for DOM references.',
+    description: 'Stores a value that persists between renders without triggering a re-render when it changes. Also used to get a direct reference to a DOM element.',
     language: 'jsx',
     tags: ['hooks', 'useRef', 'dom', 'mutable'],
     tier: 'core',
@@ -149,7 +149,7 @@ function usePrevious(value) {
   {
     id: 'usecontext',
     title: 'useContext & createContext',
-    description: 'Share state across the component tree without prop drilling.',
+    description: 'Share data across many components without passing it as a prop through every level of the tree.',
     language: 'jsx',
     tags: ['hooks', 'useContext', 'context', 'state'],
     tier: 'core',
@@ -187,7 +187,7 @@ export function useTheme() {
   {
     id: 'usereducer',
     title: 'useReducer',
-    description: 'Manages complex state logic through a pure reducer function, similar to Redux patterns.',
+    description: 'An alternative to useState for managing state that has multiple sub-values or complex update logic. You describe what happened (an action), and a separate function decides how state changes.',
     language: 'jsx',
     tags: ['hooks', 'useReducer', 'state', 'reducer'],
     tier: 'core',
@@ -226,7 +226,7 @@ function Counter({ initialCount = 0 }) {
   {
     id: 'usememo',
     title: 'useMemo',
-    description: 'Memoizes the result of an expensive computation, recomputing only when dependencies change.',
+    description: 'Caches the result of a slow calculation so React does not redo it on every render. The cached value is only recalculated when the values it depends on change.',
     language: 'jsx',
     tags: ['hooks', 'useMemo', 'performance', 'memoization'],
     tier: 'core',
@@ -261,7 +261,7 @@ function Parent({ items }) {
   {
     id: 'usecallback',
     title: 'useCallback',
-    description: 'Memoizes a function reference, preventing recreation on every render. Essential for passing callbacks to memoized children.',
+    description: 'Keeps the same function reference between renders so it does not get recreated every time. Important when passing a function as a prop to a child component that you are trying to prevent from re-rendering.',
     language: 'jsx',
     tags: ['hooks', 'useCallback', 'performance', 'memoization'],
     tier: 'core',
@@ -302,7 +302,7 @@ useEffect(() => { fetchUser(); }, [fetchUser]);`,
   {
     id: 'react-memo',
     title: 'React.memo',
-    description: 'Wraps a component to skip re-rendering when props are shallowly equal to the previous render.',
+    description: 'Wraps a component so React skips re-rendering it when its props have not changed. React compares props using a shallow check (top-level values only, not deep object contents).',
     language: 'jsx',
     tags: ['memo', 'performance', 'optimization', 'pure-components'],
     tier: 'core',
@@ -343,7 +343,7 @@ const Equal = memo(Component, (prev, next) => prev.id === next.id);`,
   {
     id: 'custom-hooks',
     title: 'Custom Hooks',
-    description: 'Extract stateful logic into reusable functions that start with "use".',
+    description: 'Pull stateful logic out of a component into its own function so you can reuse it across multiple components. The function name must start with "use".',
     language: 'jsx',
     tags: ['hooks', 'custom-hooks', 'composition'],
     tier: 'core',
@@ -381,7 +381,7 @@ function UserCard({ id }: { id: number }) {
   {
     id: 'forwardref',
     title: 'forwardRef & useImperativeHandle',
-    description: 'Forward a ref through a component to a DOM node; useImperativeHandle exposes a custom API.',
+    description: 'Lets a parent component pass a ref into a child component so it can access the child\'s DOM node directly. useImperativeHandle lets you control exactly what the parent can do with that ref.',
     language: 'jsx',
     tags: ['forwardRef', 'useImperativeHandle', 'refs', 'dom'],
     tier: 'advanced',
@@ -426,7 +426,7 @@ const Dialog = forwardRef(function Dialog(props, ref) {
   {
     id: 'uselayouteffect',
     title: 'useLayoutEffect',
-    description: 'Like useEffect but fires synchronously after DOM mutations and before the browser paints.',
+    description: 'Similar to useEffect, but runs before the browser draws anything to the screen. Use this when you need to read or change the DOM right after React updates it, to avoid a visible flicker.',
     language: 'jsx',
     tags: ['hooks', 'useLayoutEffect', 'dom', 'timing'],
     tier: 'advanced',
@@ -465,7 +465,7 @@ function Tooltip({ text, anchor }) {
   {
     id: 'error-boundary',
     title: 'Error Boundary',
-    description: 'Class component that catches JavaScript errors in its child tree and shows a fallback UI.',
+    description: 'A class component that catches JavaScript errors thrown during rendering in any of its child components and displays a fallback UI instead of crashing the whole page.',
     language: 'jsx',
     tags: ['error-boundary', 'error-handling', 'class-component'],
     tier: 'advanced',
@@ -511,7 +511,7 @@ function App() {
   {
     id: 'create-portal',
     title: 'createPortal',
-    description: 'Render children into a DOM node outside the parent component hierarchy.',
+    description: 'Renders a component\'s output into a different part of the HTML page, outside the normal component tree. Useful for modals and tooltips that need to visually escape their container.',
     language: 'jsx',
     tags: ['portal', 'createPortal', 'dom', 'modal'],
     tier: 'advanced',
@@ -554,7 +554,7 @@ function App() {
   {
     id: 'lazy-suspense',
     title: 'lazy & Suspense',
-    description: 'Code-split components by dynamic import; Suspense shows a fallback while the component loads.',
+    description: 'Load a component\'s code only when it is actually needed (code splitting), keeping the initial page load smaller. Suspense shows a fallback (like a spinner) while the component\'s code is downloading.',
     language: 'jsx',
     tags: ['lazy', 'suspense', 'code-splitting', 'performance'],
     tier: 'advanced',
@@ -590,7 +590,7 @@ function NavLink({ to, component }: { to: string; component: LazyComponent }) {
   {
     id: 'usetransition',
     title: 'useTransition & useDeferredValue',
-    description: 'Mark state updates as non-urgent to keep the UI responsive during expensive renders.',
+    description: 'Tell React that a state update is low-priority so it can be interrupted if the user does something more urgent. This keeps the UI feeling fast even while running expensive renders in the background.',
     language: 'jsx',
     tags: ['hooks', 'useTransition', 'useDeferredValue', 'concurrent', 'performance'],
     tier: 'advanced',
@@ -633,7 +633,7 @@ function FilteredList({ items, filter }) {
   {
     id: 'use-hook-react19',
     title: 'use() Hook (React 19)',
-    description: 'Read a Promise or Context inside the render function — including conditionally.',
+    description: 'Read a Promise or Context value directly inside your component\'s render logic — even inside an if statement. Unlike most hooks, it can be called conditionally.',
     language: 'jsx',
     tags: ['hooks', 'use', 'react19', 'suspense', 'promises'],
     tier: 'advanced',
@@ -668,7 +668,7 @@ function ConditionalTheme({ showTheme }) {
   {
     id: 'server-components',
     title: 'React Server Components',
-    description: 'Components that render on the server only — can fetch data directly, have no client bundle.',
+    description: 'Components that run only on the server, never in the browser. They can fetch data directly from a database or API, and their code is never sent to the user\'s browser.',
     language: 'jsx',
     tags: ['server-components', 'rsc', 'react19', 'next.js'],
     tier: 'advanced',
@@ -709,7 +709,7 @@ function AddToCartButton({ productId, price }) {
   {
     id: 'react19-actions',
     title: 'React 19 Actions',
-    description: 'Server and client actions simplify form handling and async mutations in React 19.',
+    description: 'A new way in React 19 to handle form submissions and data changes. Actions can run on the server or client, and React tracks their pending and error states automatically.',
     language: 'jsx',
     tags: ['actions', 'react19', 'forms', 'server-actions'],
     tier: 'advanced',
@@ -742,6 +742,279 @@ function CreateUserForm() {
       </button>
       {state?.error && <p role="alert">{state.error}</p>}
     </form>
+  );
+}`,
+  },
+  {
+    id: 'context-api-pattern',
+    title: 'Context API Pattern',
+    description: 'A complete example of the Context API pattern: create a context, wrap your app in a Provider, and expose a custom hook so any component can access the shared data safely.',
+    language: 'jsx',
+    tags: ['context', 'state-management', 'context-api', 'custom-hooks'],
+    tier: 'core',
+    level: 'experienced',
+    code: `import { createContext, useContext, useState, ReactNode } from 'react';
+
+// 1. Define shape
+interface AuthContextValue {
+  user: { name: string } | null;
+  login: (name: string) => void;
+  logout: () => void;
+}
+
+// 2. Create context (undefined default catches missing Provider)
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+
+// 3. Provider component owns the state
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<{ name: string } | null>(null);
+
+  const login = (name: string) => setUser({ name });
+  const logout = () => setUser(null);
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+// 4. Custom hook — throws if used outside Provider
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+  return ctx;
+}
+
+// 5. Wrap your app
+function App() {
+  return (
+    <AuthProvider>
+      <Header />
+    </AuthProvider>
+  );
+}
+
+// 6. Consume anywhere in the tree
+function Header() {
+  const { user, logout } = useAuth();
+  return user ? <button onClick={logout}>Sign out {user.name}</button> : null;
+}`,
+  },
+  {
+    id: 'redux-toolkit',
+    title: 'Redux Toolkit',
+    description: 'The modern, recommended way to use Redux. Redux Toolkit removes most of the boilerplate by combining action creators, reducers, and async logic into a much simpler API.',
+    language: 'jsx',
+    tags: ['redux', 'redux-toolkit', 'state-management', 'createSlice', 'useSelector'],
+    tier: 'advanced',
+    level: 'experienced',
+    code: `// store/counterSlice.ts
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+
+// Async thunk — handles loading/error states automatically
+export const fetchUser = createAsyncThunk('user/fetch', async (id: number) => {
+  const res = await fetch(\`/api/users/\${id}\`);
+  return res.json(); // returned value becomes action.payload
+});
+
+interface CounterState { value: number; status: 'idle' | 'loading' | 'failed' }
+const initialState: CounterState = { value: 0, status: 'idle' };
+
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState,
+  reducers: {
+    // Immer lets you write "mutating" logic — it produces immutable updates
+    increment: (state) => { state.value += 1; },
+    decrement: (state) => { state.value -= 1; },
+    incrementByAmount: (state, action: PayloadAction<number>) => {
+      state.value += action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUser.pending,   (state) => { state.status = 'loading'; })
+      .addCase(fetchUser.fulfilled, (state) => { state.status = 'idle'; })
+      .addCase(fetchUser.rejected,  (state) => { state.status = 'failed'; });
+  },
+});
+
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export default counterSlice.reducer;
+
+// store/index.ts
+import { configureStore } from '@reduxjs/toolkit';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import counterReducer from './counterSlice';
+
+export const store = configureStore({
+  reducer: { counter: counterReducer },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+// Typed hooks — use these instead of plain useSelector/useDispatch
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+// main.tsx
+import { Provider } from 'react-redux';
+function Main() {
+  return <Provider store={store}><App /></Provider>;
+}
+
+// Counter.tsx — consuming the store
+function Counter() {
+  const count = useAppSelector((state) => state.counter.value);
+  const dispatch = useAppDispatch();
+
+  return (
+    <div>
+      <button onClick={() => dispatch(decrement())}>-</button>
+      <span>{count}</span>
+      <button onClick={() => dispatch(increment())}>+</button>
+      <button onClick={() => dispatch(incrementByAmount(5))}>+5</button>
+    </div>
+  );
+}`,
+  },
+  {
+    id: 'zustand',
+    title: 'Zustand',
+    description: 'A lightweight library for global state. Each component subscribes only to the specific piece of state it needs, so it only re-renders when that piece changes — not whenever anything in the store changes.',
+    language: 'jsx',
+    tags: ['zustand', 'state-management', 'store', 'selective-subscriptions'],
+    tier: 'advanced',
+    level: 'experienced',
+    code: `import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+// --- Basic store ---
+interface BearStore {
+  bears: number;
+  increase: () => void;
+  reset: () => void;
+}
+
+const useBearStore = create<BearStore>((set) => ({
+  bears: 0,
+  increase: () => set((state) => ({ bears: state.bears + 1 })),
+  reset: () => set({ bears: 0 }),
+}));
+
+// Component only re-renders when bears changes (not whole store)
+function BearCounter() {
+  const bears = useBearStore((state) => state.bears);
+  return <h1>{bears} bears</h1>;
+}
+
+function Controls() {
+  const increase = useBearStore((state) => state.increase);
+  return <button onClick={increase}>Add bear</button>;
+}
+
+// --- Persisted store (localStorage) ---
+interface SettingsStore {
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+}
+
+const useSettings = create<SettingsStore>()(
+  persist(
+    (set) => ({
+      theme: 'light',
+      toggleTheme: () =>
+        set((s) => ({ theme: s.theme === 'light' ? 'dark' : 'light' })),
+    }),
+    { name: 'settings-storage' } // localStorage key
+  )
+);
+
+// --- Slice pattern (large stores) ---
+const useStore = create<{ count: number; name: string }>()((set) => ({
+  count: 0,
+  name: '',
+}));
+
+// Select only what you need — prevents unnecessary re-renders
+const count = useStore((s) => s.count);
+const name  = useStore((s) => s.name);`,
+  },
+  {
+    id: 'react-query',
+    title: 'React Query (TanStack Query)',
+    description: 'Handles all the complexity of loading data from an API: caching the results, refetching them in the background when they go stale, and tracking loading and error states automatically.',
+    language: 'jsx',
+    tags: ['react-query', 'tanstack-query', 'server-state', 'useQuery', 'useMutation', 'data-fetching'],
+    tier: 'advanced',
+    level: 'experienced',
+    code: `import {
+  QueryClient, QueryClientProvider,
+  useQuery, useMutation, useQueryClient,
+} from '@tanstack/react-query';
+
+// Setup — wrap your app once
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 1000 * 60 } }, // 1 min cache
+});
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <UserList />
+    </QueryClientProvider>
+  );
+}
+
+// --- useQuery: fetch & cache data ---
+function UserList() {
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['users'],          // cache key — must be unique
+    queryFn: () => fetch('/api/users').then(r => r.json()),
+    staleTime: 30_000,            // treat as fresh for 30s
+    refetchOnWindowFocus: true,   // refetch when tab regains focus
+  });
+
+  if (isLoading) return <p>Loading…</p>;
+  if (isError) return <p>Error: {(error as Error).message}</p>;
+  return <ul>{data.map(u => <li key={u.id}>{u.name}</li>)}</ul>;
+}
+
+// --- useQuery with params ---
+function UserDetail({ id }: { id: number }) {
+  const { data: user } = useQuery({
+    queryKey: ['users', id],      // key includes params
+    queryFn: () => fetch(\`/api/users/\${id}\`).then(r => r.json()),
+    enabled: id > 0,              // skip query when id is invalid
+  });
+  return <div>{user?.name}</div>;
+}
+
+// --- useMutation: create/update/delete ---
+function CreateUser() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (newUser: { name: string }) =>
+      fetch('/api/users', {
+        method: 'POST',
+        body: JSON.stringify(newUser),
+      }).then(r => r.json()),
+    onSuccess: () => {
+      // Invalidate cache so UserList refetches
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+    onError: (error) => console.error('Failed:', error),
+  });
+
+  return (
+    <button
+      onClick={() => mutation.mutate({ name: 'Alice' })}
+      disabled={mutation.isPending}
+    >
+      {mutation.isPending ? 'Creating…' : 'Create User'}
+    </button>
   );
 }`,
   },
