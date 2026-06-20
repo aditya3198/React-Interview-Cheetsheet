@@ -12,8 +12,6 @@
     "test:run": "vitest run"
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.6.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "framer-motion": "^12.38.0",
@@ -21,7 +19,6 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-syntax-highlighter": "^16.1.1",
-    "three": "^0.184.0",
     "zustand": "^5.0.13"
   },
   "overrides": {
@@ -36,7 +33,6 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "@types/three": "^0.184.1",
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.6",
     "eslint-plugin-react-hooks": "^7.1.1",
