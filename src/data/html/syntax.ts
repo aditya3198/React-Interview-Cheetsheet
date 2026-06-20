@@ -4,7 +4,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'semantic-elements',
     title: 'Semantic Elements',
-    description: 'HTML5 structural elements that convey meaning to browsers, search engines, and assistive technologies.',
+    description: 'HTML5 elements that describe what content is, not just how it looks — helping browsers, search engines, and screen readers understand the page structure.',
     language: 'html',
     tags: ['semantic', 'structure', 'html5', 'accessibility'],
     tier: 'core',
@@ -34,7 +34,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'meta-tags',
     title: 'Meta Tags',
-    description: 'Essential <head> meta tags for character encoding, viewport, SEO, and social sharing.',
+    description: 'Common tags that go inside <head> to set character encoding, control mobile layout, help search engines, and improve how the page looks when shared on social media.',
     language: 'html',
     tags: ['meta', 'seo', 'head', 'og', 'viewport'],
     tier: 'core',
@@ -63,7 +63,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'input-types',
     title: 'Input Types',
-    description: 'HTML input types trigger native validation, mobile keyboards, and UI controls.',
+    description: 'Setting the right input type does three things automatically: triggers browser validation, shows the correct keyboard on mobile, and displays the appropriate UI control (like a date picker or color wheel).',
     language: 'html',
     tags: ['forms', 'input', 'validation', 'html5'],
     tier: 'core',
@@ -86,7 +86,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'form-structure',
     title: 'Form Structure',
-    description: 'Accessible form markup using fieldset, legend, label, and ARIA attributes.',
+    description: 'How to structure a form so it works correctly for keyboard users and screen readers — using fieldset, legend, label, and ARIA attributes to link inputs with their labels and error messages.',
     language: 'html',
     tags: ['forms', 'accessibility', 'fieldset', 'label'],
     tier: 'core',
@@ -130,7 +130,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'details-summary',
     title: 'details & summary',
-    description: 'Native disclosure widget — interactive open/close without JavaScript.',
+    description: 'A built-in browser element for collapsible sections — clicking the summary toggles content open or closed with no JavaScript needed.',
     language: 'html',
     tags: ['details', 'summary', 'disclosure', 'html5'],
     tier: 'core',
@@ -160,7 +160,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'table-structure',
     title: 'Accessible Tables',
-    description: 'Proper table markup with thead, tbody, tfoot, scope, and caption for accessibility.',
+    description: 'Table markup that screen readers can understand — using caption for the table title, thead/tbody/tfoot to group rows, and scope to tell assistive technology which header belongs to which column or row.',
     language: 'html',
     tags: ['tables', 'accessibility', 'scope', 'caption'],
     tier: 'core',
@@ -198,7 +198,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'figure-figcaption',
     title: 'figure & figcaption',
-    description: 'Group self-contained media (images, diagrams, code) with their caption.',
+    description: 'Wraps an image, diagram, or code block together with its caption so browsers and screen readers know the two are related.',
     language: 'html',
     tags: ['figure', 'figcaption', 'images', 'semantic'],
     tier: 'core',
@@ -225,7 +225,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'video-audio',
     title: 'video & audio',
-    description: 'Native media elements with controls, fallback sources, and accessibility tracks.',
+    description: 'Built-in browser elements for embedding video and audio — with multiple format fallbacks so different browsers can play what they support, and track files for captions.',
     language: 'html',
     tags: ['video', 'audio', 'media', 'html5', 'accessibility'],
     tier: 'core',
@@ -258,7 +258,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'data-attributes',
     title: 'Data Attributes',
-    description: 'Custom data-* attributes store extra information on HTML elements accessible via JavaScript.',
+    description: 'A way to attach custom data to any HTML element using data-* attributes — that data can then be read or changed by JavaScript without affecting how the element looks.',
     language: 'html',
     tags: ['data-attributes', 'javascript', 'dom'],
     tier: 'core',
@@ -280,7 +280,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'aria-roles',
     title: 'ARIA Roles & Attributes',
-    description: 'ARIA roles, states, and properties augment HTML semantics for screen readers.',
+    description: 'Extra attributes that add or clarify meaning for screen readers — especially useful when native HTML elements alone cannot describe the current state or role of a custom UI widget.',
     language: 'html',
     tags: ['aria', 'accessibility', 'screen-reader', 'a11y'],
     tier: 'core',
@@ -316,7 +316,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'script-loading',
     title: 'Script Loading Strategies',
-    description: 'defer and async attributes control when scripts are fetched and executed relative to HTML parsing.',
+    description: 'defer and async let the browser download a script in the background while still parsing HTML — the difference is when each script actually runs and whether order is guaranteed.',
     language: 'html',
     tags: ['script', 'defer', 'async', 'performance'],
     tier: 'core',
@@ -346,7 +346,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'picture-srcset',
     title: 'Responsive Images',
-    description: 'picture, srcset, and sizes enable art direction and resolution switching for responsive images.',
+    description: 'Tools for serving the right image at the right size — srcset lets the browser pick the best resolution, while picture lets you swap to a completely different image on different screen sizes.',
     language: 'html',
     tags: ['images', 'responsive', 'performance', 'picture'],
     tier: 'core',
@@ -378,7 +378,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'link-preload-prefetch',
     title: 'Resource Hints',
-    description: 'Preload, prefetch, preconnect, and dns-prefetch hints to improve loading performance.',
+    description: 'Link tags that tell the browser to start fetching or connecting early — before it would normally discover the resource — so pages load faster.',
     language: 'html',
     tags: ['performance', 'preload', 'prefetch', 'resource-hints'],
     tier: 'advanced',
@@ -405,7 +405,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'dialog-element',
     title: 'dialog Element',
-    description: 'Native modal and non-modal dialogs with built-in focus trapping and backdrop.',
+    description: 'A built-in browser element for popup dialogs — handles focus trapping (keeps keyboard focus inside the dialog), the dark backdrop overlay, and the Escape key to close, without any JavaScript library.',
     language: 'html',
     tags: ['dialog', 'modal', 'accessibility', 'html5'],
     tier: 'advanced',
@@ -424,7 +424,7 @@ const htmlSyntax: SyntaxEntry[] = [
   {
     id: 'template-element',
     title: 'template Element',
-    description: 'Client-side HTML template that is parsed but not rendered until cloned into the DOM via JS.',
+    description: 'An HTML block that the browser parses and validates but does not display or run — you clone it with JavaScript and insert copies into the page when needed.',
     language: 'html',
     tags: ['template', 'web-components', 'dom', 'html5'],
     tier: 'advanced',

@@ -4,14 +4,14 @@ const cssTheory: ConceptCard[] = [
   {
     id: 'box-model',
     title: 'Box Model',
-    summary: 'Every element is a rectangular box with content, padding, border, and margin areas.',
-    body: `The CSS box model describes the rectangular boxes generated for each element. From inside out: content area (width/height), padding (space between content and border), border (visible edge), and margin (space outside the border that separates elements from each other).
+    summary: 'Every HTML element is treated as a rectangular box made up of four layers: content, padding, border, and margin.',
+    body: `The CSS box model is the system the browser uses to calculate how much space each element takes up. Working from the inside out, the layers are: the content area (where your text or image goes), padding (space between the content and the border), border (a visible line around the element), and margin (space outside the border that pushes other elements away).
 
-box-sizing: content-box (default) — width/height apply only to the content box, so padding and border are added on top. A 200px element with 20px padding is actually 240px wide.
+box-sizing: content-box (default) — the width and height you set apply only to the content area. Padding and border are added on top of that. So a 200px element with 20px padding on each side is actually 240px wide on screen.
 
-box-sizing: border-box — width/height include padding and border. A 200px element stays 200px regardless of padding. This is almost always what you want. Apply universally with: *, *::before, *::after { box-sizing: border-box; }.
+box-sizing: border-box — the width and height you set include the padding and border. A 200px element stays 200px no matter what padding you add. This is almost always what you want. Apply it everywhere with: *, *::before, *::after { box-sizing: border-box; }.
 
-Margin collapsing: adjacent vertical margins of block elements collapse to the larger value (not added together). This doesn't happen with flexbox/grid children.`,
+Margin collapsing: when two block elements are stacked vertically, their margins don't add together — the browser takes the larger of the two. This does not happen with children of a flex or grid container.`,
     diagram: {
       type: 'ascii',
       content: `┌──────────────────────────────────┐
@@ -34,12 +34,16 @@ Margin collapsing: adjacent vertical margins of block elements collapse to the l
   {
     id: 'css-inheritance',
     title: 'CSS Inheritance',
-    summary: 'Some properties inherit from parent to child by default; others do not. You can control inheritance explicitly.',
-    body: `CSS properties are either inherited (default value from parent if not set) or non-inherited (initial value if not set). Text properties inherit: color, font-*, line-height, letter-spacing, text-align, visibility. Layout/box properties do not: margin, padding, border, background, width, height, display.
+    summary: 'Some CSS properties pass their value down to child elements automatically. Others do not, and must be set on each element individually.',
+    body: `CSS properties fall into two groups. Inherited properties get their value from the parent if you don't set them yourself. These are mostly text-related: color, font-family, font-size, line-height, letter-spacing, text-align, visibility. Non-inherited properties always start from a browser default. These are mostly box-related: margin, padding, border, background, width, height, display.
 
-Keywords: inherit (take the parent's computed value), initial (the property's browser default), unset (inherit if the property is inherited, otherwise initial), revert (return to the browser's stylesheet value), revert-layer (return to the previous cascade layer's value).
+There are four keywords you can assign to any property to control inheritance:
+- inherit — use whatever value the parent has.
+- initial — use the browser's default for this property (not the element's default, but the property's spec default).
+- unset — inherit if the property normally inherits, otherwise use initial.
+- revert — go back to whatever the browser's built-in stylesheet sets for this element.
 
-The all property applies a keyword to all properties at once. all: unset is useful for resetting custom elements or isolated components.`,
+The all property is a shortcut that applies one of these keywords to every property at once. all: unset is useful for resetting a custom element to a clean slate.`,
     tags: ['inheritance', 'inherit', 'initial', 'unset', 'all'],
     tier: 'core',
     level: 'fresher',
@@ -47,16 +51,16 @@ The all property applies a keyword to all properties at once. all: unset is usef
   {
     id: 'flexbox-deep-dive',
     title: 'Flexbox: Axes, Alignment, and Flexibility',
-    summary: 'Flexbox controls one-dimensional layout via a main axis and cross axis — understanding the flex algorithm prevents sizing surprises.',
-    body: `Flexbox has two axes: the main axis (set by flex-direction) and the cross axis (perpendicular). justify-content aligns items on the main axis; align-items aligns on the cross axis.
+    summary: 'Flexbox lays items out along a main axis and a cross axis. Understanding how the browser sizes flex items prevents unexpected behavior.',
+    body: `Flexbox has two axes. The main axis runs in the direction set by flex-direction (row by default). The cross axis runs perpendicular to it. justify-content controls spacing along the main axis. align-items controls alignment on the cross axis.
 
-The flex item sizing algorithm: the browser first measures the item's flex-basis (its ideal size). If items overflow, they shrink proportionally based on flex-shrink. If there's space left, they grow based on flex-grow.
+The browser sizes each flex item in steps: it starts with the item's flex-basis (the item's target size before growing or shrinking). If items overflow the container, they shrink based on flex-shrink. If there is leftover space, they grow based on flex-grow.
 
-flex: 1 is shorthand for flex-grow: 1; flex-shrink: 1; flex-basis: 0% — items grow equally, ignoring content size. flex: auto means flex-basis: auto — items start at their content size then grow/shrink.
+flex: 1 is shorthand for flex-grow: 1; flex-shrink: 1; flex-basis: 0% — all items share space equally regardless of their content. flex: auto means flex-basis: auto — items start at their natural content size and then grow or shrink.
 
-Common pitfall: flex items have min-width: auto by default (they won't shrink below their content size). Set min-width: 0 to allow text truncation or overflow: hidden inside flex items.
+Common pitfall: flex items have min-width: auto by default. This means they will not shrink below the width of their content. Set min-width: 0 on the item if you want text inside it to truncate or overflow: hidden to work.
 
-gap replaces the margin-based spacing hack and works with flex and grid.`,
+gap is the clean way to add space between flex or grid items. You no longer need margin hacks.`,
     diagram: {
       type: 'ascii',
       content: `flex-direction: row (default):
@@ -81,16 +85,16 @@ flex: none    = 0 0 auto  (rigid, no flex)`,
   {
     id: 'css-grid-deep',
     title: 'CSS Grid: Tracks, Areas, and Placement',
-    summary: 'Grid defines rows and columns simultaneously — named areas and auto-placement make complex layouts maintainable.',
-    body: `Grid introduces row and column tracks. fr (fraction) units divide available space proportionally after fixed/auto tracks are placed.
+    summary: 'CSS Grid lets you define rows and columns at the same time. Named areas and auto-placement make complex layouts easy to read and maintain.',
+    body: `Grid works with tracks — the rows and columns you define. The fr unit (short for "fraction") divides the remaining space proportionally after any fixed-size or auto-size tracks have been placed.
 
-Explicit vs implicit grid: tracks you define are explicit. If you place items outside, the browser creates implicit tracks (controlled by grid-auto-rows/columns).
+Explicit vs implicit grid: tracks you define yourself are the explicit grid. If you place an item in a position that doesn't have a defined track, the browser creates an implicit track automatically. You control those with grid-auto-rows and grid-auto-columns.
 
-Named template areas: grid-template-areas lets you define layout visually with string names. Each name becomes a named area assigned to items with grid-area. Dots (.) denote empty cells.
+Named template areas: grid-template-areas lets you sketch the layout using string names. Each string name maps to a grid item using grid-area. A dot (.) marks an empty cell.
 
-Auto-placement: items flow into the grid automatically. grid-auto-flow: dense fills gaps eagerly (good for photo mosaics).
+Auto-placement: by default, items flow into the next available cell. Setting grid-auto-flow: dense tells the browser to fill gaps eagerly, which is handy for photo-mosaic layouts.
 
-repeat(auto-fill, minmax(200px, 1fr)) creates as many columns as fit, each at least 200px — truly responsive without media queries. auto-fill creates empty tracks; auto-fit collapses empty tracks to zero.`,
+repeat(auto-fill, minmax(200px, 1fr)) creates as many columns as will fit, each at least 200px wide. This gives you a responsive grid with no media queries. auto-fill keeps empty tracks; auto-fit collapses them to zero width.`,
     diagram: {
       type: 'ascii',
       content: `grid-template-areas pattern:
@@ -125,19 +129,19 @@ Result:
   {
     id: 'specificity-cascade',
     title: 'Specificity & Cascade',
-    summary: 'When styles conflict, the cascade resolves them using origin, importance, specificity, and source order.',
-    body: `The cascade is the algorithm CSS uses to determine which rule wins when multiple rules target the same property on the same element. Priority order (highest first):
+    summary: 'When two CSS rules try to set the same property on the same element, the cascade decides which one wins.',
+    body: `The cascade is the set of rules CSS uses to resolve conflicts. When multiple rules target the same element and property, the browser picks a winner using this priority order (highest first):
 
-1. !important declarations (avoid in product code)
-2. Inline styles (style attribute)
-3. ID selectors (#id) — 100 points
-4. Class selectors (.class), attribute selectors ([attr]), pseudo-classes (:hover) — 10 points each
-5. Type selectors (div, p) and pseudo-elements (::before) — 1 point each
-6. Universal (*), combinators (+, >, ~), and :where() — 0 points
+1. !important declarations — use sparingly, as they are hard to override.
+2. Inline styles (the style attribute on the element itself).
+3. ID selectors (#id) — worth 100 specificity points.
+4. Class selectors (.class), attribute selectors ([type="text"]), and pseudo-classes (:hover) — worth 10 points each.
+5. Type selectors (div, p) and pseudo-elements (::before) — worth 1 point each.
+6. The universal selector (*), combinators (+, >, ~), and :where() — worth 0 points.
 
-Specificity is compared column-by-column (IDs, then classes, then types). A single ID always beats any number of classes. When specificity is equal, source order (last rule) wins.
+Specificity (how "targeted" a selector is) is compared column by column: IDs first, then classes, then types. One ID selector always beats any number of class selectors. If two rules have equal specificity, the one that appears later in the file wins.
 
-Cascade Layers (@layer) let you create explicit ordering groups where layer priority overrides specificity — the most important recent addition for managing large CSS codebases.`,
+Cascade Layers (@layer) are a newer way to control priority. Instead of fighting over specificity, you put styles in named layers and declare which layer wins overall. This is very useful when combining your own CSS with third-party libraries.`,
     diagram: {
       type: 'ascii',
       content: `Specificity: (inline, ID, class/attr/pseudo-class, type/pseudo-el)
@@ -152,12 +156,12 @@ a                    → (0, 0, 0, 1)`,
   {
     id: 'stacking-context',
     title: 'Stacking Context & z-index',
-    summary: 'Stacking contexts are independent z-axis layers. z-index only competes within the same context.',
-    body: `A stacking context is an element that forms its own layer for z-ordering. Elements inside a stacking context are painted together and their z-index values only compete with siblings in the same context — not with elements outside.
+    summary: 'A stacking context is a self-contained layer in the z-axis. z-index values only compete with other elements inside the same stacking context.',
+    body: `A stacking context is like a sealed container for z-ordering. Elements inside it are painted as a group. Their z-index values only matter relative to each other — they cannot affect elements that are outside the context.
 
-A new stacking context is created by: position: relative/absolute/fixed/sticky with z-index not auto; elements with opacity < 1; transform, filter, perspective, clip-path, mask; will-change; isolation: isolate.
+A new stacking context is created by any of these: a positioned element (relative, absolute, fixed, sticky) that has a z-index other than auto; an element with opacity less than 1; an element with transform, filter, perspective, clip-path, or mask; will-change; or isolation: isolate.
 
-The classic z-index bug: you set z-index: 9999 on a modal, but it's still behind something. The cause is usually that the modal's ancestor forms a stacking context with a lower z-index than the element you're trying to go above. The fix is isolation: isolate on the container or move the modal to a portal at the body level.`,
+The classic z-index bug: you set z-index: 9999 on a modal and it's still hidden behind another element. The usual cause is that an ancestor of the modal creates its own stacking context with a low z-index. No matter how high you set z-index on the modal, it can't escape its ancestor's context. Fix it by moving the modal to a portal at the body level, or use isolation: isolate on the ancestor to contain the problem.`,
     diagram: {
       type: 'ascii',
       content: `document
@@ -174,16 +178,16 @@ The classic z-index bug: you set z-index: 9999 on a modal, but it's still behind
   {
     id: 'block-formatting-context',
     title: 'Block Formatting Context (BFC)',
-    summary: 'A BFC is an isolated layout region where floats, margins, and overflow behave differently.',
-    body: `A Block Formatting Context (BFC) is an area of the document where block boxes are laid out independently from the outside. Creating a BFC has several effects:
+    summary: 'A Block Formatting Context (BFC) is an isolated layout region. Inside it, floats, margins, and overflow behave differently from the rest of the page.',
+    body: `A Block Formatting Context (BFC) is a region of the page where block-level boxes are laid out in isolation from the rest of the document. When you create a BFC on a container, three things change:
 
-1. Contains floats — the BFC's height includes floated children (the classic "clearfix" problem is solved by creating a BFC on the container).
-2. Prevents margin collapse — margins don't collapse between BFC and its children, or between two BFCs.
-3. Doesn't overlap floats — a BFC positioned next to a float won't overlap it (useful for two-column layouts).
+1. Contains floats — the container's height grows to include any floated children. This solves the classic "clearfix" problem where a container collapses to zero height because it only has floated children.
+2. Prevents margin collapse — top and bottom margins do not merge between a BFC and its children.
+3. Does not overlap adjacent floats — a BFC next to a floated element will not slide underneath it. This is handy for simple two-column layouts.
 
-BFCs are created by: display: flow-root (cleanest), overflow other than visible, float, position: absolute/fixed, display: flex/grid (on the container), contain: layout.
+You can create a BFC with: display: flow-root (the cleanest option), overflow set to anything other than visible, float set to any value, position: absolute or fixed, display: flex or grid on a container, or contain: layout.
 
-Use display: flow-root instead of overflow: hidden for the clearfix — it creates a BFC without hiding overflow content.`,
+Use display: flow-root instead of overflow: hidden when you just want to contain floats. overflow: hidden clips content that goes outside the box, which is often an unwanted side effect.`,
     tags: ['bfc', 'float', 'clearfix', 'overflow', 'margin-collapse'],
     tier: 'advanced',
     level: 'experienced',
@@ -191,16 +195,16 @@ Use display: flow-root instead of overflow: hidden for the clearfix — it creat
   {
     id: 'reflow-repaint',
     title: 'Reflow vs Repaint',
-    summary: 'Reflow (layout) recalculates geometry; repaint redraws pixels. Both are expensive — minimize triggers.',
-    body: `The browser rendering pipeline: Style → Layout (reflow) → Paint (repaint) → Composite. Each step has a cost.
+    summary: 'Reflow recalculates element positions and sizes. Repaint redraws pixels. Both are costly — knowing what triggers each helps you write faster CSS.',
+    body: `The browser follows a pipeline to render every frame: Style → Layout (reflow) → Paint (repaint) → Composite. Each step has a performance cost.
 
-Reflow (layout) recalculates element positions and sizes. It's triggered by: changing width, height, margin, padding, font-size, adding/removing DOM elements, reading layout properties after writing (layout thrashing). Reflow cascades — changing one element may force recalculation of its parents and siblings.
+Reflow (layout) recalculates the position and size of affected elements. It is triggered by: changing width, height, margin, padding, font-size, adding or removing DOM elements, or reading layout measurements (like offsetWidth) immediately after writing to the DOM. Reflow can cascade — changing one element may force the browser to recalculate its siblings and ancestors too.
 
-Repaint redraws pixels without geometry changes. Triggered by: color, background, box-shadow, outline changes. Less expensive than reflow but still blocks the main thread.
+Repaint redraws the pixels for an element whose appearance changed but whose geometry did not. It is triggered by: changes to color, background, box-shadow, or outline. Repaint is less expensive than reflow but it still blocks the main thread (the thread responsible for JavaScript and UI updates).
 
-Compositor-only changes (transform, opacity) skip both reflow and repaint — they're the fastest animations. Use will-change: transform on frequently animated elements to promote them to their own GPU layer, but use it sparingly as each layer consumes VRAM.
+Compositing-only changes (transform and opacity on promoted elements) skip both reflow and repaint entirely. The GPU handles them, making them the cheapest and smoothest type of animation. Use will-change: transform to promote an element to its own GPU layer before animation starts, but apply it selectively — each promoted layer uses graphics memory (VRAM).
 
-To avoid layout thrashing: batch reads together, then batch writes. Use requestAnimationFrame for visual updates.`,
+To avoid layout thrashing (triggering multiple reflows in a loop): batch all your DOM reads first, then batch all your writes. Use requestAnimationFrame to schedule visual updates.`,
     diagram: {
       type: 'ascii',
       content: `JavaScript → Style → Layout → Paint → Composite
@@ -217,14 +221,14 @@ width/height changes: full pipeline ← slowest`,
   {
     id: 'rendering-pipeline',
     title: 'Browser Rendering Pipeline',
-    summary: 'Style → Layout → Paint → Composite — understanding which CSS properties trigger which stages is key to 60fps UIs.',
-    body: `The browser renders a frame in stages: (1) Style — compute which CSS rules apply to each element. (2) Layout (reflow) — calculate position and size of every element in the document flow. (3) Paint — fill in pixels for each layer (backgrounds, text, borders). (4) Composite — combine GPU layers in the correct order.
+    summary: 'The browser renders every frame in four stages: Style, Layout, Paint, and Composite. Knowing which CSS properties trigger which stages helps you hit 60fps.',
+    body: `The browser renders a frame in stages: (1) Style — figure out which CSS rules apply to each element. (2) Layout (reflow) — calculate the exact position and size of every element in the page flow. (3) Paint — fill in pixels for each layer: backgrounds, text, borders, shadows. (4) Composite — hand the painted layers to the GPU, which combines them in the correct order and puts the result on screen.
 
-Each stage is progressively cheaper: Layout is the most expensive (it can cascade through the document tree), Paint is moderate, Composite is cheap (runs on the GPU, off the main thread).
+Each stage costs more than the next one. Layout is the most expensive because a change in one element can cascade through its ancestors and siblings. Paint is moderate. Compositing is cheap because it runs on the GPU, away from the main thread.
 
-Optimization strategy: use CSS properties that skip expensive stages. transform and opacity only trigger Composite — no Layout or Paint. This is why CSS animations on these properties stay smooth even during JavaScript work. Use will-change: transform to tell the browser to promote an element to its own GPU layer before an animation starts.
+The best optimization is to use CSS properties that skip the expensive stages. transform and opacity only trigger compositing — no layout, no paint. This is why animating those two properties stays smooth even when JavaScript is doing other work. Use will-change: transform to tell the browser to promote an element to its own GPU layer before the animation starts.
 
-Layout thrashing: reading layout properties (offsetWidth, getBoundingClientRect) after writes forces a synchronous layout. Batch all reads before writes, or use requestAnimationFrame to separate measurement from mutation.`,
+Layout thrashing happens when you read layout measurements (like offsetWidth or getBoundingClientRect) right after writing to the DOM. Each read forces the browser to redo layout immediately so it can give you an accurate number. To avoid this, batch all reads together first, then do all writes. Use requestAnimationFrame to separate measurement from mutation.`,
     diagram: {
       type: 'ascii',
       content: `CSS property cost:
@@ -243,14 +247,14 @@ will-change: transform;  → promotes to GPU layer early
   {
     id: 'responsive-design-system',
     title: 'Responsive Design: Media Queries, Fluid Layouts, and Container Queries',
-    summary: 'Modern responsive CSS uses three complementary tools: fluid sizing, media queries for global breakpoints, and container queries for component-level adaptation.',
-    body: `Fluid sizing with clamp(): font-size: clamp(1rem, 2.5vw, 2rem) produces a value that scales between 1rem and 2rem based on viewport width — no breakpoints needed for intermediate sizes.
+    summary: 'Modern responsive CSS uses three tools together: fluid sizing for smooth scaling, media queries for page-level layout shifts, and container queries for component-level adaptation.',
+    body: `Fluid sizing with clamp(): font-size: clamp(1rem, 2.5vw, 2rem) gives a value that scales continuously between 1rem and 2rem as the viewport grows. No breakpoints are needed for the in-between sizes.
 
-Media queries (@media): global breakpoints based on viewport size. Best for page-level structural changes (single column → two column). Use min-width (mobile-first) in most cases.
+Media queries (@media): respond to the viewport width. Best for changing the overall page structure, like switching from a single column to two columns. Use min-width and start from the mobile layout — this is the "mobile-first" approach.
 
-Container queries (@container): breakpoints based on the containing element's size. Essential for reusable components that may appear in different contexts (sidebar, main, modal). Set container-type: inline-size on the wrapper to enable them.
+Container queries (@container): respond to the width of the parent element (the container). This is important for reusable components. A card component can be placed in a wide main section or a narrow sidebar, and it adapts to each one independently. Set container-type: inline-size on the wrapper element to enable this.
 
-Logical approach: start with a fluid, wrapping layout (flexbox with flex-wrap, grid with auto-fill). Add media queries only when the automatic wrapping isn't enough. Add container queries for component-level adaptation.`,
+A practical order: start with a fluid, wrapping layout using flexbox with flex-wrap or grid with auto-fill. Add media queries only when the layout needs a bigger structural change. Add container queries when a component needs to look different depending on where it is placed.`,
     diagram: {
       type: 'ascii',
       content: `Three tools for responsive design:
@@ -280,21 +284,21 @@ Desktop-first: start full → reduce
   {
     id: 'stacking-context-deep',
     title: 'Stacking Contexts & the Painter\'s Model',
-    summary: 'Elements are painted in a specific order determined by stacking contexts — understanding this resolves z-index mysteries.',
-    body: `The browser paints elements in a defined order (the "painter's model"):
+    summary: 'The browser paints elements in a specific order. Stacking contexts are self-contained layers within that order, which explains why z-index sometimes behaves unexpectedly.',
+    body: `The browser paints elements in a defined sequence sometimes called the "painter's model":
 
 1. Background and borders of the root element.
-2. Descendant non-positioned block elements.
+2. Non-positioned block elements (normal document flow).
 3. Floating elements.
-4. Inline elements.
-5. Positioned elements (z-index: auto or 0), in source order.
-6. Positioned elements with positive z-index, lowest first.
+4. Inline elements (text, inline images).
+5. Positioned elements with z-index: auto or 0, in source order.
+6. Positioned elements with a positive z-index, lowest values first.
 
-A stacking context is a self-contained layer. z-index only competes within the same stacking context — elements in different stacking contexts are isolated, and the entire context is painted as a unit.
+A stacking context is a self-contained painting layer. z-index values only compete with other elements inside the same stacking context. Elements in different stacking contexts are completely isolated from each other — the whole context is painted as a single unit.
 
-What creates a stacking context: position + z-index (non-auto), opacity < 1, transform, filter, will-change, isolation: isolate, mix-blend-mode, contain: layout/paint/strict.
+What creates a stacking context: a positioned element (relative/absolute/fixed/sticky) with a z-index that is not auto; opacity less than 1; transform; filter; will-change; isolation: isolate; mix-blend-mode; contain: layout, paint, or strict.
 
-The isolation: isolate property explicitly creates a stacking context without any visual effect — useful to prevent z-index leakage from children into the parent context.`,
+isolation: isolate is particularly useful because it creates a stacking context without any visible change to the element. Use it to stop high z-index children from accidentally overlapping elements outside their parent.`,
     diagram: {
       type: 'ascii',
       content: `Document root (stacking context)
@@ -319,14 +323,20 @@ Fix: move .tooltip to root level (use a Portal).`,
   {
     id: 'selector-performance',
     title: 'Selector Performance',
-    summary: 'CSS selectors are evaluated right-to-left; unnecessarily deep or universal selectors slow matching.',
-    body: `Browsers evaluate CSS selectors from right to left (the rightmost part is the "key selector"). For div.container > ul > li.active > a, the browser first finds all <a> elements, then checks each for an .active parent, then ul, then the specific container.
+    summary: 'Browsers read CSS selectors from right to left. Deeply nested or overly broad selectors make that matching process slower.',
+    body: `When the browser applies styles, it reads selectors from right to left. The rightmost part of the selector is called the "key selector" — the browser finds all matching elements for that first, then works leftward to check the remaining conditions. For div.container > ul > li.active > a, the browser starts by collecting all a elements, then filters by those with an .active parent li, and so on.
 
-Performance guidelines: Keep selectors short. Avoid universal selectors (*) as key selectors. Avoid deeply nested selectors. ID selectors are fastest (unique match). Class selectors are fast. Attribute selectors and pseudo-classes are slower. Descendant combinators (space) are slower than child combinators (>).
+Performance guidelines:
+- Keep selectors short. Fewer conditions to check means faster matching.
+- Avoid the universal selector (*) as the rightmost part. It matches every element, producing a huge initial set to filter.
+- Avoid deeply nested selectors — they make every matched element work harder to verify ancestry.
+- ID selectors are fastest because each ID is unique per page. Class selectors are fast too.
+- Attribute selectors (like [class*="-"]) and pseudo-classes are slower because they require extra evaluation.
+- Child combinators (>) are faster than descendant combinators (a space), because they only look at direct children.
 
-In practice, selector performance rarely bottlenecks modern sites — layout and paint are far larger concerns. The main rule: avoid *, [class*="-"], and :not(*) as key selectors in hot paths like :hover animations.
+In practice, selector performance rarely causes noticeable slowdowns on modern sites. Layout and paint are far more expensive. The one exception: avoid slow key selectors in rules triggered on scroll or :hover on animated elements.
 
-BEM (Block Element Modifier) and utility classes like Tailwind naturally produce flat, short selectors.`,
+Naming approaches like BEM (Block Element Modifier) and utility-first CSS (Tailwind) naturally produce short, flat selectors as a side effect.`,
     tags: ['selectors', 'performance', 'specificity', 'bem'],
     tier: 'advanced',
     level: 'expert',
@@ -334,16 +344,16 @@ BEM (Block Element Modifier) and utility classes like Tailwind naturally produce
   {
     id: 'cascade-layers-theory',
     title: 'Cascade Layers — Theory',
-    summary: 'Cascade Layers let you structure CSS with explicit priority groups, separating concerns without specificity wars.',
-    body: `Before @layer, managing CSS from multiple sources (resets, design systems, utilities, custom styles) required careful specificity management. A utility class with high specificity could beat component styles; !important was the only escape hatch.
+    summary: 'Cascade Layers let you group CSS into named priority buckets, so later layers always win over earlier ones — regardless of selector specificity.',
+    body: `Before @layer, combining CSS from multiple sources (resets, design systems, utility classes, your own code) was a specificity juggling act. A utility class with a high-specificity selector could beat your component styles, and the only way out was !important.
 
-Cascade layers solve this by adding a new level to the cascade above specificity. Layers declared later win over earlier layers, regardless of specificity within those layers.
+Cascade layers solve this by adding a new priority level on top of specificity. A rule in a later layer always beats a rule in an earlier layer, no matter how specific the selector is.
 
-Declared order: @layer reset, base, components, utilities; — utilities wins over components even if components uses an ID selector.
+You declare the layer order once: @layer reset, base, components, utilities; — in this setup, a rule in utilities beats one in components even if the components rule uses an ID selector.
 
-Unlayered styles beat all layers, giving you an escape hatch. Third-party CSS can be imported into a layer, containing its specificity.
+Styles not placed in any layer beat all layered styles. This gives you an easy override mechanism.
 
-This enables: import Bootstrap into @layer(third-party) and override it with simple class selectors from @layer(custom) without fighting specificity.`,
+A practical benefit: you can import third-party CSS (like Bootstrap) into a layer — @import url("bootstrap.css") layer(third-party) — and then override it with simple class selectors from your own layer. No specificity fighting needed.`,
     tags: ['cascade-layers', 'layer', 'specificity', 'architecture'],
     tier: 'advanced',
     level: 'expert',
@@ -351,17 +361,17 @@ This enables: import Bootstrap into @layer(third-party) and override it with sim
   {
     id: 'css-containment',
     title: 'CSS Containment',
-    summary: 'The contain property isolates subtrees from the rest of the document for rendering performance.',
-    body: `CSS containment (contain) lets you tell the browser that a subtree is independent from the rest of the page, enabling rendering optimizations. Four containment types:
+    summary: 'The contain property tells the browser that an element is independent from the rest of the page, allowing it to skip rendering work outside that boundary.',
+    body: `CSS containment (the contain property) is a hint to the browser that a subtree is isolated — changes inside it do not affect the layout, paint, or style of anything outside it. The browser can then skip recalculating those things for the rest of the page. There are four containment types:
 
-contain: size — the element's size doesn't depend on its children. Used for virtual scroll containers.
-contain: layout — the element's internal layout doesn't affect external layout. Changes inside don't trigger external reflow.
-contain: style — counter and quote scoping is limited to the subtree.
-contain: paint — the element clips its content (like overflow: hidden) and the browser won't paint outside it.
+contain: size — the element's size is not determined by its children. Useful for virtual scroll containers.
+contain: layout — internal layout changes do not cause reflow outside the element.
+contain: style — CSS counters and quotes are scoped to this subtree and do not affect the rest.
+contain: paint — the element's content is clipped to its border box (similar to overflow: hidden), and the browser can skip painting the element when it is off-screen.
 
-contain: strict = all four. contain: content = layout + style + paint (most useful).
+contain: strict applies all four at once. contain: content applies layout + style + paint, which is the most practical combination.
 
-content-visibility: auto is the high-level API — off-screen elements are skipped entirely during rendering, dramatically improving initial paint on long pages. Combine with contain-intrinsic-size to reserve space and prevent layout shifts.`,
+content-visibility: auto is a simpler, higher-level version of this. The browser skips rendering off-screen elements entirely — both layout and paint. This can dramatically speed up the initial render of long pages. Pair it with contain-intrinsic-size to give the browser an estimated height so the scrollbar does not jump around as elements render.`,
     tags: ['containment', 'contain', 'performance', 'content-visibility'],
     tier: 'advanced',
     level: 'expert',
@@ -369,18 +379,18 @@ content-visibility: auto is the high-level API — off-screen elements are skipp
   {
     id: 'css-architecture',
     title: 'CSS Architecture at Scale',
-    summary: 'BEM, utility-first, CSS Modules, and CSS-in-JS each solve the global-scope problem differently.',
-    body: `CSS has no native scope — every rule is global. At scale, this causes: naming conflicts, specificity wars, unused styles accumulating, and changes that break unrelated components. Different architectures solve this differently.
+    summary: 'CSS is global by default. BEM, utility-first, CSS Modules, and CSS-in-JS are four different approaches to keeping styles scoped and manageable at scale.',
+    body: `Every CSS rule is global. In a large codebase this causes problems: class names clash, specificity fights break things, unused styles build up, and a change in one component unexpectedly breaks another. Different approaches tackle this differently.
 
-BEM (Block Element Modifier): Naming convention (.card__title--large) that encodes hierarchy in the class name. No tooling needed, scales with discipline.
+BEM (Block Element Modifier): a naming convention where class names encode their role — .card__title--large means the "title" element inside a "card" block with a "large" modifier. No build tooling needed. Works well with discipline, especially in teams.
 
-Utility-first (Tailwind): Tiny single-purpose classes composed in HTML. No custom naming, no dead code (purged), tight coupling of styles and markup.
+Utility-first (Tailwind): tiny, single-purpose classes (.text-lg, .bg-blue-500) composed directly in your HTML. No custom class names to invent, no unused CSS (unused classes are removed at build time), but the HTML can become verbose.
 
-CSS Modules: Build-time scoping — .title becomes .ComponentName__title__hash. Local by default, opt-in globals. Works with any CSS feature.
+CSS Modules: a build step (Webpack, Vite, etc.) renames your classes to .ComponentName__title__hash so they are unique globally. You write normal CSS, but it is scoped to that component file by default. No runtime cost.
 
-CSS-in-JS (styled-components, Emotion): Styles written in JS, scoped to component, can use JS variables and logic. Runtime cost for some libraries; zero-runtime alternatives (vanilla-extract, linaria) address this.
+CSS-in-JS (styled-components, Emotion): styles written inside JavaScript or TypeScript files, scoped automatically to the component, and able to use props and JS variables directly. Some libraries inject styles at runtime, which adds cost on the server and during hydration (the process of making a server-rendered page interactive). Zero-runtime alternatives like vanilla-extract and Linaria compile styles at build time instead.
 
-Cascade Layers (@layer): The newest native tool — explicitly prioritize style origins without specificity games. Enables safely importing third-party CSS.`,
+Cascade Layers (@layer): a native CSS feature that gives you explicit control over which styles take priority — useful for managing third-party CSS without fighting specificity.`,
     tags: ['css-architecture', 'bem', 'css-modules', 'tailwind', 'css-in-js', 'cascade-layers'],
     tier: 'advanced',
     level: 'expert',
@@ -388,22 +398,22 @@ Cascade Layers (@layer): The newest native tool — explicitly prioritize style 
   {
     id: 'browser-rendering-pipeline',
     title: 'Browser Rendering Pipeline',
-    summary: 'From HTML bytes to painted pixels — the six stages the browser executes to render every frame.',
-    body: `The browser follows a strict pipeline to turn markup and styles into visible pixels:
+    summary: 'The browser converts HTML and CSS into visible pixels by following six sequential stages. Each stage must finish before the next one can begin.',
+    body: `The browser follows this pipeline to turn markup and styles into visible pixels:
 
-1. Parse HTML → DOM tree. The parser builds the Document Object Model node by node. External scripts block parsing unless marked async or defer.
+1. Parse HTML → DOM tree. The browser reads the HTML and builds a tree of nodes called the DOM (Document Object Model). External scripts pause (block) this parsing unless they have the async or defer attribute.
 
-2. Parse CSS → CSSOM tree. The browser builds the CSS Object Model from all stylesheets. CSS is render-blocking — the browser won't paint until CSSOM is complete.
+2. Parse CSS → CSSOM tree. The browser reads all CSS and builds a separate tree called the CSSOM (CSS Object Model). CSS is render-blocking — the browser will not paint anything until this tree is complete.
 
-3. DOM + CSSOM → Render Tree. The browser combines both trees, keeping only visible nodes (display: none elements are excluded). Each node has its computed styles.
+3. DOM + CSSOM → Render Tree. The browser merges both trees, keeping only elements that are actually visible. Elements with display: none are excluded here.
 
-4. Layout (Reflow). The browser calculates the exact position and size of every render tree node, starting from the root. This outputs a box model for every element.
+4. Layout (Reflow). The browser calculates the exact position and size of every element in the render tree. This step starts from the root and works down.
 
-5. Paint. The browser fills in pixels for each layer: colors, text, shadows, borders. Elements are painted onto one or more layers.
+5. Paint. The browser draws the pixels: colors, text, shadows, borders. Elements may be painted onto separate layers.
 
-6. Composite. The GPU combines all painted layers in the correct stacking order and displays the final frame.
+6. Composite. The GPU takes all the painted layers, stacks them in the right order, and sends the final frame to the screen.
 
-Critical Rendering Path (CRP): the minimum work needed before the first pixel appears. Optimizing it means: minimize render-blocking CSS/JS, reduce DOM size, inline critical CSS, preload key resources.`,
+Critical Rendering Path: this is the term for the minimum set of steps the browser must complete before the user sees anything. Optimizing it means: cut render-blocking CSS and JavaScript, reduce the size of the DOM, inline the CSS needed for the first visible screen (called above-the-fold content), and preload important resources.`,
     diagram: {
       type: 'ascii',
       content: `HTML bytes
@@ -430,18 +440,18 @@ Critical Rendering Path (CRP): the minimum work needed before the first pixel ap
   {
     id: 'reflow-repaint-compositing',
     title: 'Reflow, Repaint & Compositing',
-    summary: 'Three levels of render work — understanding which operations trigger which level is the foundation of CSS performance.',
-    body: `Every visual change triggers one of three levels of browser work, from most to least expensive:
+    summary: 'Every visual change triggers one of three levels of browser work. Knowing which level a CSS property triggers is the foundation of CSS performance optimization.',
+    body: `Every visual change makes the browser do one of three levels of work, from most to least expensive:
 
-Reflow (Layout): recalculates the geometry of the entire affected subtree — positions, sizes, scroll. Triggered by: DOM insertions/removals, element resizing, font changes, reading layout properties (offsetWidth, getBoundingClientRect). Expensive because it can cascade — moving one element can shift everything else.
+Reflow (Layout): recalculates the size and position of the changed element and everything affected by it. Triggered by: adding or removing DOM elements, changing width, height, margin, padding, font-size, or reading layout measurements (offsetWidth, getBoundingClientRect). Reflow is expensive because one change can ripple through many other elements.
 
-Repaint: re-draws pixels without geometry changes. Triggered by: color, background, visibility, shadow, border-radius changes. Less expensive than reflow but still forces the CPU to redraw the affected area.
+Repaint: redraws the pixels for an element without recalculating geometry. Triggered by: changes to color, background, visibility, box-shadow, border-radius. Still uses the CPU, but cheaper than reflow because positions are not recalculated.
 
-Compositing only: changes handled entirely on the GPU, skipping layout and paint. Only transform and opacity on elements promoted to their own layer qualify. This is the cheapest path — typically sub-millisecond.
+Compositing only: the GPU shifts or fades an already-painted layer without involving the CPU for layout or paint. Only transform and opacity on elements that have been promoted to their own layer qualify. This is the cheapest path — often under one millisecond.
 
-Layout thrashing: alternating DOM reads and writes in a loop, forcing the browser to recalculate layout on every iteration. Fix by batching all reads first, then all writes.
+Layout thrashing: when you alternate DOM reads and writes inside a loop, the browser is forced to redo layout on every iteration instead of batching it. The fix is simple: do all reads first, then all writes.
 
-CSS triggers reference: csstriggers.com maps every property to which pipeline stages it triggers.`,
+Tip: csstriggers.com lists every CSS property and shows which pipeline stages it triggers.`,
     diagram: {
       type: 'ascii',
       content: `Change type          Pipeline stages triggered
@@ -466,18 +476,18 @@ els.forEach((el, i) => el.style.width = widths[i] + 10 + 'px'); // all writes`,
   {
     id: 'gpu-compositing-layers',
     title: 'GPU Layers, will-change & Composite-Only Animations',
-    summary: 'Promoting elements to their own compositor layer lets the GPU handle animations without touching layout or paint.',
-    body: `The browser paints elements onto one or more layers. Most elements share a layer. When you animate a property that only affects compositing (transform, opacity), the GPU can shift or fade that layer without re-running layout or paint on the CPU — enabling silky 60fps animations.
+    summary: 'Moving elements to their own GPU layer means the GPU handles animations directly, skipping layout and paint entirely.',
+    body: `The browser paints elements onto one or more layers. Most elements share a single layer. When you animate a property that only affects compositing — meaning only transform or opacity — the GPU can shift or fade that layer without the CPU redoing layout or paint. This is how smooth 60fps animations are achieved.
 
-Layer promotion: the browser creates a new compositor layer for elements with transform (3D), will-change, video, canvas, position: fixed/sticky, or opacity animations. Layers are textures uploaded to GPU memory.
+Layer promotion happens when the browser decides an element should have its own layer. Automatic triggers include: 3D transforms, video and canvas elements, position: fixed or sticky, and opacity animations. Layers are textures stored in GPU memory (VRAM).
 
-will-change: hints to the browser to promote an element before animation starts, avoiding jank at the first frame:
-will-change: transform — promotes immediately, GPU-ready.
-will-change: auto — no hint (default).
+will-change is a hint you add to tell the browser to promote an element before the animation starts. Without it, promotion happens at the first animation frame, which can cause a visible stutter. Two common values:
+- will-change: transform — promotes immediately, GPU-ready.
+- will-change: auto — no hint (the default).
 
-Pitfalls: overusing will-change creates too many GPU textures, consuming large amounts of VRAM and potentially hurting performance on low-memory devices. Apply it only to elements that genuinely animate frequently, and remove it after animations end via JavaScript.
+Pitfalls: each promoted layer occupies VRAM. On mobile devices or low-memory machines, too many layers slow things down rather than speeding them up. Apply will-change only to elements that genuinely animate, and remove it after the animation ends (el.style.willChange = 'auto') to free the memory.
 
-Animate transform not position: animating left/top triggers layout every frame. animating transform: translateX() stays in the composite stage only.`,
+Prefer animating transform over animating top, left, or width. Animating top/left triggers layout recalculation every frame. Animating transform: translateX() only touches the compositor stage.`,
     diagram: {
       type: 'ascii',
       content: `/* Triggers layout every frame — avoid */
@@ -503,16 +513,16 @@ Animate transform not position: animating left/top triggers layout every frame. 
   {
     id: 'core-web-vitals',
     title: 'Core Web Vitals (LCP, INP, CLS)',
-    summary: "Google's three user-experience metrics that measure loading, interactivity, and visual stability.",
-    body: `Core Web Vitals are standardized metrics that quantify real user experience. They feed into Google's search ranking and are measurable via Lighthouse, Chrome DevTools, PageSpeed Insights, and the web-vitals JS library.
+    summary: "Google's three standardized metrics for measuring real user experience: how fast the page loads, how quickly it responds to input, and how stable the layout is.",
+    body: `Core Web Vitals are three measurable metrics that reflect how users actually experience a page. They influence Google's search ranking. You can measure them with Lighthouse, Chrome DevTools, PageSpeed Insights, or the web-vitals JavaScript library.
 
-LCP — Largest Contentful Paint (target: ≤ 2.5s): time until the largest image or text block in the viewport is fully rendered. Usually a hero image, heading, or above-the-fold banner. Improve by: preloading the LCP resource (<link rel="preload">), optimizing server response time, using modern image formats (WebP/AVIF), not lazy-loading above-fold images.
+LCP — Largest Contentful Paint (target: 2.5 seconds or less): the time until the largest image or text block visible in the viewport is fully rendered. This is usually a hero image or main heading. Improve it by: preloading the LCP resource with <link rel="preload">, reducing server response time, using modern image formats (WebP or AVIF), and never lazy-loading images that are above the fold (already visible on load).
 
-INP — Interaction to Next Paint (target: ≤ 200ms, replaced FID in 2024): measures the worst latency across all user interactions (click, key, tap) during a page visit. Improve by: breaking up long tasks with scheduler.yield() or setTimeout chunking, moving heavy work to Web Workers, deferring non-critical JS.
+INP — Interaction to Next Paint (target: 200 milliseconds or less, replaced FID in 2024): measures how long it takes from a user interaction (click, key press, tap) to the next visible frame update. Improve it by: splitting long JavaScript tasks into smaller chunks using scheduler.yield() or setTimeout, moving heavy work off the main thread into Web Workers, and delaying non-critical scripts.
 
-CLS — Cumulative Layout Shift (target: ≤ 0.1): sum of all unexpected layout shifts during the page's life. A shift is unexpected if it happens without user input. Improve by: always setting width and height on images/videos, not inserting content above existing content, using CSS aspect-ratio to reserve space, avoiding late-loading ads that push content down.
+CLS — Cumulative Layout Shift (target: 0.1 or less): a score that adds up all unexpected layout shifts during the life of the page. A shift is unexpected if it happens without any user action. Improve it by: always setting width and height attributes on images and videos, not injecting content above existing content after load, using the CSS aspect-ratio property to reserve space, and avoiding late-loading ads that push content down.
 
-Measuring: new PerformanceObserver({ type: 'largest-contentful-paint' }) in JS, or import { onLCP, onINP, onCLS } from 'web-vitals'.`,
+Measuring in code: use the web-vitals library — import { onLCP, onINP, onCLS } from 'web-vitals' — or the PerformanceObserver API directly.`,
     diagram: {
       type: 'ascii',
       content: `Metric   What it measures              Good     Needs work   Poor
@@ -534,18 +544,18 @@ Common LCP killers:          Common CLS killers:
   {
     id: 'css-containment',
     title: 'CSS Containment & content-visibility',
-    summary: 'Tell the browser an element is independent so it can skip layout and paint work outside its boundary.',
-    body: `CSS containment (contain property) lets you declare that a subtree is isolated from the rest of the page for layout, paint, or style purposes. The browser can then skip recalculating those aspects for the rest of the document when the contained element changes.
+    summary: 'Telling the browser that an element is self-contained lets it skip layout and paint work that does not affect anything outside that element.',
+    body: `The contain property is a performance hint. It tells the browser that a subtree is isolated — changes inside do not affect layout, paint, or style outside. The browser can then skip recalculating those things for the rest of the page when the contained element changes.
 
-contain: layout — changes inside the element don't affect layout outside. The element acts like a formatting context.
-contain: paint — the element's descendants don't render outside its border box. The browser can skip painting it when off-screen.
-contain: style — (limited) prevents counters and quotes from leaking out.
-contain: strict — all of the above simultaneously.
-contain: content — layout + paint (safe default, most commonly useful).
+contain: layout — internal layout changes do not cause reflow outside. The element behaves like its own formatting context.
+contain: paint — the element's children do not render outside its border box. The browser can also skip painting it entirely when it is off-screen.
+contain: style — (limited use) CSS counters and quotes are scoped to the subtree.
+contain: strict — all of the above at the same time.
+contain: content — layout + paint combined. This is the safest and most commonly useful combination.
 
-content-visibility: auto — the browser skips rendering off-screen elements entirely (layout + paint), only doing work when they scroll into view. Massive performance win for long pages with many sections. Pair with contain-intrinsic-size to give the browser a placeholder size so scrollbar doesn't jump.
+content-visibility: auto — a higher-level property that tells the browser to skip rendering off-screen elements entirely (both layout and paint). The browser only does that work when the element scrolls into view. This can dramatically reduce the time to first render on long pages with many sections. Pair it with contain-intrinsic-size to give the browser an estimated height so the scrollbar position does not jump unexpectedly as sections render.
 
-Use cases: widget containers that update frequently, virtualized list items, off-screen modals, dashboard cards.`,
+Good use cases: frequently updating widget containers, items in a virtualized list, off-screen modals, and dashboard cards.`,
     diagram: {
       type: 'ascii',
       content: `/* Contain layout recalculation to this widget */

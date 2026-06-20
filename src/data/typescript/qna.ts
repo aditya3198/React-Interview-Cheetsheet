@@ -4,11 +4,15 @@ const tsQna: QnaItem[] = [
   {
     id: 'ts-what-and-why',
     question: 'What is TypeScript and why use it over plain JavaScript?',
-    answer: `TypeScript is a statically typed superset of JavaScript that compiles to plain JavaScript. It adds optional type annotations, interfaces, generics, enums, and access modifiers. Every valid JavaScript file is valid TypeScript.
+    answer: `TypeScript is JavaScript with optional type annotations added on top. It compiles (transforms) to plain JavaScript before running, so browsers and Node.js never see the TypeScript syntax. Every valid JavaScript file is also valid TypeScript, which makes it easy to adopt gradually.
 
-Why use it: (1) Catch bugs at compile time — null dereferences, wrong argument types, missing properties. (2) Better IDE experience — precise autocompletion, inline documentation, safe refactoring. (3) Acts as documentation — function signatures communicate intent without runtime checks. (4) Scales with team size — types enforce contracts across files and contributors.
+Why use it:
+(1) Catch bugs before running the code — things like accessing a property that does not exist, passing the wrong type of argument, or forgetting to handle null.
+(2) Better editor experience — precise autocompletion, inline documentation, and safe renaming of variables and functions.
+(3) Types as documentation — a function signature tells you what it expects and returns without needing comments.
+(4) Scales with team size — types create clear contracts between different parts of a codebase, reducing misunderstandings.
 
-The cost is a compilation step and learning curve for advanced type features. The tradeoff is almost always worth it for codebases beyond a few hundred lines.`,
+The cost is a build step and some extra learning for advanced features. For any codebase larger than a few hundred lines, that tradeoff is almost always worth it.`,
     codeExample: `// JavaScript — runtime error only
 function greet(user) {
   return 'Hello, ' + user.nane; // typo — undefined, no error
@@ -26,17 +30,17 @@ function greet(user: { name: string }): string {
   {
     id: 'ts-interface-vs-type',
     question: 'What is the difference between interface and type alias in TypeScript?',
-    answer: `Both describe the shape of an object, and in most cases they are interchangeable. Key differences:
+    answer: `Both describe the shape of an object, and for simple cases they are interchangeable. Here are the practical differences:
 
-1. Declaration merging: interfaces can be re-declared to add properties (merged). Type aliases cannot — redeclaring a type is always an error.
+1. Declaration merging: you can write the same interface name twice and TypeScript merges both sets of properties into one type. With a type alias, writing the same name twice is always an error.
 
-2. Extension syntax: interfaces use extends; type aliases use intersection (&). Both work for inheritance-like patterns.
+2. Extension syntax: interfaces use extends to build on another type. Type aliases use intersection (&). Both achieve a similar result.
 
-3. What they can name: type aliases can name any type — primitives, unions, tuples, conditional types. Interfaces are restricted to object/function shapes.
+3. What they can name: type aliases can name any type — primitives, unions, tuples, conditional types. Interfaces are limited to object and function shapes.
 
-4. Error messages: TypeScript often shows the interface name in errors instead of expanding the structure, which can be cleaner.
+4. Error messages: TypeScript often displays the interface name in error messages rather than expanding all its properties, which can be easier to read.
 
-Rule of thumb: use interface for public APIs, object shapes, and anything that might be augmented. Use type for unions, intersections, utility types, and anything that isn't a plain object shape.`,
+Rule of thumb: use interface for object shapes that might be extended or augmented by other code (like library types). Use type for unions, intersections, utility types, and anything that is not a plain object shape.`,
     codeExample: `// Interface — mergeable, extends syntax
 interface User { id: number; name: string; }
 interface User { email: string; } // merged: now has id, name, email
@@ -58,13 +62,13 @@ type Nullable<T> = T | null;`,
   {
     id: 'ts-structural-typing',
     question: 'What is structural typing in TypeScript?',
-    answer: `TypeScript uses structural typing — compatibility is determined by the shape of a type (its properties and their types), not by declared names or class hierarchy.
+    answer: `TypeScript uses structural typing — whether two types are compatible is decided by their properties, not by their names or how they were declared.
 
-If an object has all the properties a type requires, it satisfies that type, regardless of how it was declared. A plain object literal, a class instance, and a separately defined interface are all mutually assignable if they share the same structure.
+If an object has all the properties a type requires, it satisfies that type. It does not matter if it was created as a class instance, an object literal, or matches some unrelated interface — as long as the shape matches, TypeScript accepts it.
 
-This contrasts with nominal typing (Java, C#) where you must explicitly declare that a class implements an interface for compatibility.
+This is different from languages like Java or C# (which use nominal typing), where a class must explicitly declare that it implements an interface before it can be used as that type.
 
-One subtlety: TypeScript applies excess property checking when you pass a fresh object literal directly to a typed location — extra properties cause an error. But if you assign the same literal to an intermediate variable first, the check is skipped.`,
+One detail worth knowing: TypeScript applies "excess property checking" when you pass a fresh object literal directly to a typed location. Any extra properties that are not in the target type will cause an error. But if you first assign the literal to a variable and then pass the variable, the extra properties are allowed — only the required shape is checked at that point.`,
     codeExample: `interface Point { x: number; y: number; }
 
 class Coordinate {
@@ -88,15 +92,15 @@ const p3: Point = obj; // OK — intermediate variable bypasses check`,
   {
     id: 'ts-unknown-any-never',
     question: 'What is the difference between unknown, any, and never?',
-    answer: `These three types sit at the extremes of TypeScript's type hierarchy:
+    answer: `These three types sit at opposite ends of TypeScript's type system:
 
-any: the escape hatch. Assignable to and from every type. TypeScript stops checking any values — no errors, no autocomplete. Every any is a hole in your type safety. Use only for gradual migration or unavoidably dynamic code.
+any: the escape hatch. A value typed as any can be assigned to or from any other type. TypeScript stops type-checking it entirely — no errors, no autocomplete help. Every any is a gap in your safety net. Use it only for gradual migration from JavaScript or code that is genuinely too dynamic to type.
 
-unknown: the type-safe any. You can assign anything to unknown, but you can't use an unknown value without narrowing it first (typeof, instanceof, etc.). It forces explicit handling — use it for values from external sources, error catch variables, or generic "I don't know yet" values.
+unknown: the safer version of any. You can assign anything to unknown, but you cannot call methods or read properties on it until you narrow the type first (using typeof, instanceof, or a similar check). It forces you to handle the uncertainty. Use it for values from external sources (like API responses), catch clause variables, or any "I do not know what this is yet" situation.
 
-never: the bottom type. No value can ever have this type. It's the return type of functions that always throw, the result of impossible intersections (string & number), and the type in unreachable branches — enabling exhaustiveness checking.
+never: means "this is impossible." No value can have type never. It is the return type of functions that always throw an error or never finish. It is also the result of impossible type intersections (like string & number), and it shows up in the unreachable default branch of an exhaustive switch — which lets TypeScript warn you when you forget to handle a new union member.
 
-Hierarchy: unknown is the top type (every type extends it). never is the bottom type (extends every type). any floats outside the normal lattice — it's both assignable to and from everything.`,
+Hierarchy: unknown is the top type — every type is a subtype of it. never is the bottom type — it is a subtype of every other type. any sits outside this ordering and is compatible in both directions.`,
     codeExample: `// any — dangerous
 let a: any = 'hello';
 a.notReal(); // no error — runtime surprise
@@ -125,18 +129,18 @@ function area(s: Shape) {
   {
     id: 'ts-narrowing',
     question: 'How does type narrowing work in TypeScript?',
-    answer: `TypeScript performs control flow analysis — it tracks which types are possible for a variable at each point in the code, based on type guards, assignments, and early returns.
+    answer: `TypeScript performs control flow analysis — it reads your code branch by branch to track which types are still possible for a variable at each point.
 
-Type guards that trigger narrowing:
-- typeof: typeof x === 'string' narrows to string
-- instanceof: x instanceof Error narrows to Error
+Type guards (checks that trigger narrowing):
+- typeof: typeof x === 'string' makes x a string in that branch
+- instanceof: x instanceof Error makes x an Error
 - in operator: 'prop' in x narrows to types that have that property
-- Equality: x === null narrows to null (eliminates the rest)
-- Truthiness: if (x) narrows out null/undefined/0/''
-- User-defined predicates: (val: unknown): val is User
-- Discriminated union: checking a shared literal "tag" property
+- Equality: x === null eliminates all non-null types in that branch
+- Truthiness: if (x) rules out null, undefined, 0, and empty string
+- User-defined predicates: functions with a return type like val is User
+- Discriminated union tag: checking a shared literal property like type or kind
 
-After a return/throw, TypeScript knows that code path ended and narrows accordingly. This makes early return guard clauses idiomatic — they progressively eliminate types so the rest of the function works with a narrower, safer type.`,
+After a return or throw, TypeScript knows that path has ended and continues with the remaining types. This is why writing guard checks at the top of a function works so well — each one removes a type from the possible set, making the code below it simpler and safer to work with.`,
     codeExample: `function process(value: string | number | null) {
   if (value === null) return;       // null eliminated
   // value: string | number
@@ -162,13 +166,13 @@ function handle(e: Event) {
   {
     id: 'ts-generics-explanation',
     question: 'What are generics in TypeScript and when should you use them?',
-    answer: `Generics let you write reusable, type-safe abstractions where the types involved are parameters rather than fixed types. They preserve type information through transformations — something any[] and union types cannot do.
+    answer: `Generics let you write reusable, type-safe code where the type is a variable (called a type parameter) rather than something fixed. This preserves type information through transformations in a way that any[] or a union type cannot.
 
-Use generics when the output type depends on the input type. The canonical example: a function that returns the first element of an array should return T, not any. A function that maps over an array should return U[], where U depends on the callback's return type.
+Use generics when the output type depends on the input type. A clear example: a function that returns the first element of an array should return T (the element type), not any. The caller needs to know what type they will get back.
 
-Constraints (T extends SomeType) limit what T can be, letting you access specific properties while remaining generic.
+Constraints (T extends SomeType) limit what T can be, so you can safely access specific properties inside the function while still being flexible about what exact type is passed in.
 
-When not to use generics: don't add a type parameter just because a function accepts multiple types. If the output type doesn't depend on which specific type was passed in, a union is simpler. A function that accepts string | number and always returns string doesn't benefit from generics.`,
+When not to use generics: do not add a type parameter just because a function accepts multiple types. If the output type is always the same regardless of what was passed in, a union is simpler and clearer. For example, a function that accepts string | number and always returns string does not need generics.`,
     codeExample: `// Generic — return type depends on input type
 function first<T>(arr: T[]): T | undefined { return arr[0]; }
 first([1, 2, 3]);  // number | undefined
@@ -193,13 +197,13 @@ interface Repository<T> {
   {
     id: 'ts-mapped-types-explanation',
     question: 'What are mapped types and how do they work?',
-    answer: `Mapped types iterate over the keys of an existing type and transform each property. The syntax uses [K in keyof T] to loop over every key, and you can change the value type, add/remove modifiers, and remap key names.
+    answer: `Mapped types loop over every key of an existing type and produce a new type from it. The syntax [K in keyof T] is the loop, and you can change the value type, add or remove modifiers, and rename keys.
 
-Modifiers: add or remove optional (?) and readonly with + (default) or - prefixes. -? makes all properties required; -readonly makes them mutable.
+Modifiers: use + or - before ? and readonly to add or remove them. For example, -? removes the optional marker from all properties (making them required), and -readonly makes all properties writable.
 
-Key remapping: the as clause in [K in keyof T as NewKeyType] renames keys. Using as never filters a key out entirely. Combined with template literal types, this lets you compute getter/setter method names from an object shape.
+Key remapping: the as clause in [K in keyof T as NewKey] renames keys. Using as never removes a key from the result entirely. Combining this with template literal types lets you generate method names from an object's property names — for example, name → getName.
 
-All built-in utility types (Partial, Required, Readonly, Pick, Omit, Record) are implemented with mapped types — reading their definitions in lib.es5.d.ts is the best way to truly understand them.`,
+All built-in utility types like Partial, Required, Readonly, Pick, Omit, and Record are implemented using mapped types. Reading their definitions in lib.es5.d.ts is the best way to understand them at a deeper level.`,
     codeExample: `// How Partial<T> works
 type Partial<T> = { [K in keyof T]?: T[K] };
 
@@ -225,13 +229,13 @@ type StringKeys<T> = {
   {
     id: 'ts-conditional-types-explanation',
     question: 'What are conditional types and what is the infer keyword?',
-    answer: `Conditional types use the syntax T extends U ? TrueType : FalseType — if T is assignable to U, the type resolves to TrueType, otherwise FalseType.
+    answer: `Conditional types use the syntax T extends U ? TrueType : FalseType. If T is assignable to U, the type resolves to TrueType. Otherwise it resolves to FalseType.
 
-Distributivity: by default, conditional types distribute over union members. If T is A | B, then T extends U ? X : Y becomes (A extends U ? X : Y) | (B extends U ? X : Y). Wrap in brackets [T] extends [U] to prevent this.
+Distributivity: when T is a union type, the condition runs separately for each member. So if T is A | B, the result is (A extends U ? X : Y) | (B extends U ? X : Y). To prevent this and treat the union as one unit, wrap in brackets: [T] extends [U].
 
-The infer keyword appears inside conditional types to capture a matched sub-type and name it for use in the true branch. T extends Promise<infer R> ? R : never extracts R from a Promise wrapper. This is how ReturnType, Parameters, Awaited, and InstanceType are all implemented.
+The infer keyword: inside a conditional type, infer lets you pull out and name a piece of the matched type. For example, T extends Promise<infer R> ? R : never extracts the type R from inside a Promise. This is exactly how built-in types like ReturnType, Parameters, Awaited, and InstanceType are written.
 
-Conditional types enable computing types that would otherwise require runtime reflection or code generation — extracting array element types, function return types, constructor instance types, and more.`,
+Conditional types let you compute types at compile time — extracting element types from arrays, return types from functions, instance types from classes, and more — without any runtime code.`,
     codeExample: `// Conditional type — branch on type relationship
 type IsArray<T> = T extends any[] ? true : false;
 type A = IsArray<string[]>; // true
@@ -256,15 +260,15 @@ type D = Awaited<Promise<Promise<string>>>; // string`,
   {
     id: 'ts-template-literal-types-explanation',
     question: 'What are template literal types in TypeScript?',
-    answer: `Template literal types use backtick syntax at the type level to construct new string literal types. They mirror JavaScript template literals but operate on types.
+    answer: `Template literal types use backtick syntax at the type level, the same way you write template strings in JavaScript. They let you build new string types by combining fixed strings with other types.
 
-When a union type is embedded, the template distributes over every member, producing a union of all combinations.
+When a union type is embedded inside the template, TypeScript generates every possible combination and produces a union of all the resulting strings.
 
-Built-in string utilities: Uppercase<S>, Lowercase<S>, Capitalize<S>, Uncapitalize<S>.
+Built-in string helpers: Uppercase<S>, Lowercase<S>, Capitalize<S>, Uncapitalize<S>.
 
-The most powerful patterns combine template literal types with mapped types and key remapping (as clause) to transform entire object shapes: generate getter/setter method names, CSS property variants, or event handler names from object keys.
+The most useful patterns combine template literal types with mapped types and key remapping (the as clause) to transform object shapes. For example, you can turn every property name into a corresponding getter method name — name becomes getName, age becomes getAge.
 
-Template literal types can also be used with infer in conditional types to parse string patterns at the type level — extracting route parameters, prefix/suffix substrings, and more.`,
+Template literal types also work with infer inside conditional types. This lets you parse string patterns at the type level — for example, extracting a route parameter from a string like ':userId'.`,
     codeExample: `type Side = 'top' | 'right' | 'bottom' | 'left';
 type Margin = \`margin-\${Side}\`;
 // 'margin-top' | 'margin-right' | 'margin-bottom' | 'margin-left'
@@ -291,13 +295,13 @@ type Handlers = { [K in Events as \`on\${Capitalize<K>}\`]: () => void };
   {
     id: 'ts-discriminated-unions-explanation',
     question: 'What are discriminated unions and why are they useful?',
-    answer: `A discriminated union is a union of object types that each have a shared property with a unique literal type value. TypeScript uses this "discriminant" to narrow the full union to its specific member when you check the tag property.
+    answer: `A discriminated union is a union of object types where each one has a shared property (called a discriminant) with a unique literal value — for example, type: 'click' or kind: 'circle'. TypeScript uses this property to narrow the union to the specific variant when you check it in a switch or if statement.
 
-The pattern is TypeScript-idiomatic alternative to class hierarchies for polymorphism. It works well because the data is plain objects — easy to serialize, log, and test.
+This is a clean alternative to class inheritance when you need to handle multiple shapes of data. Because each variant is a plain object, it is easy to serialize (for example, to JSON), log, and test.
 
-Exhaustiveness checking: add a default branch that assigns the remaining type to a never variable. If all union members are handled, the assignment is valid. If a new member is added to the union later without updating the switch, TypeScript reports an error — the new member can't be assigned to never.
+Exhaustiveness checking: in the default branch of a switch, assign the remaining value to a variable typed as never. If every union member has been handled, this works fine. If you add a new member to the union later without adding a case for it, TypeScript reports an error — because the new member cannot be assigned to never.
 
-Common applications: Redux action types, API response shapes, state machines, AST nodes.`,
+Common uses: Redux action types, API response shapes, state machine states, and AST nodes (the structure compilers use to represent code).`,
     codeExample: `type Action =
   | { type: 'increment'; amount: number }
   | { type: 'reset' }
@@ -322,13 +326,13 @@ function reducer(state: number, action: Action): number {
   {
     id: 'ts-satisfies-explanation',
     question: 'What is the satisfies operator and how does it differ from a type annotation?',
-    answer: `A type annotation (const x: Type = value) validates the value but widens its inferred type to Type. Accessing properties gives you the Type's property types, not the literal values.
+    answer: `A type annotation (const x: Type = value) checks that the value matches the type, but then broadens the type of x to Type. When you access a property later, TypeScript gives you the wider type, not the specific literal value you wrote.
 
-The satisfies operator (value satisfies Type) also validates the value against the type, but preserves the original inferred type. You get both validation and the precise literal types.
+The satisfies operator (value satisfies Type) also checks that the value matches the type. The difference is that it keeps TypeScript's precise inferred type. You get both validation and the exact types from the value you wrote.
 
-The practical difference: if a value's property is string | number[] in the target type but you write a number[] literal, with an annotation you can't call .map without narrowing. With satisfies, TypeScript knows it's a number[] and lets you call .map directly.
+A concrete example: if a property is typed as string | number[] in the target type but you write a number[] literal, a type annotation makes TypeScript treat it as string | number[] — so you cannot call .map without narrowing first. With satisfies, TypeScript knows it is a number[] and allows .map directly.
 
-satisfies is especially useful for configuration objects and lookup tables where you want type validation but need the specific inferred types for downstream usage.`,
+satisfies is especially useful for configuration objects and lookup tables where you want type safety but also need to use the specific inferred types of each property afterwards.`,
     codeExample: `type Palette = Record<string, string | number[]>;
 
 // Type annotation — widens to string | number[]
@@ -355,13 +359,13 @@ const c = {
   {
     id: 'ts-strict-null-checks',
     question: 'How does strictNullChecks work and why does it matter?',
-    answer: `Without strictNullChecks, null and undefined are silently assignable to every type. A variable typed as string can actually hold null, making null-dereference bugs invisible to the type checker.
+    answer: `Without strictNullChecks, null and undefined are silently accepted everywhere. A variable typed as string can hold null with no error, which means null-related bugs only show up at runtime.
 
-With strictNullChecks enabled (which is included in "strict": true), null and undefined are distinct types. A string variable cannot be null unless you explicitly write string | null. This makes all null/undefined paths visible and forces you to handle them.
+With strictNullChecks (included in "strict": true), null and undefined become their own distinct types. A string variable cannot be null unless you explicitly write string | null. This forces all null and undefined paths to be visible and handled.
 
-The discipline: when a function returns string | null, callers must check for null before using the result. TypeScript tracks this via control flow analysis — after if (x !== null), x is narrowed to string.
+In practice: when a function returns string | null, the caller must check for null before using the value. TypeScript tracks this via control flow analysis — after if (x !== null), the type of x becomes just string in that branch.
 
-Optional chaining (?.) and nullish coalescing (??) work seamlessly with strictNullChecks to handle nullable values concisely.`,
+Optional chaining (?.) and nullish coalescing (??) work well alongside strictNullChecks and make handling nullable values concise. For example, user?.address?.city ?? 'Unknown' safely handles a chain of possibly-null values in one expression.`,
     codeExample: `// Without strictNullChecks — null sneaks in silently
 let name: string = null; // OK but dangerous
 
@@ -387,21 +391,21 @@ function getCity(user: { address?: { city?: string } } | null): string {
   {
     id: 'ts-utility-types-explanation',
     question: 'What are TypeScript utility types and which are most commonly used?',
-    answer: `Utility types are generic types in TypeScript's standard library for common type transformations. They're built with mapped types and conditional types under the hood.
+    answer: `Utility types are generic helpers that TypeScript ships in its standard library. They handle the most common type transformations so you do not have to write them from scratch. They are built using mapped types and conditional types.
 
-Most commonly used:
-- Partial<T> — all properties optional (good for update/patch payloads)
-- Required<T> — all properties required (remove optionals)
-- Readonly<T> — all properties readonly (immutable contracts)
-- Record<K, V> — object type from key union and value type
-- Pick<T, K> — select a subset of properties
-- Omit<T, K> — exclude specific properties
-- Exclude<T, U> / Extract<T, U> — manipulate union members
-- NonNullable<T> — remove null and undefined
-- ReturnType<T> / Parameters<T> — introspect function types
-- Awaited<T> — unwrap Promise types recursively
+The most commonly used ones:
+- Partial<T> — makes all properties optional (useful for update or patch payloads)
+- Required<T> — makes all properties required (removes any optional markers)
+- Readonly<T> — makes all properties read-only
+- Record<K, V> — creates an object type where K is the set of keys and V is the value type
+- Pick<T, K> — keeps only the listed properties from T
+- Omit<T, K> — removes the listed properties from T
+- Exclude<T, U> / Extract<T, U> — filter members in or out of a union type
+- NonNullable<T> — removes null and undefined from a type
+- ReturnType<T> / Parameters<T> — get the return type or parameter types of a function
+- Awaited<T> — unwraps a Promise type all the way down, even if nested
 
-Understanding how they're implemented helps you write your own: most are a few lines of mapped or conditional types.`,
+Learning how they are implemented (a few lines each in lib.es5.d.ts) helps you understand mapped and conditional types and write your own transformations when needed.`,
     codeExample: `type User = { id: number; name: string; email: string };
 
 type Patch      = Partial<User>;            // all optional
@@ -421,13 +425,13 @@ type GetUserResult = Awaited<ReturnType<typeof getUser>>; // User`,
   {
     id: 'ts-function-overloads-explanation',
     question: 'What are function overloads and when should you use them?',
-    answer: `Function overloads let you declare multiple call signatures for a single function. Each signature describes a specific combination of argument and return types. Callers see only the overload signatures; the implementation signature is hidden.
+    answer: `Function overloads let you declare multiple signatures for one function, where each signature describes a specific combination of argument types and the matching return type. Callers only see the overload signatures. The actual implementation is hidden from them.
 
-Use overloads when a function's return type genuinely depends on which argument types are passed — where a union return type would be too imprecise. For example, a format function that returns string for all inputs doesn't need overloads, but a createElement function that returns a specific element type based on the tag name does.
+Use overloads when the return type genuinely depends on what argument types were passed in, and a union return type would be too vague. For example, a function that returns string for every input does not need overloads. But a createElement function that returns HTMLAnchorElement specifically when passed 'a', or HTMLInputElement when passed 'input', does benefit from overloads — because without them, the caller just gets HTMLElement and loses the specific type.
 
-Implementation: write two or more overload signatures, then an implementation signature that is a union of all overloads. The implementation must handle all cases; TypeScript type-checks the implementation against the broader signature.
+How to write them: write two or more overload signatures first, then write one implementation signature that covers all cases using a union type. TypeScript checks the implementation against the broader combined signature.
 
-Prefer overloads over a single union signature when callers benefit from knowing the specific return type based on what they passed in.`,
+Use overloads when callers genuinely benefit from getting a more specific return type based on what they passed in.`,
     codeExample: `// Return type depends on argument type
 function createElement(tag: 'a'): HTMLAnchorElement;
 function createElement(tag: 'input'): HTMLInputElement;
@@ -451,16 +455,16 @@ function createElementSimple(tag: string): HTMLElement {
   {
     id: 'ts-declaration-merging-explanation',
     question: 'What is declaration merging in TypeScript?',
-    answer: `Declaration merging happens when TypeScript sees multiple declarations with the same name in the same scope and combines them into a single definition. The most practical form is interface merging: declaring the same interface name twice merges both sets of properties into one type.
+    answer: `Declaration merging happens when TypeScript sees multiple declarations with the same name in the same scope and combines them into one. The most practical case is interface merging: writing the same interface name twice produces a single type with all the properties from both declarations combined.
 
-This is the standard mechanism for extending third-party types:
-- Module augmentation: declare module 'library-name' { interface X { newProp: T } } adds to an existing module's types
-- Global augmentation: declare global { interface Window { ... } } extends global types
-- Namespace + function/class merging allows attaching static properties to a function via a same-named namespace
+This is how you extend types from third-party libraries without editing their source:
+- Module augmentation: write declare module 'library-name' { interface X { newProp: T } } to add properties to an existing type in that module
+- Global augmentation: write declare global { interface Window { ... } } to extend global types like Window
+- Namespace merging: a namespace with the same name as a function or class lets you attach extra properties to it
 
-A key consequence: interfaces merge, type aliases do not. Redeclaring type Foo twice is always a duplicate identifier error — this is one concrete behavioral difference between them.
+A key practical difference: interfaces merge, type aliases do not. Writing type Foo twice in the same scope is always a duplicate identifier error.
 
-Module augmentation files must be actual module files (they contain at least one top-level import or export). Otherwise all declarations become global.`,
+For module augmentation to work, the file must be a module file — meaning it has at least one top-level import or export. Without that, TypeScript treats all declarations as global, which changes the behaviour.`,
     codeExample: `// Interface merging
 interface Config { host: string; }
 interface Config { port: number; }
@@ -486,13 +490,13 @@ window.myLib.version; // typed`,
   {
     id: 'ts-decorators-explanation',
     question: 'How do TypeScript 5 decorators work?',
-    answer: `TypeScript 5.0 adopted the TC39 Stage 3 decorator proposal, replacing the older experimental decorators (emitDecoratorMetadata era).
+    answer: `TypeScript 5.0 adopted the TC39 Stage 3 decorator proposal. This replaced the older experimental decorators that required the experimentalDecorators flag.
 
-New decorators can be applied to: classes, class methods, class fields, class accessors (getter/setter pairs), and auto-accessors (the new accessor keyword). Each type receives a specific context object describing the decorated target.
+Decorators are special functions prefixed with @ that can be placed on classes, class methods, class fields, getter/setter pairs (accessors), and auto-accessors (a new accessor keyword). Each type of decorator receives a context object that describes what is being decorated.
 
-A decorator is a function that either modifies or replaces the decorated value. Method decorators wrap the method; field decorators return an initializer function; class decorators transform the class.
+A decorator either modifies or replaces the value it is applied to. Method decorators wrap the original method. Field decorators return an initializer function that runs when the field is set up. Class decorators can transform or extend the class itself.
 
-Key difference from legacy decorators: the new API doesn't rely on Reflect.metadata — it uses context.metadata for metadata scenarios. The enable flag changed too: set "experimentalDecorators": false (or omit it) for the new spec-compliant decorators.`,
+Key change from the old system: the new API does not depend on Reflect.metadata. Instead it uses context.metadata. To use the new decorators, do not set "experimentalDecorators": true (or remove it entirely) in tsconfig.json — the new behaviour is the default in TypeScript 5.`,
     codeExample: `// Method decorator — wraps the original method
 function memoize(target: Function, ctx: ClassMethodDecoratorContext) {
   const cache = new Map<string, unknown>();
@@ -519,15 +523,15 @@ class MathUtils {
   {
     id: 'ts-variance-explanation',
     question: 'What is covariance and contravariance in TypeScript?',
-    answer: `Variance describes how generic type compatibility relates to the compatibility of their type arguments.
+    answer: `Variance describes how the assignability of a generic type (like Container<T>) relates to the assignability of the type it wraps (T).
 
-Covariant: if Dog extends Animal, then Container<Dog> extends Container<Animal>. Safe for read-only / output positions. Arrays and return types are covariant.
+Covariant (same direction): if Dog extends Animal, then Container<Dog> also extends Container<Animal>. This applies to output positions — return types and read-only arrays. It is always safe to return a more specific type than required.
 
-Contravariant: the relationship reverses. If Dog extends Animal, then (animal: Animal) => void extends (dog: Dog) => void. A handler that accepts any Animal can certainly handle a Dog — it handles a broader set. Function parameters are contravariant.
+Contravariant (reversed direction): the relationship flips for input positions. If Dog extends Animal, then a function that accepts Animal can be used where a function that accepts Dog is expected — because it handles a broader set of values. Function parameters are contravariant.
 
-Invariant: neither direction holds. A mutable container (Ref<T> with get and set) can't be either — writing Animal into Ref<Dog> would break it.
+Invariant (neither direction): a mutable container typed as Ref<T> (with both get and set) is invariant. Ref<Dog> is not assignable to Ref<Animal> because you could then set an Animal into it, which would break Dog-specific behaviour.
 
-TypeScript's method parameters are historically bivariant (both directions) for practical compatibility, but function-typed properties use proper contravariance in strict mode. TypeScript 4.7 introduced in/out annotations for explicit variance marking, improving both documentation and compiler performance on complex generics.`,
+TypeScript's method parameters are historically bivariant (both directions allowed) for compatibility reasons. Function-typed properties use proper contravariance in strict mode. TypeScript 4.7 added in/out variance annotations so you can mark this explicitly, which also helps the compiler skip expensive variance calculations for complex generics.`,
     codeExample: `class Animal { move() {} }
 class Dog extends Animal { bark() {} }
 
@@ -552,15 +556,15 @@ interface Consumer<in T>  { consume(x: T): void } // contravariant`,
   {
     id: 'ts-index-signatures-explanation',
     question: 'What are index signatures and when should you use them?',
-    answer: `An index signature describes an object with dynamic (runtime-determined) keys. The syntax [key: string]: ValueType tells TypeScript that any string key maps to ValueType.
+    answer: `An index signature describes an object where the property names are not known ahead of time. The syntax [key: string]: ValueType tells TypeScript that any string key on this object maps to ValueType.
 
-Use index signatures when you genuinely have a homogeneous dynamic map — for example, a cache keyed by ID, a lookup table, or a dictionary. Avoid them when you know the specific set of keys upfront — use an object type or Record<'specific' | 'keys', ValueType> instead.
+Use index signatures when you have a genuinely dynamic map — for example, a cache keyed by ID, a lookup table, or a dictionary where entries are added at runtime. If you know the set of keys in advance, use a specific object type or Record<'key1' | 'key2', ValueType> instead — it is more precise and easier to work with.
 
-Important constraints: all specific named properties on the interface must be assignable to the index signature type. If the index signature says [key: string]: string, then every named property must also be a string.
+One constraint to know: if you use an index signature, every specific named property on the same interface must be assignable to the index signature's value type. So if the index says [key: string]: string, then every named property must also be a string.
 
-Prefer Record<K, V> for simple maps — it's cleaner and the K parameter enforces allowed keys. Use index signatures when K must literally be any string (or any number).
+For simple maps, prefer Record<K, V> — it is cleaner and K enforces the allowed keys. Use index signatures only when the keys can truly be any string or number.
 
-TypeScript 4.4 added template literal index signatures: [event: \`on\${string}\`]: Handler works as expected.`,
+TypeScript 4.4 added template literal index signatures, so something like [event: \`on\${string}\`]: Handler is valid and works as you would expect.`,
     codeExample: `// Index signature for a cache
 interface Cache {
   [id: string]: { value: unknown; expiresAt: number };
@@ -587,15 +591,15 @@ interface Handlers {
   {
     id: 'ts-deep-readonly',
     question: 'How do you create a deep Readonly or deep Partial type in TypeScript?',
-    answer: `TypeScript's built-in Readonly<T> and Partial<T> only operate one level deep — nested objects are still mutable/optional. For deeply nested structures, you need recursive versions using conditional types and mapped types.
+    answer: `TypeScript's built-in Readonly<T> and Partial<T> only work one level deep. Nested object properties are left mutable or required. To make every level of a nested structure read-only or optional, you need recursive versions built with mapped types and conditional types.
 
-DeepReadonly<T>: map over all keys and recursively apply DeepReadonly if the property is an object. Primitive types pass through unchanged.
+DeepReadonly<T>: loop over all keys and apply DeepReadonly again if the value is an object. Primitive types (string, number, boolean, etc.) pass through unchanged.
 
-DeepPartial<T>: map over all keys with ?, and recursively apply DeepPartial if the property is an object.
+DeepPartial<T>: loop over all keys, mark them optional with ?, and recursively apply DeepPartial if the value is an object.
 
-Caveats: TypeScript's recursive type support has depth limits. Very deeply nested types may trigger "Type instantiation is excessively deep" errors. Functions, Maps, Sets, and arrays often need special handling if you want them treated differently from plain objects.
+Things to be aware of: TypeScript has a limit on how deeply it will recurse when computing types. Very deeply nested structures can trigger a "Type instantiation is excessively deep" error. Functions, Maps, Sets, and arrays may need special handling if you want them treated differently from plain objects.
 
-For production use, libraries like type-fest provide battle-tested implementations that handle edge cases (functions, arrays, Maps) correctly.`,
+For production code, libraries like type-fest provide well-tested implementations that handle those edge cases correctly.`,
     codeExample: `// Deep Readonly
 type DeepReadonly<T> = {
   readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K];
@@ -624,15 +628,18 @@ type PatchConfig = DeepPartial<Config>;
   {
     id: 'ts-ambient-declarations',
     question: 'What are ambient declarations and .d.ts files?',
-    answer: `Ambient declarations tell TypeScript about the types of things that exist at runtime but weren't written in TypeScript — existing JavaScript modules, browser globals injected by a bundler, or global polyfills.
+    answer: `Ambient declarations tell TypeScript about the types of things that exist at runtime but were not written in TypeScript. Common examples include JavaScript modules without types, global variables injected by a bundler, and polyfills added to the global scope.
 
-.d.ts files contain only type information (no implementation). They're automatically included from node_modules/@types packages (DefinitelyTyped) and can be written manually for untyped modules or to describe global augmentations.
+.d.ts files (type declaration files) contain only type information — no runtime code. TypeScript automatically picks them up from node_modules/@types packages (which come from the DefinitelyTyped community project). You can also write them manually for untyped packages or to describe custom globals.
 
-declare module 'module-name' { ... } describes the shape of a JS module. declare const __DEV__: boolean describes a bundler-injected global. declare global { ... } adds to the global scope from inside a module file.
+Common patterns:
+- declare module 'module-name' { ... } — describes the shape of a plain JavaScript module
+- declare const __DEV__: boolean — describes a global variable injected by a build tool
+- declare global { ... } — adds type definitions to the global scope from inside a module file
 
-Triple-slash directives (/// <reference types="..." />) are a legacy way to add type dependencies, now mostly replaced by the types field in tsconfig. They're still used when imports aren't available.
+Triple-slash directives (lines like /// <reference types="..." />) are an older way to include type dependencies. They have mostly been replaced by the types array in tsconfig.json, but are still used in some .d.ts files.
 
-Writing a .d.ts file is how you add TypeScript support to an untyped npm package when @types/package doesn't exist.`,
+Writing a .d.ts file is how you add TypeScript support to an npm package that has no types, when @types/package-name does not exist.`,
     codeExample: `// my-lib.d.ts — describe a JavaScript module
 declare module 'my-untyped-lib' {
   export function compute(value: number): number;
@@ -660,17 +667,17 @@ declare module '*.png' { const url: string; export default url; }`,
   {
     id: 'ts-as-const-explanation',
     question: 'What does as const do in TypeScript?',
-    answer: `as const is a type assertion that tells TypeScript to infer the narrowest possible type for a value — literal types instead of widened primitives, and readonly modifiers throughout.
+    answer: `as const is a type assertion that tells TypeScript to use the most specific (narrowest) type possible for a value. Instead of widening 3000 to number, it keeps the literal type 3000. It also marks the entire structure as deeply read-only.
 
-Without as const: const config = { port: 3000 } gives port: number (widened). TypeScript figures you might change it or pass it to something accepting any number.
+Without as const: const config = { port: 3000 } gives port the type number. TypeScript assumes you might change it later or pass it somewhere that accepts any number.
 
-With as const: port is typed as 3000 (literal), and the object is deeply readonly. This means you can't mutate any property, and TypeScript knows the exact value.
+With as const: port becomes the literal type 3000, and the object is read-only throughout. TypeScript knows the exact value, which unlocks more precise type checking.
 
-Common use cases:
-- Extracting a string/number union from an object's values: (typeof COLORS)[keyof typeof COLORS]
-- Enum-like patterns without enums (no runtime overhead)
-- Typed route or config definitions where exact values matter
-- Tuples — without as const, [1, 'hello'] infers (number | string)[], not [number, string]`,
+Common uses:
+- Extracting a union of an object's values: (typeof COLORS)[keyof typeof COLORS] gives 'red' | 'green' | 'blue' instead of just string
+- Enum-like constants without enums (simpler, no runtime object generated)
+- Route or config definitions where the exact string or number values matter to the type system
+- Tuple inference — without as const, [1, 'hello'] becomes (number | string)[] instead of the more useful readonly [1, 'hello']`,
     codeExample: `// Without as const
 const COLORS = { red: 'red', green: 'green', blue: 'blue' };
 type Color = (typeof COLORS)[keyof typeof COLORS]; // string (widened)
@@ -694,15 +701,15 @@ type Env = typeof config['env']; // 'production' — not string`,
   {
     id: 'ts-excess-property-checking',
     question: 'How does excess property checking work in TypeScript?',
-    answer: `TypeScript has two modes of checking objects against a type:
+    answer: `TypeScript applies two different checks when comparing an object to a type:
 
-Structural compatibility check: used when assigning a variable to another typed variable. Only required properties are checked — extra properties are allowed because TypeScript only requires the shape to be at least as wide as the target type.
+Structural compatibility check: used when assigning a variable to another typed variable. TypeScript only requires the object to have at least the properties the target type needs — extra properties are fine because the structural shape is satisfied.
 
-Excess property check: applied specifically to fresh object literals passed directly to a typed location (function argument, assignment, return). Any property not in the target type is flagged as an error. This catches common typos in property names.
+Excess property check: applied when you write an object literal directly in place (as a function argument, in an assignment, or as a return value). Any property not listed in the target type is flagged as an error. This catches typos in property names before they cause silent bugs at runtime.
 
-The check applies only to fresh literals — if you assign the literal to an intermediate variable first, the excess check is skipped on the assignment to the typed location. This is intentional: the intermediate variable might legitimately have extra properties for other uses.
+The excess check only applies to fresh object literals. If you assign the literal to a variable first and then pass that variable, the excess check is skipped — TypeScript only does the structural check. This is intentional, because the variable might be used in other places where the extra properties are valid.
 
-This asymmetry is why the same object passes when assigned through a variable but fails when written inline.`,
+This is why the exact same object can fail when written inline but pass when assigned through a variable first.`,
     codeExample: `interface Options { timeout: number; retries?: number; }
 
 function request(opts: Options) { /* ... */ }
@@ -724,13 +731,13 @@ const o: Options = { timeout: 5000, debug: true }; // Error`,
   {
     id: 'ts-const-type-params-explanation',
     question: 'What are const type parameters in TypeScript 5?',
-    answer: `Const type parameters (added in TypeScript 5.0) let generic functions infer literal types without requiring as const at every call site.
+    answer: `Const type parameters (added in TypeScript 5.0) let a generic function automatically infer literal types from its arguments, without requiring callers to write as const every time.
 
-Without const: a generic function like identity<T>(value: T) infers T as string[], not readonly ['a', 'b'] when called with ['a', 'b']. The type is widened.
+Without const: identity<T>(value: T) called with ['a', 'b'] infers T as string[]. The array type is widened — TypeScript assumes the array might hold any string.
 
-With const: function identity<const T>(value: T): T infers the literal/readonly type directly. The caller gets back readonly ['a', 'b'] without writing anything extra.
+With const: identity<const T>(value: T) called with ['a', 'b'] infers T as readonly ['a', 'b']. TypeScript uses the narrowest possible type, the same as if the caller had written as const.
 
-This is especially useful for library authors building typed route definitions, query builders, or any API where the precise literal value matters to the return type. Previously, callers had to sprinkle as const everywhere — now the function signature communicates the intent.`,
+This is especially useful when building APIs where the exact values matter to the return type — for example, typed route definitions or query builders. Before this feature, callers had to write as const at every call site. Now the function signature itself communicates that intent.`,
     codeExample: `// Without const — infers widened type
 function wrap<T>(value: T): { value: T } { return { value }; }
 const a = wrap(['x', 'y']); // { value: string[] } — not ideal
@@ -757,15 +764,15 @@ type Paths = (typeof routes)[number]['path']; // '/' | '/about'`,
   {
     id: 'ts-using-declarations-explanation',
     question: 'What are using declarations (TypeScript 5.2) and how do they work?',
-    answer: `using declarations (TypeScript 5.2) implement the TC39 explicit resource management proposal. They ensure a resource's cleanup method is called automatically when the variable leaves scope, similar to a try/finally or Python's with statement.
+    answer: `using declarations (TypeScript 5.2) implement the TC39 Explicit Resource Management proposal. They automatically call a cleanup method when a variable goes out of scope — similar to try/finally, but without the boilerplate.
 
-A synchronous Disposable implements [Symbol.dispose](): void. using x = ... calls x[Symbol.dispose]() at the end of the enclosing block, even if an exception is thrown.
+For synchronous cleanup: a class implements [Symbol.dispose](): void. Declaring a variable with using x = ... makes TypeScript call x[Symbol.dispose]() automatically at the end of the block, even if an exception was thrown.
 
-AsyncDisposable implements [Symbol.asyncDispose](): Promise<void>. await using x = ... awaits the cleanup automatically.
+For asynchronous cleanup: a class implements [Symbol.asyncDispose](): Promise<void>. Using await using x = ... awaits the cleanup method automatically.
 
-When multiple using declarations exist in the same scope, they're disposed in reverse order (last declared, first disposed) — like a stack.
+When multiple using declarations appear in the same block, they are disposed in reverse order — last declared, first cleaned up. This is the same order as stack unwinding, which ensures dependent resources are released safely.
 
-This eliminates a common bug pattern: forgetting to close a database connection, release a lock, or remove an event listener in a finally block.`,
+The main benefit: you no longer need to remember to write a finally block to close a database connection, release a lock, or remove an event listener. The cleanup is guaranteed by the language.`,
     codeExample: `class Connection implements Disposable {
   constructor(readonly url: string) { console.log('Connected to', url); }
   query(sql: string): unknown[] { return []; }
@@ -793,16 +800,16 @@ class FileStream implements AsyncDisposable {
   {
     id: 'ts-keyof-usage',
     question: 'What is the keyof operator and what are its common use cases?',
-    answer: `keyof T produces a union of all property names (keys) of type T as string (or number/symbol) literal types. It's fundamental to writing type-safe generic utilities.
+    answer: `keyof T produces a union type of all the property names of T as string (or number or symbol) literal types. It is a building block for writing type-safe generic utilities.
 
-Common use cases:
-1. Constrain a key parameter to only valid keys of an object: K extends keyof T
-2. Index safely into an object at a generic key: obj[key] where key: keyof T
-3. Derive a union of valid keys for runtime validation
-4. Combined with typeof to get key unions from runtime objects: keyof typeof obj
-5. Combined with indexed access to get the union of all value types: T[keyof T]
+Common uses:
+1. Restrict a key parameter to only valid property names of an object: K extends keyof T
+2. Index into an object at a generic key safely: obj[key] where key has type keyof T
+3. Generate a union of valid keys, useful for runtime validation logic
+4. Combined with typeof to get keys from a runtime object: keyof typeof someObject
+5. Combined with indexed access to get a union of all value types: T[keyof T]
 
-keyof on a union type: keyof (A | B) gives only the keys that appear in both — the intersection of key sets. keyof (A & B) gives the union of all keys.`,
+One detail to know: keyof (A | B) gives only the keys that exist in both A and B (the intersection of their key sets). keyof (A & B) gives all the keys from both (the union of their key sets).`,
     codeExample: `type User = { id: number; name: string; email: string };
 type UserKey = keyof User; // 'id' | 'name' | 'email'
 

@@ -4,7 +4,7 @@ const cssQna: QnaItem[] = [
   {
     id: 'specificity-calculation',
     question: 'How is CSS specificity calculated?',
-    answer: `Specificity is a weight applied to a CSS declaration, determined by the count of selector components in three categories: (A) IDs, (B) classes/attributes/pseudo-classes, (C) type selectors/pseudo-elements. Written as (A, B, C). Inline styles beat all selectors. !important overrides the entire cascade. When specificity is equal, source order (last rule) wins. The universal selector (*) and :where() contribute zero specificity.`,
+    answer: `Specificity is a score the browser assigns to each CSS rule. It decides which rule wins when two rules target the same property on the same element. The score is tracked in three categories: (A) number of ID selectors, (B) number of class selectors, attribute selectors, and pseudo-classes, (C) number of type selectors and pseudo-elements. Written as (A, B, C). Inline styles (the style attribute) beat all selectors. !important overrides the entire system. When two rules have equal specificity, the one that appears later in the file wins. The universal selector (*) and :where() contribute zero specificity — they do not affect the score at all.`,
     codeExample: `/* Specificity scores */
 #nav .link:hover   → (1, 1, 0) = 110
 .nav a.active      → (0, 2, 1) = 021
@@ -26,7 +26,7 @@ nav ul li a        → (0, 0, 4) = 004
   {
     id: 'bfc-triggers',
     question: 'What triggers a Block Formatting Context (BFC) and why does it matter?',
-    answer: `A BFC is an independent layout region. It's created by: display: flow-root, overflow other than visible (hidden, auto, scroll), float (any value), position: absolute or fixed, display: flex/grid on the container, contain: layout or strict. A BFC (1) contains its floated children so the container's height includes them, (2) prevents margin collapse between itself and children, and (3) doesn't overlap adjacent floats. display: flow-root is the cleanest way to create a BFC without side effects.`,
+    answer: `A Block Formatting Context (BFC) is an isolated layout region — changes inside it do not leak out, and changes outside do not affect it. It is created by: display: flow-root, overflow set to anything other than visible (hidden, auto, scroll), a float, position: absolute or fixed, display: flex or grid on the container, or contain: layout or strict. A BFC does three things: (1) contains its floated children so the container's height includes them — this solves the classic "collapsed container" problem, (2) prevents margin collapsing between the BFC and its children, and (3) does not slide underneath an adjacent float. display: flow-root is the cleanest way to create a BFC because it has no visual side effects.`,
     codeExample: `/* Problem: float not contained */
 .container { background: lightblue; }
 .floated { float: left; height: 100px; }
@@ -45,7 +45,7 @@ nav ul li a        → (0, 0, 4) = 004
   {
     id: 'flexbox-vs-grid',
     question: 'When should you use Flexbox vs CSS Grid?',
-    answer: `Flexbox is one-dimensional — it controls layout along a single axis (row or column). Use it for: navigation bars, button groups, centering single items, distributing items along one axis. Grid is two-dimensional — it controls rows AND columns simultaneously. Use it for: page-level layouts, card grids, any design that requires both horizontal and vertical alignment. They complement each other: a grid layout with flexbox inside individual cells is very common. The key question: do you need to control both axes simultaneously? If yes, Grid.`,
+    answer: `Flexbox works along a single axis — either a row or a column, but not both at once. Use it for: navigation bars, button groups, centering a single item, or distributing items along one direction. Grid works along two axes simultaneously — rows and columns at the same time. Use it for: page-level layouts, card grids, or any design where you need elements to line up both horizontally and vertically. The two systems complement each other and are commonly combined: a page-level grid for the overall layout with flexbox inside individual cells. The key question to ask yourself: do I need to control both rows and columns at the same time? If yes, reach for Grid.`,
     codeExample: `/* Flexbox — one axis (row of buttons) */
 .toolbar {
   display: flex;
@@ -67,7 +67,7 @@ nav ul li a        → (0, 0, 4) = 004
   {
     id: 'z-index-not-working',
     question: 'Why is z-index not working on my element?',
-    answer: `There are two common reasons: (1) z-index only works on positioned elements (position: relative, absolute, fixed, or sticky). On a statically positioned element, z-index has no effect. (2) Stacking contexts — z-index values only compete within the same stacking context. If a parent element creates a new stacking context (via transform, opacity < 1, filter, etc.) with a lower z-index, its children can never appear above elements outside that parent, no matter how high their z-index is.`,
+    answer: `There are two common reasons. First, z-index only works on positioned elements — those with position: relative, absolute, fixed, or sticky. On an element with the default position: static, z-index has no effect at all. Second, stacking contexts (self-contained z-ordering layers) — z-index values only compete with other elements inside the same stacking context. If a parent element creates a stacking context (through transform, opacity less than 1, filter, or similar) and that parent has a low z-index, its children are stuck behind. No matter how high you set the child's z-index, it cannot appear above elements that are outside the parent's stacking context.`,
     codeExample: `/* Bug: parent is a stacking context with z-index: 1 */
 .parent {
   position: relative;
@@ -90,7 +90,7 @@ nav ul li a        → (0, 0, 4) = 004
   {
     id: 'centering-methods',
     question: 'What are the modern ways to center an element in CSS?',
-    answer: `The cleanest modern methods: (1) Flexbox on the parent: display: flex; justify-content: center; align-items: center. (2) Grid on the parent: display: grid; place-items: center. (3) Absolute + transform for overlay elements: position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%). (4) margin: auto in a flex/grid container. Avoid old methods like negative margins or table-cell unless supporting very old browsers.`,
+    answer: `The three cleanest modern approaches are: (1) Flexbox on the parent — display: flex; justify-content: center; align-items: center. Works for centering children in any direction. (2) Grid on the parent — display: grid; place-items: center. The shortest way to center an element. (3) Absolute positioning plus transform for overlays — position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%). Use this when the element must float on top of other content. A fourth option — margin: auto — centers an element horizontally inside a flex or grid container. Avoid old approaches like negative margins or display: table-cell unless you are targeting very old browsers.`,
     codeExample: `/* Method 1: Flexbox (most common) */
 .parent {
   display: flex;
@@ -119,7 +119,7 @@ nav ul li a        → (0, 0, 4) = 004
   {
     id: 'custom-props-vs-sass-vars',
     question: 'How do CSS custom properties differ from Sass variables?',
-    answer: `Sass variables are preprocessor features — they're resolved at compile time and compiled away. They cannot change at runtime, respond to media queries, or be accessed from JavaScript. CSS custom properties (--var) live in the browser — they're part of the cascade, inherit through the DOM, can be changed at runtime with JavaScript, respond to media queries and container queries, and can be animated (with @property). Use Sass variables for build-time config; use CSS custom properties for design tokens that need runtime flexibility.`,
+    answer: `Sass variables are a preprocessor feature. They are resolved at compile time and replaced with their values in the output CSS. By the time the browser sees the CSS, the variable is gone. They cannot change at runtime, respond to media queries, or be read by JavaScript. CSS custom properties (--var) work inside the browser. They are part of the cascade (so they can be overridden), they inherit through the DOM tree, they can be updated at runtime with JavaScript, they respond to media queries and container queries, and they can be animated when registered with @property. A simple rule: use Sass variables for values that never need to change after build (like a spacing scale or a breakpoint value used in a mixin). Use CSS custom properties for design tokens — colors, font sizes, themes — that may need to change at runtime or vary by context.`,
     codeExample: `/* Sass variable — compile-time, static */
 $primary: #6366f1;
 .button { background: $primary; } /* compiled to: background: #6366f1 */
@@ -143,7 +143,7 @@ document.documentElement.style.setProperty('--primary', '#ef4444');
   {
     id: 'will-change-usage',
     question: 'When and how should you use will-change?',
-    answer: `will-change hints to the browser that an element will animate soon, promoting it to its own compositor layer. This can eliminate jank during animations but has costs: GPU memory for each layer, layer creation overhead, and it creates a stacking context. Best practices: (1) Only use it for properties that will actually animate (transform, opacity). (2) Add it just before the animation, remove it after. (3) Don't apply globally or to too many elements. (4) If you're already using transform: translateZ(0) as a GPU hack, will-change: transform is cleaner.`,
+    answer: `will-change tells the browser that an element is about to animate. The browser then promotes it to its own compositor (GPU) layer in advance, which avoids the visual stutter that can happen when promotion occurs at the first animation frame. This has real costs though: each promoted layer occupies GPU memory (VRAM), there is overhead in creating the layer, and the element automatically creates a new stacking context. Best practices: (1) Only use it on properties that will actually animate — mainly transform and opacity. (2) Add it just before the animation starts and remove it afterwards with el.style.willChange = 'auto'. (3) Never apply it globally or to large numbers of elements — too many layers hurt performance on low-memory devices. (4) If you have been using transform: translateZ(0) as an old GPU trick, will-change: transform is the modern replacement and is easier to read.`,
     codeExample: `/* Bad: applied globally and unnecessarily */
 * { will-change: transform; }
 
@@ -166,7 +166,7 @@ function prepareAnimation(el) {
   {
     id: 'pseudo-element-vs-pseudo-class',
     question: 'What is the difference between pseudo-elements and pseudo-classes?',
-    answer: `Pseudo-classes select existing elements based on a state or position: :hover, :focus, :first-child, :nth-child(), :not(), :is(), :has(). They style things that are already there. Pseudo-elements create virtual elements that don't exist in the DOM: ::before and ::after insert generated content; ::placeholder styles placeholder text; ::selection styles selected text; ::first-line, ::first-letter, ::marker. Modern CSS uses :: (double colon) for pseudo-elements and : (single colon) for pseudo-classes, though browsers accept single colon for legacy pseudo-elements.`,
+    answer: `Pseudo-classes select real elements based on their state or position in the document: :hover, :focus, :first-child, :nth-child(), :not(), :is(), :has(). They style elements that already exist in the HTML. Pseudo-elements create virtual sub-parts that do not exist in the HTML as actual nodes: ::before and ::after insert generated content before or after an element's content; ::placeholder styles the placeholder text inside an input; ::selection styles the text a user has highlighted; ::first-line, ::first-letter, and ::marker target specific parts of text and list items. Modern CSS syntax uses a double colon (::) for pseudo-elements and a single colon (:) for pseudo-classes. Browsers still accept single colon for older pseudo-elements like :before and :after, but the double colon is the correct and recommended form.`,
     codeExample: `/* Pseudo-class: select by state/position */
 a:hover { color: rebeccapurple; }
 li:first-child { font-weight: bold; }
@@ -185,7 +185,7 @@ li::marker { color: var(--color-primary); }`,
   {
     id: 'responsive-without-media-queries',
     question: 'How can you write responsive CSS without media queries?',
-    answer: `Modern CSS provides responsive tools that don't need @media breakpoints: clamp() for fluid sizing (font-size, padding, width), min()/max() for bounds, auto-fill/auto-fit with minmax() in Grid, flex-wrap, container queries for component-level responsiveness, and the aspect-ratio property. These approaches respond continuously to the available space rather than jumping at fixed breakpoints.`,
+    answer: `Modern CSS has several tools that respond to the available space without requiring breakpoints. clamp() scales a value continuously between a minimum and maximum based on the viewport width — font-size: clamp(1rem, 4vw, 3rem) grows smoothly without ever needing a @media rule. min() and max() let you express constraints like "no wider than 500px, but also never wider than 100%." In CSS Grid, repeat(auto-fill, minmax(250px, 1fr)) creates as many columns as will fit, wrapping automatically. flex-wrap lets flex items spill to the next line when there is no room. container queries go one step further — they respond to the parent element's width instead of the viewport. These tools all work by reacting to actual available space continuously, rather than jumping at fixed breakpoints.`,
     codeExample: `/* Fluid type — no breakpoints needed */
 h1 { font-size: clamp(1.5rem, 4vw, 3rem); }
 
@@ -209,7 +209,7 @@ h1 { font-size: clamp(1.5rem, 4vw, 3rem); }
   {
     id: 'margin-collapse-explanation',
     question: 'When do margins collapse and how do you prevent it?',
-    answer: `Vertical margins (top and bottom) collapse between adjacent block-level elements and between a parent and its first/last child — the resulting margin is the larger of the two, not the sum. Horizontal margins never collapse. Conditions preventing collapse: elements in a BFC (flex/grid children, overflow !== visible, float), elements with border or padding between them, inline-block elements, positioned elements. To prevent parent-child collapse: add padding or border to the parent, or create a BFC with display: flow-root.`,
+    answer: `Margin collapsing happens when two vertical margins (top or bottom) touch — instead of adding together, they merge into the larger of the two. This occurs between adjacent block-level siblings and between a parent and its first or last child when there is no border or padding separating them. Horizontal margins never collapse. Collapse does not happen when: elements are inside a flex or grid container, elements have overflow set to anything other than visible, elements have a border or padding between them, or elements are floated or absolutely positioned. To stop parent-child margin collapse specifically: add any amount of padding or border to the parent, or create a BFC on it with display: flow-root.`,
     codeExample: `/* Sibling collapse: result is 2rem, not 3rem */
 .a { margin-bottom: 2rem; }
 .b { margin-top: 1rem; }
@@ -233,7 +233,7 @@ h1 { font-size: clamp(1.5rem, 4vw, 3rem); }
   {
     id: 'position-values',
     question: 'What are the differences between position values in CSS?',
-    answer: `static (default): normal document flow, no positioning properties. relative: normal flow but offset from its natural position; creates a positioning context for absolute children. absolute: removed from flow, positioned relative to nearest positioned ancestor. fixed: removed from flow, positioned relative to the viewport — stays in place when scrolling. sticky: hybrid — in flow until it hits its scroll threshold, then acts like fixed within its scroll container. Only non-static elements can use z-index.`,
+    answer: `static (default): the element sits in the normal document flow. You cannot use top, left, right, or bottom on it, and z-index has no effect. relative: the element stays in the normal flow but can be nudged from its natural position using top/left/right/bottom. It also creates a positioning anchor for any absolutely positioned children. absolute: the element is removed from the document flow — it does not take up space. It is positioned relative to the nearest ancestor that has a non-static position value. If no such ancestor exists, it is positioned relative to the initial viewport. fixed: also removed from flow, but positioned relative to the browser viewport and stays in the same spot when the user scrolls. sticky: a hybrid. The element sits in the normal flow until it reaches a scroll threshold (like top: 0), at which point it sticks in place like a fixed element — but only within the boundaries of its scroll container. Only non-static elements (relative, absolute, fixed, sticky) can use z-index.`,
     codeExample: `/* relative: stays in flow, offset from natural position */
 .el { position: relative; top: 10px; } /* pushes down, gap remains */
 
@@ -254,7 +254,7 @@ h1 { font-size: clamp(1.5rem, 4vw, 3rem); }
   {
     id: 'css-has-use-cases',
     question: 'What are practical use cases for the CSS :has() selector?',
-    answer: `:has() is the "parent selector" CSS lacked for decades. Practical uses: (1) Style a form when it has invalid inputs. (2) Style a card differently when it contains an image. (3) Style a label when its sibling input is focused (without JS). (4) Style a list item when it's the last one with a sibling. (5) Conditionally show/hide decorators based on child presence. Browser support reached baseline in 2023.`,
+    answer: `:has() is often called the "parent selector" — the ability to style an element based on what it contains, which CSS did not have for decades. Practical uses: (1) Disable or dim a submit button when the form contains an invalid input field. (2) Remove padding from a card when it contains an image. (3) Highlight a label when its sibling input is focused — no JavaScript needed. (4) Style a list item differently when it has a following sibling. (5) Show or hide decorative elements based on whether a certain child element is present. Browser support reached full baseline in 2023, so it is safe to use in production today.`,
     codeExample: `/* Disable submit when form has invalid field */
 form:has(:invalid) button[type="submit"] {
   opacity: 0.5;
@@ -279,7 +279,7 @@ ul:has(li:nth-child(5)) li { font-size: 0.9rem; }`,
   {
     id: 'cascade-layers-practice',
     question: 'How do cascade layers improve CSS architecture?',
-    answer: `Without @layer, adding third-party CSS (Bootstrap, design systems) requires fighting their specificity with !important or overly specific selectors. With @layer, import third-party CSS into a named layer — then your custom styles in a later layer always win, even with low-specificity selectors. Layers also let teams create explicit style hierarchies: reset → base → components → utilities, where each layer always wins over the previous regardless of selector weight.`,
+    answer: `Without @layer, adding third-party CSS like Bootstrap means your own styles must compete with Bootstrap's selectors on specificity. If Bootstrap uses an ID selector and you use a class, Bootstrap wins — and the only way around it is !important or writing overly specific selectors yourself. With @layer, you import third-party CSS into a named layer — then your own styles in a later-declared layer always win, even if you use simple class selectors. Layers also let your team define a clear priority order: reset → base → components → utilities. Each layer always beats the one before it, regardless of how specific the selectors are inside each one.`,
     codeExample: `/* Declare priority (right-to-left: utilities wins) */
 @layer reset, base, components, utilities;
 
@@ -307,7 +307,7 @@ ul:has(li:nth-child(5)) li { font-size: 0.9rem; }`,
   {
     id: 'paint-layout-composite',
     question: 'What CSS properties cause layout, paint, or composite changes?',
-    answer: `Rendering has three phases with different costs. Layout (most expensive) recalculates geometry — triggered by width, height, margin, padding, top/left, font-size, display, float. Paint (medium) redraws pixels — triggered by color, background, box-shadow, border-color. Composite (cheapest) only moves existing layers — triggered by transform and opacity. For smooth 60fps animations, animate only transform and opacity. If you must animate other properties, use will-change to promote elements and batch DOM reads/writes to avoid layout thrashing.`,
+    answer: `Browser rendering has three phases, each with a different performance cost. Layout (the most expensive): the browser recalculates the position and size of elements. It is triggered by changes to width, height, margin, padding, top, left, font-size, display, or float. Paint (medium cost): the browser redraws pixels for elements whose appearance changed but whose geometry did not. Triggered by changes to color, background, box-shadow, or border-color. Composite (cheapest): the GPU moves or fades an already-painted layer. Only transform and opacity on promoted elements trigger this stage alone. To keep animations smooth at 60 frames per second, animate only transform and opacity. If you must animate other properties, promote the element with will-change first, and batch your DOM reads and writes to prevent layout thrashing (repeatedly forcing the browser to recalculate layout in a loop).`,
     codeExample: `/* ✗ Expensive — triggers layout on each frame */
 @keyframes bad {
   from { width: 100px; }
@@ -336,7 +336,7 @@ elements.forEach((el, i) => el.style.width = widths[i] + 10 + 'px');`,
   {
     id: 'container-queries-vs-media',
     question: 'What problem do container queries solve that media queries cannot?',
-    answer: `Media queries respond to the viewport — a component styled to change at 768px works fine on a full-width page but breaks when placed in a narrow sidebar (still 768px+ viewport). Container queries respond to the element's container width, making components truly portable. A card component that switches between stacked and side-by-side layouts based on its container works correctly wherever you place it — whether that's a full-width section, a two-column grid, or a narrow sidebar.`,
+    answer: `Media queries look at the viewport width — the full width of the browser window. This works for page-level layout changes, but it breaks down for reusable components. A card component styled to switch layouts at 768px will trigger that change based on the window size, not the space it actually has. If that card is placed in a narrow sidebar, the viewport might be 1200px wide — the media query fires and the card switches to its wide layout even though it only has 280px of actual space. Container queries fix this by responding to the parent element's width instead of the viewport. The card adapts to the space it actually has, so it works correctly in a sidebar, a two-column grid, or a full-width section — without any changes to the component's CSS.`,
     codeExample: `/* Media query: viewport-dependent, not component-portable */
 @media (min-width: 600px) {
   .card { display: grid; grid-template-columns: 120px 1fr; }
@@ -358,7 +358,7 @@ elements.forEach((el, i) => el.style.width = widths[i] + 10 + 'px');`,
   {
     id: 'box-sizing-border-box',
     question: 'Why is box-sizing: border-box recommended?',
-    answer: `The default box-sizing: content-box adds padding and border on top of the declared width/height, making sizing calculations non-intuitive. A 200px element with 20px padding is actually 240px wide. With border-box, padding and border are included within the declared width — a 200px element stays 200px. This makes CSS math straightforward and is the universal recommendation. Apply it globally with the reset shown.`,
+    answer: `The default value, content-box, adds padding and border on top of the width you declare. If you set an element to 200px wide and add 20px of padding on each side, the element actually takes up 240px on screen. This makes sizing calculations harder than they need to be. With border-box, the width you declare includes the padding and border — a 200px element stays 200px no matter what padding you add. This makes layout math much more predictable. It is universally recommended to apply border-box to everything using the global reset shown in the code example.`,
     codeExample: `/* Universal reset — apply first in your CSS */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -379,7 +379,7 @@ elements.forEach((el, i) => el.style.width = widths[i] + 10 + 'px');`,
   {
     id: 'logical-properties-why',
     question: 'What are CSS logical properties and why should you use them?',
-    answer: `Physical properties (margin-left, padding-right, border-top) are hardcoded to physical directions. Logical properties use flow-relative terms: inline (horizontal in LTR, but horizontal-reversed in RTL), block (vertical). margin-inline-start maps to margin-left in LTR but margin-right in RTL — automatically. Using logical properties makes components RTL-compatible without duplicating CSS in dir="rtl" blocks. They're also more natural for vertical writing modes used in CJK typography.`,
+    answer: `Physical properties like margin-left and padding-right are tied to absolute screen directions — left always means left. Logical properties use flow-relative terms instead. "Inline" refers to the direction text flows (horizontal in English), and "block" refers to the direction content stacks (vertical in English). margin-inline-start maps to margin-left in a left-to-right language like English, but automatically maps to margin-right in a right-to-left language like Arabic or Hebrew. Using logical properties means your component handles RTL layouts without you writing a separate block of overrides under [dir="rtl"]. They are also the natural fit for vertical writing modes used in CJK (Chinese, Japanese, Korean) typography.`,
     codeExample: `/* Physical — must override for RTL */
 .el { padding-left: 1rem; margin-left: auto; border-left: 3px solid blue; }
 [dir="rtl"] .el { padding-left: 0; padding-right: 1rem; ... }
@@ -398,7 +398,7 @@ elements.forEach((el, i) => el.style.width = widths[i] + 10 + 'px');`,
   {
     id: 'css-nesting',
     question: 'How does native CSS nesting work and how does it differ from Sass?',
-    answer: `Native CSS nesting (baseline 2024) lets you write nested rules inside a parent without a preprocessor. Rules must be preceded by & or a combinator — you can't start a nested rule with a bare type selector. Sass nesting has been around longer and compiles away; native CSS nesting runs in the browser and can respond to runtime changes. The main practical difference: nested selectors in CSS must use & before type selectors (& p instead of p), though this restriction was relaxed in the final spec.`,
+    answer: `Native CSS nesting (available in all major browsers as of 2024) lets you write rules inside a parent rule without a build tool like Sass. This keeps related styles in one place and reduces repetition. Nested rules that target type selectors (like p or h2) need to start with & — you write & p instead of just p. Sass nesting has worked this way for years, but Sass compiles it away at build time. Native nesting runs directly in the browser. The main practical difference: native CSS nesting requires & before bare type selectors (though recent spec updates relaxed this in some cases), while Sass allows omitting it. For most everyday use like &:hover or & .child, the syntax is identical.`,
     codeExample: `/* Native CSS nesting */
 .card {
   background: white;
@@ -427,7 +427,7 @@ elements.forEach((el, i) => el.style.width = widths[i] + 10 + 'px');`,
   {
     id: 'custom-props-animation',
     question: 'Can you animate CSS custom properties?',
-    answer: `Plain custom properties (--var) can't be animated because the browser doesn't know their type. Registered properties created with @property can be animated because they have a declared syntax and initial-value. This enables previously impossible animations: transitioning between two colors stored in a custom property, animating a gradient, or smooth counter values. The @property syntax also lets the property be used in calc() for typed number values.`,
+    answer: `Plain CSS custom properties cannot be animated. The browser treats their value as an opaque string — it does not know if the value is a color, a number, or a length, so it cannot interpolate (smoothly calculate in-between values) during an animation. Registered properties created with @property solve this by declaring a type. You tell the browser the syntax (like '<color>' or '<percentage>') and an initial value. With that information, the browser can animate the property smoothly — it knows how to blend between two colors or two percentages. This unlocks effects that were previously impossible in CSS alone, like animating a gradient or smoothly transitioning a color stored in a variable. Registered properties can also be used inside calc() because the browser knows their numeric type.`,
     codeExample: `/* Unregistered — can't animate */
 :root { --progress: 0%; }
 .bar { width: var(--progress); transition: --progress 0.3s; } /* won't work */
@@ -456,7 +456,7 @@ elements.forEach((el, i) => el.style.width = widths[i] + 10 + 'px');`,
   {
     id: 'critical-css-technique',
     question: 'What is critical CSS and how do you implement it?',
-    answer: `Critical CSS is the minimal CSS required to render the above-the-fold content. Inlining it in a <style> tag in <head> eliminates the render-blocking external stylesheet request for initial paint. Non-critical CSS is then loaded asynchronously. The tradeoff: inlined CSS is not cached separately (but the benefit of faster paint usually outweighs this). Tools like critters, penthouse, or PurgeCSS can extract and inline critical CSS automatically.`,
+    answer: `Critical CSS is the smallest amount of CSS needed to render the part of the page visible on first load (called "above the fold"). By default, the browser blocks all rendering until it has downloaded and parsed every stylesheet. If you inline the critical CSS directly in a <style> tag in the <head>, the browser can paint the visible content immediately — no network round trip needed for that CSS. The rest of the CSS is then loaded asynchronously in the background. The tradeoff: inlined CSS cannot be cached separately by the browser, but the gain in first-paint speed usually outweighs this cost. Tools like Critters, Penthouse, or build-time Vite plugins can extract and inline critical CSS automatically.`,
     codeExample: `<head>
   <!-- Critical CSS inlined — no network round trip -->
   <style>
@@ -484,17 +484,17 @@ elements.forEach((el, i) => el.style.width = widths[i] + 10 + 'px');`,
   {
     id: 'css-units-explained',
     question: 'What is the difference between px, em, rem, %, vw, and vh?',
-    answer: `px: absolute pixels — fixed size, not responsive to user or browser font-size changes. Use for fine-grained control (border widths, box shadows).
+    answer: `px: a fixed pixel size. It does not change if the user adjusts their browser font size. Use it for fine details like border widths and box shadows where you want exact control.
 
-em: relative to the element's own font-size. If the element has font-size: 20px, 1.5em = 30px. Compounds with nesting, which can cause unexpected sizes deep in the tree.
+em: relative to the element's own font-size. If the element has font-size: 20px, then 1.5em equals 30px. The problem with em is that it compounds — if a parent is 1.2em and its child is also 1.2em, the child ends up at 1.2 × 1.2 = 1.44× the base size. This can produce unexpected results in deeply nested elements.
 
-rem (root em): relative to the <html> element's font-size (usually 16px). Doesn't compound. Best for typography and spacing that should respect the user's font-size preference.
+rem (root em): relative to the font-size on the <html> element, which is usually 16px in browsers. It does not compound. This is the best unit for font sizes and spacing because it respects the user's browser font-size preference.
 
-%: relative to the parent's same property (width, height, font-size). Great for fluid layouts.
+%: relative to the parent element's value for the same property. 50% width means half the parent's width. Good for fluid layouts.
 
-vw/vh: 1vw = 1% of the viewport width/height. Use for full-screen sections, fluid typography with clamp().
+vw / vh: 1vw is 1% of the viewport width. 1vh is 1% of the viewport height. Use for full-screen sections or fluid font sizes with clamp().
 
-Rule of thumb: rem for font-size and spacing, % or fr for layout widths, px for fine details.`,
+General rule: use rem for font sizes and spacing, % or fr for layout widths, and px for fine decorative details.`,
     codeExample: `html { font-size: 16px; } /* default browser font size */
 
 /* rem — consistent, user-respecting */
@@ -524,17 +524,17 @@ body { font-size: 1rem; }    /* 16px */
   {
     id: 'display-values-explained',
     question: 'What are the differences between block, inline, inline-block, flex, and grid?',
-    answer: `block: full width by default, starts on a new line, accepts width/height/margin (all sides). Examples: div, p, h1.
+    answer: `block: the element takes up the full available width and starts on a new line. You can set width, height, and margin on all four sides. Most structural HTML elements (div, p, h1) are block by default.
 
-inline: only as wide as content, does not start a new line, horizontal margin/padding works but vertical margin/padding doesn't affect surrounding layout. Examples: span, a, strong.
+inline: the element is only as wide as its content. It sits in the text flow and does not start a new line. Horizontal margin and padding work, but top and bottom margin do not push surrounding elements away. Examples: span, a, strong.
 
-inline-block: like inline (sits in text flow) but accepts full box model (width/height/vertical margin). Good for buttons next to text.
+inline-block: sits in the text flow like an inline element, but you can also set width, height, and vertical margin — the full box model works. Useful for badges or buttons that need to sit inline with text.
 
-flex (display: flex on container): one-dimensional layout. Children become flex items. Control main axis (justify-content) and cross axis (align-items). Essential for navigation bars, centering.
+flex (set on the parent): creates a one-dimensional layout. Children become flex items you can align and distribute along one axis. Essential for navigation bars, button groups, and centering.
 
-grid (display: grid on container): two-dimensional layout. Define rows AND columns simultaneously. Best for page-level layouts and card grids.
+grid (set on the parent): creates a two-dimensional layout where you define rows and columns at the same time. Best for page-level structures and card grids.
 
-none: removes element from layout AND accessibility tree. Use visibility: hidden to hide visually while keeping it in the flow.`,
+none: removes the element completely from layout and from the accessibility tree (screen readers cannot find it). Use visibility: hidden instead if you want to hide it visually but keep it in the layout flow and accessible.`,
     codeExample: `/* Block — full width, new line */
 div { display: block; width: 50%; } /* 50% of parent */
 
@@ -571,11 +571,11 @@ span { display: inline; } /* width/height ignored */
   {
     id: 'css-transitions-vs-animations',
     question: 'What is the difference between CSS transitions and animations?',
-    answer: `Transitions animate between two states triggered by a state change (hover, class toggle, focus). They need a trigger, have a start state and end state, and can't loop on their own. Defined with: transition: property duration timing-function delay.
+    answer: `Transitions animate a change between two states. They need a trigger — something like a :hover, a class being toggled, or a :focus. You define which property to animate, how long it takes, and the timing curve (ease, linear, etc.). They always go between exactly two states and cannot loop on their own.
 
-Animations (@keyframes) run independently of state changes — they can loop, play in reverse, alternate, and go through multiple steps. Defined with @keyframes to describe the steps, then applied with animation properties.
+CSS animations (@keyframes) run independently. You define steps in @keyframes and apply them to an element with the animation property. They can loop, reverse, alternate directions, and go through many intermediate steps without any user interaction.
 
-Performance rule: only animate transform and opacity — these use the GPU compositor and don't trigger layout or paint. Animating width, height, top, left, etc. causes layout recalculation every frame and will drop below 60fps on complex pages.`,
+Performance rule for both: only animate transform and opacity if you want smooth 60fps animations. These properties are handled by the GPU (graphics processor) and skip the expensive layout and paint steps. Animating width, height, top, or left forces the browser to recalculate layout on every single frame, which will cause dropped frames on complex pages.`,
     codeExample: `/* Transition — state change triggered */
 .button {
   background: blue;
@@ -616,13 +616,13 @@ Performance rule: only animate transform and opacity — these use the GPU compo
   {
     id: 'css-transform-deep',
     question: 'How does CSS transform work and what does it create?',
-    answer: `transform applies geometric transformations to an element without affecting layout flow — other elements don't reflow. Functions: translate() (move), rotate(), scale(), skew(), matrix().
+    answer: `transform applies visual transformations — move, rotate, scale, skew — to an element without affecting the document layout. Other elements do not reflow when you apply a transform. The main functions are translate() (move), rotate(), scale(), skew(), and matrix().
 
-transform creates a new stacking context and positioning context. This is why transform: translateZ(0) or transform: translate3d(0,0,0) is used as a "GPU hack" — it promotes the element to its own compositor layer.
+Applying a transform also creates a new stacking context (z-ordering layer) and a new containing block for fixed-position children. This is why transform: translateZ(0) is sometimes used as a "GPU hack" — it forces the browser to promote the element to its own compositor layer.
 
-Transforms are applied right-to-left when chained: transform: rotate(45deg) translateX(100px) first translates in the rotated space, then... wait, no — they are applied right to left, so translateX happens first in the un-rotated coordinate system. Order matters — rotate then translate ≠ translate then rotate.
+When you chain multiple transforms, they are applied from right to left. So transform: rotate(45deg) translateX(100px) first moves the element 100px to the right in its original coordinate system, then rotates it. Compare that to transform: translateX(100px) rotate(45deg) — which first rotates and then moves 100px in the rotated direction. The order matters and the results are different.
 
-3D transforms (perspective, rotateX/Y/Z, translate3d) enable 3D space effects.`,
+3D transform functions — perspective(), rotateX(), rotateY(), rotateZ(), translate3d() — let you create depth effects in three-dimensional space.`,
     codeExample: `/* Order matters! */
 /* Right-to-left: first scale(2), then translateX(50px) */
 .a { transform: translateX(50px) scale(2); } /* moves 100px (scaled) */
@@ -654,15 +654,15 @@ Transforms are applied right-to-left when chained: transform: rotate(45deg) tran
   {
     id: 'bem-methodology',
     question: 'What is BEM and when should you use it?',
-    answer: `BEM (Block Element Modifier) is a CSS naming convention: Block__Element--Modifier.
+    answer: `BEM (Block Element Modifier) is a naming convention for CSS classes. The format is Block__Element--Modifier.
 
-Block: standalone component (card, nav, button).
-Element: part of a block, only meaningful inside it (card__title, nav__link).
-Modifier: variant or state of a block or element (button--primary, card__title--highlighted).
+Block: a standalone, self-contained component — like card, nav, or button.
+Element: a part that only makes sense inside its block — like card__title or nav__link. The double underscore signals the relationship.
+Modifier: a variant or state — like button--primary or card__title--highlighted. The double dash signals a variation.
 
-Benefits: classes are descriptive and self-documenting, low specificity (all single-class), no nesting wars, easy to grep. Particularly valuable in large teams or when CSS Modules aren't available.
+The benefits: class names are self-documenting (you know where a class belongs just by reading it), all classes have low and equal specificity (a single class), and there are no specificity conflicts from nesting. Large teams find it especially useful because you can search for a class name and immediately understand its role.
 
-When not to use: in CSS Modules or scoped styles (the module system handles encapsulation, so BEM is redundant). Also overkill for small projects. CUBE CSS and utility-first (Tailwind) are alternative philosophies.`,
+When to skip it: if you are using CSS Modules or any scoped CSS system, the tooling already handles name isolation, so BEM is redundant. For small projects it can feel like extra ceremony. Tailwind (utility-first) and CUBE CSS are alternative approaches that solve the same naming problem differently.`,
     codeExample: `/* Block */
 .card { border-radius: 8px; padding: 1.5rem; background: white; }
 
@@ -684,11 +684,7 @@ When not to use: in CSS Modules or scoped styles (the module system handles enca
   {
     id: 'css-subgrid',
     question: 'What problem does CSS Subgrid solve?',
-    answer: `Subgrid solves the "nested grid alignment" problem. Without subgrid, a child element that is itself a grid starts a new independent grid — it can't align its own children to the outer grid's tracks.
-
-With display: subgrid, a grid item inherits the parent grid's tracks. Its children align to the parent's columns or rows as if they were direct children of the outer grid. This enables perfectly aligned card layouts where card titles, images, and footers all line up across cards, regardless of content length.
-
-Browser support: all major browsers since 2023 (Chrome 117, Firefox 71, Safari 16).`,
+    answer: `Without subgrid, a grid item that is itself a grid container creates its own independent grid. Its children align to its own tracks — not to the outer grid's tracks. This means card titles across a row of cards can never perfectly align because each card's grid is independent and sized to its own content. Subgrid fixes this. When you set grid-template-rows: subgrid or grid-template-columns: subgrid on a grid item, that item's children inherit and align to the parent grid's tracks instead of creating their own. The result: card images, titles, bodies, and footers all line up perfectly across a row of cards, regardless of how much content each card has. Browser support has been available in all major browsers since 2023.`,
     codeExample: `/* Without subgrid — each card has independent rows */
 .gallery {
   display: grid;
@@ -726,17 +722,17 @@ Browser support: all major browsers since 2023 (Chrome 117, Firefox 71, Safari 1
   {
     id: 'css-containment',
     question: 'What is CSS containment and why is it important for performance?',
-    answer: `CSS containment (contain property) tells the browser that an element's subtree is independent from the rest of the document, enabling performance optimizations.
+    answer: `CSS containment (the contain property) is a hint that tells the browser an element's subtree is isolated from the rest of the document. The browser can then skip re-running layout, paint, or style calculations for the rest of the page when something inside the element changes.
 
-contain: layout — the element's internal layout doesn't affect elements outside it (no layout escape). The browser can skip re-laying other elements when internal layout changes.
+contain: layout — layout changes inside the element do not cause reflow outside. The browser can skip recalculating positions of external elements.
 
-contain: paint — the element's content doesn't overflow visually (browser can skip painting offscreen contained elements).
+contain: paint — the element's content does not visually overflow its border box. The browser can also skip painting the element entirely when it is off-screen.
 
-contain: strict — both layout and paint plus size containment (element doesn't affect document size).
+contain: strict — applies layout, paint, and size containment all at once. The element's size is also independent of its children.
 
-container-type: inline-size (for container queries) implicitly applies layout and style containment.
+container-type: inline-size (used to set up container queries) automatically applies layout and style containment as a side effect.
 
-content-visibility: auto (CSS level) tells the browser to skip rendering offscreen elements entirely — massive performance win for long pages with many complex components.`,
+content-visibility: auto is a higher-level shortcut. The browser skips rendering off-screen elements entirely — no layout, no paint. On long pages with many complex sections this can reduce initial render time dramatically. Pair it with contain-intrinsic-size to give the browser an estimated height for skipped sections so the scrollbar does not jump.`,
     codeExample: `/* contain: strict — browser can isolate layout/paint for this widget */
 .widget {
   contain: strict;    /* layout + paint + size containment */
@@ -768,13 +764,13 @@ content-visibility: auto (CSS level) tells the browser to skip rendering offscre
   {
     id: 'css-in-js-tradeoffs',
     question: 'What are the tradeoffs between CSS Modules, CSS-in-JS, and utility-first CSS?',
-    answer: `CSS Modules: scoped class names at build time, zero runtime overhead, works with any CSS. Best for: projects that want scoped CSS without a framework. Tradeoff: no dynamic styling based on props without inline styles or CSS variables.
+    answer: `CSS Modules: class names are made unique at build time (e.g. .title becomes .Card__title__3xQ2). Zero runtime cost. Works with any CSS feature. Best for teams that want scoped styles without adopting a framework. The main limitation: styling based on JavaScript props requires inline styles or CSS custom properties.
 
-CSS-in-JS (styled-components, Emotion): styles defined in JS/TS, full prop-based dynamic styling, co-located with components. Tradeoff: runtime style injection (affects performance, especially on SSR), larger bundle, potential hydration issues. The community trend since 2022 is moving away from runtime CSS-in-JS toward build-time solutions.
+CSS-in-JS (styled-components, Emotion): styles are written in JavaScript or TypeScript files, co-located with the component. You can dynamically change styles based on props. The tradeoff: styles are injected at runtime, which adds cost — especially on server-rendered pages during hydration (the step where a server-rendered page becomes interactive in the browser). Since 2022 the community has been moving away from runtime CSS-in-JS.
 
-Zero-runtime CSS-in-JS (vanilla-extract, Linaria, Panda CSS): TypeScript-defined styles compiled to static CSS at build time. Best of both worlds: type safety + no runtime cost.
+Zero-runtime CSS-in-JS (vanilla-extract, Linaria, Panda CSS): a middle ground. You write styles in TypeScript and get type safety and prop-based APIs, but the output is compiled to static CSS at build time. No runtime cost.
 
-Utility-first (Tailwind CSS): small utility classes composed in HTML. Fast to build, eliminates dead CSS, great for design-constrained teams. Tradeoff: verbose HTML, requires learning Tailwind's system.`,
+Utility-first (Tailwind CSS): instead of writing CSS, you compose small pre-built utility classes directly in your HTML markup. No custom class names, no dead CSS (unused classes are removed at build time), and design decisions are constrained to a consistent scale. The tradeoff: HTML can become long, and you need to learn Tailwind's naming system.`,
     codeExample: `/* CSS Modules — scoped classes, zero runtime */
 /* Card.module.css */
 .card { background: white; border-radius: 8px; }
@@ -804,13 +800,13 @@ export const button = style({ background: 'blue', color: 'white' });
   {
     id: 'design-tokens-theming',
     question: 'How do you implement a design token system and multi-theme support in CSS?',
-    answer: `Design tokens are the atomic decisions of a design system — colors, spacing, typography — expressed as named variables. In CSS, they live as custom properties on :root.
+    answer: `Design tokens are the named decisions of a design system — things like your brand colors, spacing scale, and font sizes. In CSS, they live as custom properties on :root (the html element). Instead of scattering raw values like #3b82f6 across your CSS, every component references a token like var(--color-primary).
 
-Theming: define token values per theme by scoping overrides to a class or data attribute on a parent element. JavaScript sets the attribute; CSS handles all the visual changes.
+Theming: to change the visual theme, you override the token values for a scoped context — a data attribute like [data-theme="dark"] or a class on the root. JavaScript sets the attribute and CSS does all the visual work.
 
-Dark mode: use @media (prefers-color-scheme: dark) for automatic system preference, or data-theme="dark" for user-controlled toggle (gives user agency over system preference).
+Dark mode: you can use @media (prefers-color-scheme: dark) to automatically follow the user's system preference, or data-theme="dark" for a manual toggle button. The manual approach gives the user control over their system preference.
 
-Semantic tokens: define two layers — primitive tokens (--color-blue-600: #2563eb) and semantic tokens (--color-action-primary: var(--color-blue-600)). Components consume semantic tokens; themes swap the semantic layer without touching component code.`,
+Semantic tokens: a useful pattern is to define two layers. Primitive tokens hold raw values — --color-blue-500: #3b82f6. Semantic tokens reference primitives and describe intent — --color-action-primary: var(--color-blue-500). Components consume semantic tokens. To change a theme, you only need to swap what the semantic tokens point to — no component code changes required.`,
     codeExample: `/* Primitive tokens — raw values */
 :root {
   --primitive-blue-500: #3b82f6;
@@ -851,15 +847,15 @@ Semantic tokens: define two layers — primitive tokens (--color-blue-600: #2563
   {
     id: 'accessibility-css',
     question: 'What CSS techniques are essential for accessibility?',
-    answer: `focus-visible: style keyboard focus rings without showing them for mouse clicks. Use :focus-visible instead of removing outline entirely — removing all focus styles is a WCAG failure.
+    answer: `focus-visible: use :focus-visible instead of removing the focus ring with outline: none. The :focus-visible pseudo-class only shows the focus ring when the user is navigating with a keyboard — not when they click with a mouse. Removing all focus styles entirely is a WCAG (Web Content Accessibility Guidelines) failure because keyboard users lose the ability to see where they are on the page.
 
-prefers-reduced-motion: some users (epilepsy, vestibular disorders) need reduced animation. Respect this media query by disabling or reducing all animations.
+prefers-reduced-motion: some users have conditions like epilepsy or vestibular disorders that make motion harmful or disorienting. The @media (prefers-reduced-motion: reduce) query lets you detect this and disable or greatly reduce animations for those users.
 
-prefers-contrast: high contrast mode. Ensure your design works with forced-colors: active (Windows High Contrast mode) — use system color keywords as fallbacks.
+prefers-contrast and forced colors: Windows has a High Contrast mode (forced-colors: active) that overrides your CSS colors with system colors. Test that your layout remains usable in this mode. Use system color keywords (ButtonText, LinkText, etc.) as fallbacks where needed.
 
-visually hidden (sr-only): text visible to screen readers but not sighted users. DO NOT use display: none or visibility: hidden — those hide from AT too. Use the clip-path technique.
+Visually hidden (sr-only): sometimes you need text that only screen readers can access — like a label for an icon button. Do not use display: none or visibility: hidden — both hide the element from screen readers too. Instead use the clip-path technique shown in the code example.
 
-Minimum tap/click target size: 44×44px (WCAG 2.5.5) or 24×24px (WCAG 2.5.8 Level AA).`,
+Minimum touch target size: interactive elements should be at least 44×44px to be reliably tappable on mobile (WCAG 2.5.5), or 24×24px at a minimum (WCAG 2.5.8 Level AA).`,
     codeExample: `/* Focus ring — keyboard only, not on click */
 :focus { outline: none; }
 :focus-visible { outline: 3px solid var(--color-primary); outline-offset: 2px; }
@@ -900,7 +896,7 @@ Minimum tap/click target size: 44×44px (WCAG 2.5.5) or 24×24px (WCAG 2.5.8 Lev
   {
     id: 'reflow-vs-repaint',
     question: 'What is the difference between reflow and repaint? Which properties trigger which?',
-    answer: `Reflow (layout) recalculates the geometry — position and size — of the affected element and everything downstream in the document. It is the most expensive render operation because it can cascade across the entire tree. Repaint re-draws pixels for an element whose appearance changed but whose geometry did not (color, background, shadow). Compositing-only changes (transform, opacity on a promoted layer) skip both and are handled entirely by the GPU. The rule: always prefer animating transform and opacity over properties like left, top, width, or background-color.`,
+    answer: `Reflow (also called layout) recalculates the position and size of the affected element and anything else in the page that depends on it. It is the most expensive operation because one change can cascade through the entire document tree. Repaint redraws the pixels of an element whose appearance changed without any geometry change — things like a new color, background, or shadow. It is less expensive than reflow because positions do not need to be recalculated. Compositing-only changes — transform and opacity on elements promoted to their own GPU layer — skip both reflow and repaint entirely. The GPU handles them directly. The practical rule: always prefer animating transform and opacity over properties like left, top, width, or background-color.`,
     codeExample: `/* Triggers reflow every frame — expensive */
 .bad { transition: left 0.3s, width 0.3s; }
 
@@ -922,7 +918,7 @@ Minimum tap/click target size: 44×44px (WCAG 2.5.5) or 24×24px (WCAG 2.5.8 Lev
   {
     id: 'layout-thrashing',
     question: 'What is layout thrashing and how do you fix it?',
-    answer: `Layout thrashing happens when JavaScript alternates DOM reads and writes in rapid succession, forcing the browser to recalculate layout (reflow) on every iteration instead of batching it. Reading layout properties like offsetWidth, getBoundingClientRect, or scrollTop after writing to the DOM invalidates the browser's cached layout and forces a synchronous recalculation. The fix is to batch all reads first, then all writes — the browser only reflows once at the end of the write phase.`,
+    answer: `Layout thrashing happens when JavaScript reads and writes to the DOM in an alternating loop. The browser caches its layout calculations, but any write (changing a style, adding an element) marks that cache as stale. If you then read a layout measurement like offsetWidth or getBoundingClientRect right after a write, the browser is forced to throw away the cache and recalculate layout immediately — so it can give you an accurate answer. Do this in a loop and the browser reflows on every single iteration. The fix is straightforward: collect all your DOM reads in one pass first, then do all your writes in a second pass. The browser reflows only once, after all the writes are done.`,
     codeExample: `// BAD — thrashing: read → write → reflow on every iteration
 elements.forEach(el => {
   const width = el.offsetWidth; // forces reflow
@@ -949,7 +945,7 @@ requestAnimationFrame(() => {
   {
     id: 'will-change-usage',
     question: 'When should you use will-change and what are its pitfalls?',
-    answer: `will-change hints to the browser to promote an element to its own GPU compositor layer before an animation starts, preventing the jank of on-the-fly promotion at the first frame. Use it on elements that genuinely animate transform or opacity frequently. The main pitfall is overuse: each promoted layer is a texture stored in GPU memory (VRAM). Applying it broadly — especially to all elements or large sections — causes excessive VRAM consumption, slows compositing, and can hurt performance on mobile. Apply it surgically, and ideally remove it via JavaScript after the animation ends.`,
+    answer: `will-change is a hint you add to an element to tell the browser it is about to animate. The browser responds by promoting it to its own GPU layer in advance. Without this hint, promotion happens at the first frame of the animation, which can cause a visible stutter or flash. The main pitfall is overuse. Each promoted layer is a texture stored in GPU memory (VRAM — the memory on the graphics card). Promoting too many elements wastes VRAM, slows down the compositing step, and can noticeably hurt performance on mobile devices with limited graphics memory. Use will-change on specific elements that genuinely animate frequently. Ideally, remove it via JavaScript after the animation finishes — el.style.willChange = 'auto' — so the layer is freed.`,
     codeExample: `/* Good: targeted use on animated element */
 .drawer {
   will-change: transform;
@@ -978,7 +974,7 @@ el.addEventListener('transitionend', () => {
   {
     id: 'font-display-fout-foit',
     question: 'What is FOIT and FOUT, and how does font-display fix them?',
-    answer: `FOIT (Flash of Invisible Text) is when the browser hides text while a web font loads, showing a blank space until the font arrives. FOUT (Flash of Unstyled Text) is when the browser shows text in a fallback system font first, then swaps to the web font once loaded — causing a visible layout shift. font-display in @font-face controls this tradeoff. font-display: swap eliminates FOIT by showing fallback text immediately and swapping when ready — best for body text. font-display: optional skips the swap entirely if the font isn't already cached — eliminates both FOIT and FOUT at the cost of the font not loading on first visit. Pair with <link rel="preload"> to reduce the swap window.`,
+    answer: `FOIT (Flash of Invisible Text) is what happens when the browser hides text completely while waiting for a web font to download. The user sees a blank space where the text should be. FOUT (Flash of Unstyled Text) is the opposite approach: the browser shows the text immediately in a fallback system font, then swaps in the web font when it arrives. The swap causes a visible jump because the two fonts rarely have identical proportions. font-display inside @font-face controls which behavior you get. font-display: swap eliminates FOIT — text is always visible, with a fallback swap when the font loads. This is best for body text where readability matters more than a perfect first render. font-display: optional shows text for a short period in the fallback and only swaps if the web font is already cached — no swap on first visit. This eliminates both FOIT and FOUT at the cost of the font not appearing on the first page load. Pair any value with <link rel="preload"> to start downloading the font earlier, which shortens the swap window.`,
     codeExample: `@font-face {
   font-family: 'Inter';
   src: url('/fonts/inter.woff2') format('woff2');
